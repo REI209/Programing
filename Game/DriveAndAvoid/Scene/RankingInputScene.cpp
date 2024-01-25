@@ -150,6 +150,67 @@ bool RankingInputScene::InputName()
 	}
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_RIGHT))
 	{
-
+		if (cursor_x < 12)
+		{
+			cursor_x--;
+		}
+		else
+		{
+			cursor_x = 0;
+		}
 	}
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
+	{
+		if (cursor_y > 0)
+		{
+			cursor_y--;
+		}
+	}
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
+	{
+		if (cursor_y < 4)
+		{
+			cursor_y++;
+			if (cursor_y == 4)
+			{
+				cursor_x = 0;
+			}
+		}
+	}
+
+	//カーソル位置の文字を決定する
+	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
+	{
+		if (cursor_y < 2)
+		{
+			name[name_num++] = 'a' + cursor_x + (cursor_y * 13);
+			if (name_num == 14)
+			{
+				cursor_x = 0;
+				cursor_y = 4;
+			}
+		}
+		else if (cursor_y < 4)
+		{
+			name[name_num++] = 'A' + cursor_x + ((cursor_y - 2) * 13);
+			if (name_num == 14)
+			{
+				cursor_x = 0;
+				cursor_y = 4;
+			}
+		}
+		else
+		{
+			if (cursor_x == 0)
+			{
+				name[name_num] = '\0';
+				return true;
+			}
+			else
+			{
+				name[name_num--] = NULL;
+			}
+		}
+	}
+	return false;
 }
