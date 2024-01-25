@@ -2,17 +2,19 @@
 
 #include"SceneBase.h"
 
-class ResultScene :public SceneBase
+class Titlescene :public SceneBase
 {
 private:
-	int back_ground;
-	int score;
-	int enemy_count[3];
-	int enemy_image[3];
+
+private:
+	int background_image;  //背景画像
+	int menu_image;        //メニュー画面
+	int cursor_iamge;      //カーソル画像
+	int menu_cursor;       //メニューカーソル番号
 
 public:
-	ResultScene();
-	virtual ~ResultScene();
+	TitleScene();
+	virtual ~TitleScene();
 
 	virtual void Initialize() override;
 	virtual eSceneType Update() override;
@@ -20,7 +22,4 @@ public:
 	virtual void Finalize() override;
 
 	virtual eSceneType GetNowScene() const override;
-
-private:
-	void ReadResultData();
 };
