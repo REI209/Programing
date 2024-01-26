@@ -15,7 +15,7 @@ RankingData::RankingData()
 	}
 }
 
-RankigData::~RankingData()
+RankingData::~RankingData()
 {
 
 }

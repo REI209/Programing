@@ -51,7 +51,7 @@ void GameMainScene::Initialize()
 	enemy = new Enemy * [10];
 
 	//オブジェクトの初期化
-	Player->Initialize();
+	player->Initialize();
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -63,7 +63,7 @@ void GameMainScene::Initialize()
 eSceneType GameMainScene::Update()
 {
 	//プレイヤーの更新
-	Player->Update();
+	player->Update();
 
 	//移動距離の更新
 	mileage += (int)player->GetSpeed
@@ -149,7 +149,7 @@ void GameMainScene::Draw() const
 	{
 		DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE,
 			FALSE);
-		DrawRotaGraph(523 + (i * 50), 120, GetColor(255, 255, 255), "%03d",
+		DrawFormatString(523 + (i * 50), 120, GetColor(255, 255, 255), "%03d",
 			enemy_count[i]);
 	}
 	DrawFormatString(510, 200, GetColor(0, 0, 0), "走行距離");
@@ -249,7 +249,7 @@ void GameMainScene::ReadHighScore()
 }
 
 //当たり判定（プレイヤーと敵）
-bool GameMainScene::IsHitCheck(Player* p, enemy* e)
+bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 {
 	//プレイヤーがバリアを貼っていたら、当たり判定を無視する
 	if (p->IsBarrier())
@@ -264,7 +264,7 @@ bool GameMainScene::IsHitCheck(Player* p, enemy* e)
 	}
 
 	//敵情報の差分を取得
-	Vector2D diff_location = p->GetLocation() - e > GetLocation();
+	Vector2D diff_location = p->GetLocation() - e -> GetLocation();
 
 	//当たり判定サイズの大きさ取得
 	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();

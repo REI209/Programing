@@ -37,7 +37,7 @@ void TitleScene::Initialize()
 }
 
 //更新処理
-eSceneType TitlleScene::Update()
+eSceneType TitleScene::Update()
 {
 	//カーソル下移動
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
