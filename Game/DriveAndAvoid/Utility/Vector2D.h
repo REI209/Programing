@@ -12,6 +12,10 @@ public:
 	{
 
 	}
+	Vector2D(float scalar) :x(scalar), y(scalar)
+	{
+
+	}
 	Vector2D(float mx, float my) :x(mx), y(my)
 	{
 
@@ -89,7 +93,7 @@ public:
 		return *this;
 
 	}
-	Vector2D& operator*=(const Vector2D& scalar)
+	Vector2D& operator*=(const float& scalar)
 	{
 		this->x *= scalar;
 		this->y *= scalar;
@@ -103,7 +107,7 @@ public:
 
 		return *this;
 	}
-	Vector2D& operator/=(const float& sacalar)
+	Vector2D& operator/=(const float& scalar)
 	{
 		if (scalar < 1e-6f)
 		{
