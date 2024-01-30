@@ -7,6 +7,11 @@ HelpScene::HelpScene() :background_image(NULL)
 
 }
 
+HelpScene::~HelpScene()
+{
+
+}
+
 //‰Šú‰»ˆ—
 void HelpScene::Initialize()
 {

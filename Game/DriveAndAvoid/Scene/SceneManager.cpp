@@ -50,13 +50,13 @@ void SceneManager::Initialize()
 void SceneManager::Update()
 {
 	//フレーム開始時間（マイクロ秒）を取得
-	LONGLONG start_time = GetNowHitPerformanceCount();
+	LONGLONG start_time = GetNowHiPerformanceCount();
 
 	//メインループ
 	while (ProcessMessage() != -1)
 	{
 		//現在時間を取得
-		LONGLONG start_time = GetNowHitPerformanceCount();
+		LONGLONG now_time = GetNowHiPerformanceCount();
 
 		//1フレーム当たりの時間に到達したら、更新および描画処理を行う
 		if ((now_time - start_time) >= DELTA_SECOND)
@@ -108,63 +108,62 @@ void SceneManager::Finalize()
 
 	//DXライブラリの使用を終了する
 	DxLib_End();
+}
+//シーンマネージャー機能:描画処理
+void SceneManager::Draw() const
+{
+	//画面の初期化
+	ClearDrawScreen();
 
-	//シーンマネージャー機能:描画処理
-	void SceneManager::Draw() const
+	//裏画面の内容を表画面に反映
+	ScreenFlip();
+}
+
+//シーン切り替え処理
+void SceneManager::ChangeScene(eSceneType scene_type)
+{
+	//シーンを生成する(SceneBaseが継承されているか？）
+	SceneBase* new_scene = dynamic_cast<SceneBase*>(CreateScene(scene_type));
+
+	//エラーチェック
+	if (new_scene == nullptr)
 	{
-		//画面の初期化
-		ClearDrawScreen();
-
-		//裏画面の内容を表画面に反映
-		ScreenFlip();
+		throw("シーンが生成できませんでした。\n");
 	}
 
-	//シーン切り替え処理
-	void SceneManager::ChangeScene(eSceneType scene_type)
+	//前回シーンの初期化を行う
+	if (current_scene != nullptr)
 	{
-		//シーンを生成する(SceneBaseが継承されているか？）
-		SceneBase* new_scene = dynamic_cast<SceneBase*>(CreateScene(scene_type));
+		current_scene->Finalize();
+		delete current_scene;
+	}
 
-		//エラーチェック
-		if (new_scene == nullptr)
-		{
-			throw("シーンが生成できませんでした。\n");
-		}
-
-		//前回シーンの初期化を行う
-		if (current_scene != nullptr)
-		{
-			current_scene->Finalize();
-			delete current_scene;
-		}
-
-		//新しく生成したシーンの初期化を行う
+	//新しく生成したシーンの初期化を行う
 		new_scene->Initialize();
 
-		//現在シーンの初期化を行う
-		current_scene = new_scene;
-	}
+	//現在シーンの初期化を行う
+	current_scene = new_scene;
+}
 
-	//シーン生成処理
-	SceneBase* SceneManager::CreateScene(eSceneType scene_type)
+//シーン生成処理
+SceneBase* SceneManager::CreateScene(eSceneType scene_type)
+{
+	//引数（シーンタイプ）によって、生成するシーンを決定する
+	switch (scene_type)
 	{
-		//引数（シーンタイプ）によって、生成するシーンを決定する
-		switch (scene_type)
-		{
-		case eSceneType::E_TITLE:
-			return new TitleScene;
-		case eSceneType::E_MAIN:
-			return new GameMainScene;
-		case eSceneType::E_RESULT:
-			return new ResultScene;
-		case eSceneType::E_HELP:
-			return new HelpScene;
-		case eSceneType::E_RANKING_DISP:
-			return new RankingDispScene;
-		case eSceneType::E_RANKING_INPUT:
-			return new RankingInputScene;
-		default:
-			return nullptr;
-		}
+	case eSceneType::E_TITLE:
+		return new TitleScene;
+	case eSceneType::E_MAIN:
+		return new GameMainScene;
+	case eSceneType::E_RESULT:
+		return new ResultScene;
+	case eSceneType::E_HELP:
+		return new HelpScene;
+	case eSceneType::E_RANKING_DISP:
+		return new RankingDispScene;
+	case eSceneType::E_RANKING_INPUT:
+		return new RankingInputScene;
+	default:
+		return nullptr;
 	}
 }
