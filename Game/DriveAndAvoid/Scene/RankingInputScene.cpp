@@ -19,12 +19,12 @@ RankingInputScene::~RankingInputScene()
 void RankingInputScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("REsouce/images/Ranking.bpm");
+	background_image = LoadGraph("Resource/images/Ranking.bmp");
 
 	//エラーチェック
 	if (background_image == -1)
 	{
-		throw("Resouce/images/Ranking.bpmがありません\n");
+		throw("Resource/images/Ranking.bmpがありません\n");
 	}
 
 	//メモリの動的確保
@@ -34,12 +34,12 @@ void RankingInputScene::Initialize()
 	//リザルトデータを取得する
 	FILE* fp = nullptr;
 	//ファイルオープン
-	errno_t result = fopen_s(&fp, "Resouce/dat/result_data.csv", "r");
+	errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "r");
 
 	//エラーチェック
 	if (result != 0)
 	{
-		throw("Recouce/dat/result_data.csvが読み込めません\n");
+		throw("Recource/dat/result_data.csvが読み込めません\n");
 	}
 
 	//結果を読み込む

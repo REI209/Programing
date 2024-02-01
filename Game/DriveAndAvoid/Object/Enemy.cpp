@@ -20,7 +20,7 @@ void Enemy::Initialize()
 	//¶¬ˆÊ’u‚ÌÝ’è
 	location = Vector2D(random_x, -50.0f);
 	//“–‚½‚è”»’è‚ÌÝ’è
-	box_size = Vector2D(31.0f, 60.0f);
+	box_size = Vector2D(50.0f, 110.0f);
 	//‘¬‚³‚ÌÝ’è
 	speed = (float)(this->type * 2);
 

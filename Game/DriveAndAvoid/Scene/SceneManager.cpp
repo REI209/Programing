@@ -115,6 +115,9 @@ void SceneManager::Draw() const
 	//‰æ–Ê‚Ì‰Šú‰»
 	ClearDrawScreen();
 
+	// ƒV[ƒ“‚Ì•`‰æ
+	current_scene->Draw();
+
 	//— ‰æ–Ê‚Ì“à—e‚ð•\‰æ–Ê‚É”½‰f
 	ScreenFlip();
 }

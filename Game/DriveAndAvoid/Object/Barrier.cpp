@@ -9,7 +9,7 @@ Barrier::Barrier():image(NULL), life_span(1000)
 	//エラーチェック
 	if (image == -1)
 	{
-		throw("Resouce/images/barrier.pngがありません\n");
+		throw("Resource/images/barrier.pngがありません\n");
 	}
 }
 

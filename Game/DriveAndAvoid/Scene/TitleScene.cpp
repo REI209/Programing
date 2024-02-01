@@ -17,22 +17,22 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resoce/images/Title.bpm");
-	menu_image = LoadGraph("Resoce/images/menu.bpm");
-	cursor_image = LoadGraph("Resouce/images/cone.bpm");
+	background_image = LoadGraph("Resource/images/Title.bmp");
+	menu_image = LoadGraph("Resource/images/menu.bmp");
+	cursor_image = LoadGraph("Resource/images/cone.bmp");
 
 	//エラーチェック
 	if (background_image == -1)
 	{
-		throw("Resouce/images/Title.bpmがありません\n");
+		throw("Resource/images/Title.bmpがありません\n");
 	}
 	if (menu_image == -1)
 	{
-		throw("Resouce/images/menu.bpmがありません\n");
+		throw("Resource/images/menu.bmpがありません\n");
 	}
 	if (cursor_image == -1)
 	{
-		throw("Resouce/images/cone.bpmがありません\n");
+		throw("Resource/images/cone.bmpがありません\n");
 	}
 }
 
@@ -87,7 +87,7 @@ void TitleScene::Draw() const
 	DrawGraph(0, 0, background_image, FALSE);
 
 	//メニュー画面の描画
-	DrawGraph(120, 220, menu_image, TRUE);
+	DrawGraph(120, 200, menu_image, TRUE);
 
 	//カーソル画面の描画
 	DrawRotaGraph(90, 220 + menu_cursor * 40, 0.7, DX_PI / 2.0, cursor_image,

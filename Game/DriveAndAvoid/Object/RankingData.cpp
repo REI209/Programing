@@ -51,6 +51,12 @@ void RankingData::Initialize()
 }
 
 //終了処理
+void RankingData::Finalize()
+{
+
+}
+
+//データ設定処理
 void RankingData::SetRankingData(int score, const char* name)
 {
 	this->score[5] = score;
@@ -61,6 +67,12 @@ void RankingData::SetRankingData(int score, const char* name)
 
 //スコア取得処理
 int RankingData::GetScore(int value) const
+{
+	return score[value];
+}
+
+//ランク取得処理
+int RankingData::GetRank(int value) const
 {
 	return rank[value];
 }
@@ -118,7 +130,7 @@ void RankingData::SortData()
 	//エラーチェック
 	if (result != 0)
 	{
-		throw("Resorce/dat/ranking_data.csvが開けませんでした\n");
+		throw("Resource/dat/ranking_data.csvが開けませんでした\n");
 	}
 
 	//対象ファイルに書き込み

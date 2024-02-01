@@ -21,18 +21,18 @@ ResultScene::~ResultScene()
 void ResultScene::Initialize()
 {
 	//画像の読み込み
-	back_ground = LoadGraph("Resouce/images/back.bpm");
-	int result = LoadDivGraph("Resouce/images/car.bpm", 3, 3, 1, 63, 120,
+	back_ground = LoadGraph("Resource/images/back.bmp");
+	int result = LoadDivGraph("Resource/images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
 
 	//エラーチェック
 	if (back_ground == -1)
 	{
-		throw("Resouce/images/back.bpmがありません\n");
+		throw("Resource/images/back.bmpがありません\n");
 	}
 	if (result == -1)
 	{
-		throw("Resouce/images/car.bpmがありません\n");
+		throw("Resource/images/car.bmpがありません\n");
 	}
 
 	//ゲーム結果の読み込み
@@ -100,12 +100,12 @@ void ResultScene::ReadResultData()
 {
 	//ファイルオープン
 	FILE* fp = nullptr;
-	errno_t result = fopen_s(&fp, "Resouce/dat/result_data.csv", "r");
+	errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "r");
 
 	//エラーチェック
 	if (result != 0)
 	{
-		throw("Resouce/dat/result_data.csvが読み込みません\n");
+		throw("Resource/dat/result_data.csvが読み込みません\n");
 	}
 
 	//結果を読み込む
