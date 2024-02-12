@@ -27,7 +27,7 @@ void GameMainScene::Initialize()
 	ReadHighScore();
 
 	//画像の読み込み
-	back_ground = LoadGraph("Resource/Images/back.bmp");
+	back_ground = LoadGraph("Resource/Images/back_img.png");
 	barrier_image = LoadGraph("Resource/Images/barrier.png");
 	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
@@ -35,7 +35,7 @@ void GameMainScene::Initialize()
 	//エラーチェック
 	if (back_ground == -1)
 	{
-		throw("Resource/Images/back.bmpがありません\n");
+		throw("Resource/Images/back_img.pngがありません\n");
 	}
 	if (result == -1)
 	{
@@ -113,7 +113,7 @@ eSceneType GameMainScene::Update()
 	}
 
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-	if (player->GetFuel() < 0.0f || player->GetHp() < 0.0f)
+	if (player->GetStamina() < 0.0f || player->GetHp() < 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
@@ -158,16 +158,11 @@ void GameMainScene::Draw() const
 	DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",
 		player->GetSpeed());
 
-	//バリア枚数の描画
-	for (int i = 0; i < player->GetBarrierCount(); i++) {
-		DrawRotaGraph(520 + i * 25, 340, 0.2f, 0, barrier_image, TRUE, FALSE);
-	}
-
 	//燃料ゲージの描画
 	float fx = 510.0f;
 	float fy = 390.0f;
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "FUEL METER");
-	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetFuel() * 100 / 20000), fy +
+	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetStamina() * 100 / 20000), fy +
 		40.0f, GetColor(0, 102, 204), TRUE);
 	DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
 		FALSE);
@@ -251,12 +246,6 @@ void GameMainScene::ReadHighScore()
 //当たり判定（プレイヤーと敵）
 bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 {
-	//プレイヤーがバリアを貼っていたら、当たり判定を無視する
-	if (p->IsBarrier())
-	{
-		return false;
-	}
-
 	//敵情報がなければ、当たり判定を無視する
 	if (e == nullptr)
 	{
@@ -270,6 +259,5 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
 
 	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) <
-		box_ex.y));
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }

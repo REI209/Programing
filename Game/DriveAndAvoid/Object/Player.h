@@ -1,7 +1,6 @@
 #pragma once
 
 #include"../Utility/Vector2D.h"
-#include"Barrier.h"
 
 class Player
 {
@@ -13,9 +12,8 @@ private:
 	float angle;         //角度
 	float speed;         //速さ
 	float hp;            //体力
-	float fuel;          //燃料
-	int barrier_count;   //バリアの枚数
-	Barrier* barrier;    //バリア
+	float stamina;       //スタミナ
+	int damage;          //点滅用変数
 
 public:
 	Player();
@@ -32,12 +30,11 @@ public:
 	Vector2D GetLocation() const;   //位置座標取得
 	Vector2D GetBoxSize() const;    //当たり判定の大きさ取得
 	float GetSpeed() const;         //速さ取得処理
-	float GetFuel() const;          //燃料取得
+	float GetStamina() const;          //燃料取得
 	float GetHp() const;            //体力取得
-	int GetBarrierCount() const;    //バリアの枚数取得
-	bool IsBarrier() const;         //バリアが有効か？を取得
 
 private:
 	void Movement();       //移動処理
-	void Acceleration();   //加速処理
+	void Acceleration();   //加減速処理
+	void DamageMove();     //ダメージを受けた時の点滅処理
 };
