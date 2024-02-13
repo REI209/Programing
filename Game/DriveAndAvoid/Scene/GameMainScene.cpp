@@ -166,16 +166,16 @@ eSceneType GameMainScene::Update()
 			obstacle_b[i]->Update(player->GetSpeed());
 
 			//画面外に行ったら、敵を削除してスコア加算
-			if (obstacle_b[i]->GetLocation().y >= 640.0f)
+			/*if (obstacle_b[i]->GetLocation().y >= 640.0f)
 			{
 				enemy_count[obstacle_b[i]->GetType()]++;
 				obstacle_b[i]->Finalize();
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
-			}
+			}*/
 
 			//当たり判定の確認
-			if (IsHitCheck(player, obstacle_b[i]))
+			if (IsObjectHitCheck_P(Player * p, T * object))
 			{
 				player->SetActive(false);
 				player->DecreaseHp(-50.0f);
