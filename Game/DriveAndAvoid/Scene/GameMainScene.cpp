@@ -138,75 +138,75 @@ eSceneType GameMainScene::Update()
 	//敵の更新と当たり判定チェック
 	for (int i = 0; i < 10; i++)
 	{
-		if (obstacle_a[i] != nullptr)
-		{
-			obstacle_a[i]->Update(player->GetSpeed());
+		//if (obstacle_a[i] != nullptr)
+		//{
+		//	obstacle_a[i]->Update(player->GetSpeed());
 
-			////画面外に行ったら、敵を削除してスコア加算
-			//if (enemy[i]->GetLocation().y >= 640.0f)
-			//{
-			//	enemy_count[enemy[i]->GetType()]++;
-			//	enemy[i]->Finalize();
-			//	delete enemy[i];
-			//	enemy[i] = nullptr;
-			//}
+		//	////画面外に行ったら、敵を削除してスコア加算
+		//	//if (enemy[i]->GetLocation().y >= 640.0f)
+		//	//{
+		//	//	enemy_count[enemy[i]->GetType()]++;
+		//	//	enemy[i]->Finalize();
+		//	//	delete enemy[i];
+		//	//	enemy[i] = nullptr;
+		//	//}
 
-			////当たり判定の確認
-			//if (IsHitCheck(player, enemy[i]))
-			//{
-			//	player->SetActive(false);
-			//	player->DecreaseHp(-50.0f);
-			//	enemy[i]->Finalize();
-			//	delete enemy[i];
-			//	enemy[i] = nullptr;
-			//}
-		}
+		//	////当たり判定の確認
+		//	//if (IsHitCheck(player, enemy[i]))
+		//	//{
+		//	//	player->SetActive(false);
+		//	//	player->DecreaseHp(-50.0f);
+		//	//	enemy[i]->Finalize();
+		//	//	delete enemy[i];
+		//	//	enemy[i] = nullptr;
+		//	//}
+		//}
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Update(player->GetSpeed());
 
-			////画面外に行ったら、敵を削除してスコア加算
-			//if (enemy[i]->GetLocation().y >= 640.0f)
-			//{
-			//	enemy_count[enemy[i]->GetType()]++;
-			//	enemy[i]->Finalize();
-			//	delete enemy[i];
-			//	enemy[i] = nullptr;
-			//}
+			//画面外に行ったら、敵を削除してスコア加算
+			if (obstacle_b[i]->GetLocation().y >= 640.0f)
+			{
+				enemy_count[obstacle_b[i]->GetType()]++;
+				obstacle_b[i]->Finalize();
+				delete obstacle_b[i];
+				obstacle_b[i] = nullptr;
+			}
 
-			////当たり判定の確認
-			//if (IsHitCheck(player, enemy[i]))
-			//{
-			//	player->SetActive(false);
-			//	player->DecreaseHp(-50.0f);
-			//	enemy[i]->Finalize();
-			//	delete enemy[i];
-			//	enemy[i] = nullptr;
-			//}
+			//当たり判定の確認
+			if (IsHitCheck(player, obstacle_b[i]))
+			{
+				player->SetActive(false);
+				player->DecreaseHp(-50.0f);
+				obstacle_b[i]->Finalize();
+				delete obstacle_b[i];
+				obstacle_b[i] = nullptr;
+			}
 		}
-		if (obstacle_c[i] != nullptr)
-		{
-			obstacle_c[i]->Update(player->GetSpeed());
+		//if (obstacle_c[i] != nullptr)
+		//{
+		//	obstacle_c[i]->Update(player->GetSpeed());
 
-			////画面外に行ったら、敵を削除してスコア加算
-			//if (enemy[i]->GetLocation().y >= 640.0f)
-			//{
-			//	enemy_count[enemy[i]->GetType()]++;
-			//	enemy[i]->Finalize();
-			//	delete enemy[i];
-			//	enemy[i] = nullptr;
-			//}
+		//	////画面外に行ったら、敵を削除してスコア加算
+		//	//if (enemy[i]->GetLocation().y >= 640.0f)
+		//	//{
+		//	//	enemy_count[enemy[i]->GetType()]++;
+		//	//	enemy[i]->Finalize();
+		//	//	delete enemy[i];
+		//	//	enemy[i] = nullptr;
+		//	//}
 
-			////当たり判定の確認
-			//if (IsHitCheck(player, enemy[i]))
-			//{
-			//	player->SetActive(false);
-			//	player->DecreaseHp(-50.0f);
-			//	enemy[i]->Finalize();
-			//	delete enemy[i];
-			//	enemy[i] = nullptr;
-			//}
-		}
+		//	////当たり判定の確認
+		//	//if (IsHitCheck(player, enemy[i]))
+		//	//{
+		//	//	player->SetActive(false);
+		//	//	player->DecreaseHp(-50.0f);
+		//	//	enemy[i]->Finalize();
+		//	//	delete enemy[i];
+		//	//	enemy[i] = nullptr;
+		//	//}
+		//}
 	}
 
 
