@@ -3,7 +3,7 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :time(0),counter(0),high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),family(nullptr)//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
@@ -12,7 +12,14 @@ barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(n
 		enemy_count[i] = NULL;
 	}
 
+	for (int i = 0; i < 2; i++)
+	{
+		family_image[i] = NULL;
+	}
+
 	roomba_image = NULL;
+
+
 }
 
 GameMainScene::~GameMainScene()
@@ -36,6 +43,8 @@ void GameMainScene::Initialize()
 	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
 	obstacle_b_image= LoadGraph("Resource/Images/omocha_tumiki.png");
+	family_image[0] = LoadGraph("Resource/Images/IMG_0111.jpg");
+	family_image[1] = LoadGraph("Resource/Images/IMG_0113.jpg");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -54,12 +63,22 @@ void GameMainScene::Initialize()
 	{
 		throw("Resource/Images/omocha_tumiki.pngがありません\n");
 	}
+	if (family_image[0] == -1)
+	{
+		throw("Resource/Images/IMG_0111.jpgがありません\n");
+	}
+	if (family_image[1] == -1)
+	{
+		throw("Resource/Images/IMG_0113.jpgがありません\n");
+	}
 	//オブジェクトの生成
 	player = new Player;
 	//enemy = new Enemy * [10];
 
 	enemy_roomba = new Enemy_Roomba;
 	obstacle_b = new Obstacle_B*[10];
+
+	family = new Family * [10];
 
 	//オブジェクトの初期化
 	player->Initialize();
@@ -70,6 +89,7 @@ void GameMainScene::Initialize()
 	for (int i = 0; i < 10; i++)
 	{
 		obstacle_b[i] = nullptr;
+		family[i] = nullptr;
 	}
 }
 
@@ -115,7 +135,21 @@ eSceneType GameMainScene::Update()
 			}
 		}
 	}
-	
+
+	//仲間生成処理
+	if (mileage / 20 % 100 == 0)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (family[i] == nullptr)
+			{
+				int type = GetRand(1);
+				family[i] = new Family(type,family_image[type]);
+				family[i]->Initialize();
+				break;
+			}
+		}
+	}
 
 
 	//敵の更新と当たり判定チェック
@@ -146,7 +180,32 @@ eSceneType GameMainScene::Update()
 	//	}
 	//}
 
+	//敵の更新と当たり判定チェック
+	for (int i = 0; i < 10; i++)
+	{
+		if (family[i] != nullptr)
+		{
+			family[i]->Update(player->GetSpeed());
 
+			//画面外に行ったら、敵を削除してスコア加算
+			if (family[i]->GetLocation().y >= 800.0f)
+			{
+				family[i]->Finalize();
+				delete family[i];
+				family[i] = nullptr;
+			}
+
+			////当たり判定の確認
+			//if (IsHitCheck(player, enemy[i]))
+			//{
+			//	player->SetActive(false);
+			//	player->DecreaseHp(-50.0f);
+			//	enemy[i]->Finalize();
+			//	delete enemy[i];
+			//	enemy[i] = nullptr;
+			//}
+		}
+	}
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if ( player->GetHp() < 0.0f)
 	{
@@ -170,6 +229,13 @@ void GameMainScene::Draw() const
 		{
 			obstacle_b[i]->Draw();
 		}
+
+		if (family[i] != nullptr)
+		{
+			family[i]->Draw();
+		}
+
+		DrawFormatString(980, 40, GetColor(255, 0, 0), "%d", family[i]);
 	}
 
 	//ルンバの描画
@@ -185,14 +251,17 @@ void GameMainScene::Draw() const
 	//制限時間の描画
 	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
 
+	for (int i = 0; i < 10; i++)
+	{
+		DrawFormatString(980, 40 + i * 30, GetColor(255, 0, 0), "%d", family[i]);
+	}
 
-	DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
+	/*DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
 	DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d",high_score);
 	DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
 	for (int i = 0; i < 3; i++)
 	{
-		DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE,
-			FALSE);
+		DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE,FALSE);
 		DrawFormatString(510 + (i * 50), 140, GetColor(255, 255, 255), "%03d",
 			enemy_count[i]);
 	}
@@ -200,7 +269,7 @@ void GameMainScene::Draw() const
 	DrawFormatString(555, 220, GetColor(255, 255, 255), "%08d",mileage/10);
 	DrawFormatString(555, 240, GetColor(0, 0, 0), "スピード");
 	DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",
-		player->GetSpeed());
+		player->GetSpeed());*/
 
 	//スタミナゲージの描画
 	float fx = 1005.0f;
@@ -264,6 +333,18 @@ void GameMainScene::Finalize()
 	//}
 
 	//delete[] enemy;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (family[i] != nullptr)
+		{
+			family[i]->Finalize();
+			delete family[i];
+			family[i] = nullptr;
+		}
+	}
+
+	delete[] family;
 }
 
 //現在のシーン情報を取得

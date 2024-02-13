@@ -8,6 +8,7 @@
 //#include "../Object/Obstacle_A.h"
 #include "../Object/Obstacle_B.h"
 //#include "../Object/Obstacle_C.h"
+#include "../Object/Family.h"
 class GameMainScene :public SceneBase
 {
 private:
@@ -28,6 +29,9 @@ private:
 
 	Obstacle_B** obstacle_b;//Ï‚İ–Ø
 	int obstacle_b_image;//Ï‚İ–Ø‰æ‘œ
+
+	Family** family; //’‡ŠÔ
+	int family_image[2]; //’‡ŠÔ‰æ‘œ
 
 public:
 	GameMainScene();

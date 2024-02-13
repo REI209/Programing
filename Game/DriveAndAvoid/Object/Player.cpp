@@ -56,7 +56,7 @@ void Player::Update()
 	//スタミナの処理
 	stamina -= speed;
 
-	if (stamina <= 0.0f)
+	if (stamina <= 0.1f)
 	{
 		stamina = 0.0f;
 	}
