@@ -4,7 +4,7 @@
 class Enemy_Roomba
 {
 private:
-	bool is_stan;	//停止中かどうか
+	bool is_active;	//停止中かどうか
 	int image;		//画像データ
 	Vector2D location;		//位置座標
 	Vector2D box_size;		//当たり判定の大きさ
@@ -18,13 +18,15 @@ public:
 	~Enemy_Roomba();
 
 	void Initialize();
-	void Update(float time);
+	void Update(float time,float _diff_x);
 	void Draw() const;
 	void Finalize();
 
 	void SetActive(bool flg);
 	Vector2D GetLocation() const;
 	Vector2D GetBoxSize() const;
+
+	float TrackingPlayer(float _diff_x);
 
 
 };
