@@ -184,14 +184,14 @@ void Player::Movement()
 		move += Vector2D(1.0f, 0.0f);
 		angle = DX_PI_F / 18;
 	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
-	{
-		move += Vector2D(0.0f, -1.0f);
-	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
-	{
-		move += Vector2D(0.0f, 1.0f);
-	}
+	//if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
+	//{
+	//	move += Vector2D(0.0f, -1.0f);
+	//}
+	//if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
+	//{
+	//	move += Vector2D(0.0f, 1.0f);
+	//}
 	location += move;
 
 	//画面外に行かないように制限する
@@ -208,8 +208,9 @@ void Player::Acceleration()
 	if (InputControl::GetButton(XINPUT_BUTTON_B) && speed < 8.0f)
 	{
 		speed += 0.05f;
+
 	}
-	else if(speed > 5.0f)
+	else if (speed > 5.0f)
 	{
 		// Bボタンを離したら、少しずつ減速する 
 		speed -= 0.05f;
@@ -219,6 +220,9 @@ void Player::Acceleration()
 		// 上記以外は1.0fで固定
 		speed = 5.0f;
 	}
+
+
+
 }
 
 //ダメージを受けた時の点滅処理
