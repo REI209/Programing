@@ -81,6 +81,13 @@ void Enemy_Roomba::Finalize()
 {
 }
 
+//ó‘ÔÝ’èˆ—
+void Enemy_Roomba::SetActive(bool flg)
+{
+	this->is_stan = flg;
+}
+
+
 Vector2D Enemy_Roomba::GetLocation() const
 {
 	return this->location;

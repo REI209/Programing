@@ -2,13 +2,8 @@
 #include"../Object/RankingData.h"
 #include<math.h>
 
-<<<<<<< HEAD
-GameMainScene::GameMainScene() :time(0),counter(0),high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
-=======
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
 barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr),obstacle_b(nullptr),obstacle_c(nullptr)//,enemy(nullptr)
->>>>>>> REI
 {
 
 	for (int i = 0; i < 3; i++)
@@ -192,7 +187,7 @@ eSceneType GameMainScene::Update()
 			}*/
 
 			//当たり判定の確認
-			if (IsObjectHitCheck_P(Player * p, T * object))
+			if (IsObjectHitCheck_P(player, obstacle_b[i]))
 			{
 				player->SetActive(false);
 				player->DecreaseHp(-50.0f);
@@ -200,29 +195,40 @@ eSceneType GameMainScene::Update()
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
 			}
+
+			//敵と障害物の当たり判定
+			if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
+			{
+				enemy_roomba->SetActive(true);
+				//enemy_roomba->DecreaseHp(-50.0f);
+				obstacle_b[i]->Finalize();
+				delete obstacle_b[i];
+				obstacle_b[i] = nullptr;
+			}
 		}
+
 		//if (obstacle_c[i] != nullptr)
 		//{
 		//	obstacle_c[i]->Update(player->GetSpeed());
 
-		//	////画面外に行ったら、敵を削除してスコア加算
-		//	//if (enemy[i]->GetLocation().y >= 640.0f)
-		//	//{
-		//	//	enemy_count[enemy[i]->GetType()]++;
-		//	//	enemy[i]->Finalize();
-		//	//	delete enemy[i];
-		//	//	enemy[i] = nullptr;
-		//	//}
+		////	////画面外に行ったら、敵を削除してスコア加算
+		////	//if (enemy[i]->GetLocation().y >= 640.0f)
+		////	//{
+		////	//	enemy_count[enemy[i]->GetType()]++;
+		////	//	enemy[i]->Finalize();
+		////	//	delete enemy[i];
+		////	//	enemy[i] = nullptr;
+		////	//}
 
-		//	////当たり判定の確認
-		//	//if (IsHitCheck(player, enemy[i]))
-		//	//{
-		//	//	player->SetActive(false);
-		//	//	player->DecreaseHp(-50.0f);
-		//	//	enemy[i]->Finalize();
-		//	//	delete enemy[i];
-		//	//	enemy[i] = nullptr;
-		//	//}
+		//	//当たり判定の確認
+		//	if (IsHitCheck(player, [i]))
+		//	{
+		//		player->SetActive(false);
+		//		player->DecreaseHp(-50.0f);
+		//		enemy[i]->Finalize();
+		//		delete enemy[i];
+		//		enemy[i] = nullptr;
+		//	}
 		//}
 	}
 
@@ -249,11 +255,7 @@ eSceneType GameMainScene::Update()
 	//{
 
 	//}
-	////敵と障害物の当たり判定
-	//if (IsObjectHitCheck_E(player, object_kari[i]))
-	//{
-
-	//}
+	
 
 
 

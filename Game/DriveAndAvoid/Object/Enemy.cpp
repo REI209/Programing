@@ -43,6 +43,8 @@ void Enemy::Finalize()
 
 }
 
+
+
 //“G‚Ìƒ^ƒCƒv‚ğæ“¾
 int Enemy::GetType() const
 {

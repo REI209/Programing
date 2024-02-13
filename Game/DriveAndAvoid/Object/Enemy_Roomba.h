@@ -22,6 +22,7 @@ public:
 	void Draw() const;
 	void Finalize();
 
+	void SetActive(bool flg);
 	Vector2D GetLocation() const;
 	Vector2D GetBoxSize() const;
 
