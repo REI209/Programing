@@ -2,7 +2,7 @@
 
 #include"../Utility/Vector2D.h"
 
-class ObstacleC
+class Obstacle_C
 {
 private:
 	int type;            //タイプ
@@ -12,8 +12,8 @@ private:
 	Vector2D box_size;   //当たり判定の大きさ
 
 public:
-	ObstacleC(int type, int handle);
-	~ObstacleC();
+	Obstacle_C(int image);
+	~Obstacle_C();
 
 	void Initialize();         //初期化処理
 	void Update(float speed);  //更新処理

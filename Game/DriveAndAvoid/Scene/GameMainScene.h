@@ -5,9 +5,9 @@
 #include"../Object/Player.h"
 #include"../Object/Enemy.h"
 #include "../Object/Enemy_Roomba.h"
-//#include "../Object/Obstacle_A.h"
+#include "../Object/Obstacle_A.h"
 #include "../Object/Obstacle_B.h"
-//#include "../Object/Obstacle_C.h"
+#include "../Object/Obstacle_C.h"
 class GameMainScene :public SceneBase
 {
 private:
@@ -26,8 +26,16 @@ private:
 	Enemy_Roomba* enemy_roomba;	//ルンバ
 	int roomba_image;	//ルンバの画像
 
+	Obstacle_A** obstacle_a;//扇風機
+	int obstacle_a_image;//扇風機画像
+
+
 	Obstacle_B** obstacle_b;//積み木
 	int obstacle_b_image;//積み木画像
+
+
+	Obstacle_C** obstacle_c;//掃除機
+	int obstacle_c_image;//掃除機画像
 
 public:
 	GameMainScene();
