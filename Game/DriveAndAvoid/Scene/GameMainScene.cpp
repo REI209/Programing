@@ -2,8 +2,13 @@
 #include"../Object/RankingData.h"
 #include<math.h>
 
+<<<<<<< HEAD
 GameMainScene::GameMainScene() :time(0),counter(0),high_score(0), back_ground(NULL),
 barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
+=======
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr),obstacle_b(nullptr),obstacle_c(nullptr)//,enemy(nullptr)
+>>>>>>> REI
 {
 
 	for (int i = 0; i < 3; i++)
@@ -35,7 +40,10 @@ void GameMainScene::Initialize()
 	barrier_image = LoadGraph("Resource/Images/barrier.png");
 	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
-	obstacle_b_image= LoadGraph("Resource/Images/omocha_tumiki.png");
+
+	obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki.png");
+	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
+	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -50,26 +58,40 @@ void GameMainScene::Initialize()
 	{
 		throw("Resource/Images/barrier.pngがありません\n");
 	}
+	if (obstacle_a)
+	{
+		throw("Resource/Images/kaden_senpuki.pngがありません\n");
+	}
 	if (obstacle_b)
 	{
 		throw("Resource/Images/omocha_tumiki.pngがありません\n");
+	}
+	if (obstacle_c)
+	{
+		throw("Resource/Images/pet_robot_soujiki_cat.pngがありません\n");
 	}
 	//オブジェクトの生成
 	player = new Player;
 	//enemy = new Enemy * [10];
 
 	enemy_roomba = new Enemy_Roomba;
+	obstacle_a = new Obstacle_A * [10];
 	obstacle_b = new Obstacle_B*[10];
+	obstacle_c = new Obstacle_C * [10];
 
 	//オブジェクトの初期化
 	player->Initialize();
 	enemy_roomba->Initialize();
 	
+	//obstacle_a->Initialize();
 	//obstacle_b->Initialize();
+	//obstacle_c->Initialize();
 
 	for (int i = 0; i < 10; i++)
 	{
+		obstacle_a[i] = nullptr;
 		obstacle_b[i] = nullptr;
+		obstacle_c[i] = nullptr;
 	}
 }
 
@@ -106,11 +128,23 @@ eSceneType GameMainScene::Update()
 	{
 		for (int i = 0; i < 10; i++)
 		{
+			if (obstacle_a[i] == nullptr)
+			{
+				obstacle_a[i] = new Obstacle_A(obstacle_a_image);
+				obstacle_a[i]->Initialize();
+				break;
+			}
 			if (obstacle_b[i] == nullptr)
 			{
 				//int type = GetRand(3) % 3;
 				obstacle_b[i] = new Obstacle_B(obstacle_b_image);
 				obstacle_b[i]->Initialize();
+				break;
+			}
+			if (obstacle_c[i] == nullptr)
+			{
+				obstacle_c[i] = new Obstacle_C(obstacle_c_image);
+				obstacle_c[i]->Initialize();
 				break;
 			}
 		}
@@ -119,32 +153,78 @@ eSceneType GameMainScene::Update()
 
 
 	//敵の更新と当たり判定チェック
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	if (obstacle_b[i] != nullptr)
-	//	{
-	//		obstacle_b[i]->Update(player->GetSpeed());
+	for (int i = 0; i < 10; i++)
+	{
+		if (obstacle_a[i] != nullptr)
+		{
+			obstacle_a[i]->Update(player->GetSpeed());
 
-	//		//画面外に行ったら、敵を削除してスコア加算
-	//		if (enemy[i]->GetLocation().y >= 640.0f)
-	//		{
-	//			enemy_count[enemy[i]->GetType()]++;
-	//			enemy[i]->Finalize();
-	//			delete enemy[i];
-	//			enemy[i] = nullptr;
-	//		}
+			////画面外に行ったら、敵を削除してスコア加算
+			//if (enemy[i]->GetLocation().y >= 640.0f)
+			//{
+			//	enemy_count[enemy[i]->GetType()]++;
+			//	enemy[i]->Finalize();
+			//	delete enemy[i];
+			//	enemy[i] = nullptr;
+			//}
 
-	//		//当たり判定の確認
-	//		if (IsHitCheck(player, enemy[i]))
-	//		{
-	//			player->SetActive(false);
-	//			player->DecreaseHp(-50.0f);
-	//			enemy[i]->Finalize();
-	//			delete enemy[i];
-	//			enemy[i] = nullptr;
-	//		}
-	//	}
-	//}
+			////当たり判定の確認
+			//if (IsHitCheck(player, enemy[i]))
+			//{
+			//	player->SetActive(false);
+			//	player->DecreaseHp(-50.0f);
+			//	enemy[i]->Finalize();
+			//	delete enemy[i];
+			//	enemy[i] = nullptr;
+			//}
+		}
+		if (obstacle_b[i] != nullptr)
+		{
+			obstacle_b[i]->Update(player->GetSpeed());
+
+			////画面外に行ったら、敵を削除してスコア加算
+			//if (enemy[i]->GetLocation().y >= 640.0f)
+			//{
+			//	enemy_count[enemy[i]->GetType()]++;
+			//	enemy[i]->Finalize();
+			//	delete enemy[i];
+			//	enemy[i] = nullptr;
+			//}
+
+			////当たり判定の確認
+			//if (IsHitCheck(player, enemy[i]))
+			//{
+			//	player->SetActive(false);
+			//	player->DecreaseHp(-50.0f);
+			//	enemy[i]->Finalize();
+			//	delete enemy[i];
+			//	enemy[i] = nullptr;
+			//}
+		}
+		if (obstacle_c[i] != nullptr)
+		{
+			obstacle_c[i]->Update(player->GetSpeed());
+
+			////画面外に行ったら、敵を削除してスコア加算
+			//if (enemy[i]->GetLocation().y >= 640.0f)
+			//{
+			//	enemy_count[enemy[i]->GetType()]++;
+			//	enemy[i]->Finalize();
+			//	delete enemy[i];
+			//	enemy[i] = nullptr;
+			//}
+
+			////当たり判定の確認
+			//if (IsHitCheck(player, enemy[i]))
+			//{
+			//	player->SetActive(false);
+			//	player->DecreaseHp(-50.0f);
+			//	enemy[i]->Finalize();
+			//	delete enemy[i];
+			//	enemy[i] = nullptr;
+			//}
+		}
+	}
 
 
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
@@ -166,9 +246,17 @@ void GameMainScene::Draw() const
 	//敵の描画
 	for (int i = 0; i < 10; i++)
 	{
+		if (obstacle_a[i] != nullptr)
+		{
+			obstacle_a[i]->Draw();
+		}
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Draw();
+		}
+		if (obstacle_c[i] != nullptr)
+		{
+			obstacle_c[i]->Draw();
 		}
 	}
 
@@ -284,20 +372,20 @@ void GameMainScene::ReadHighScore()
 }
 
 //当たり判定（プレイヤーと敵）
-bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
-{
-	//敵情報がなければ、当たり判定を無視する
-	if (e == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = p->GetLocation() - e -> GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-}
+////bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
+//{
+//	//敵情報がなければ、当たり判定を無視する
+//	if (e == nullptr)
+//	{
+//		return false;
+//	}
+//
+//	//敵情報の差分を取得
+//	Vector2D diff_location = p->GetLocation() - e -> GetLocation();
+//
+//	//当たり判定サイズの大きさ取得
+//	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
+//
+//	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+//	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+//}
