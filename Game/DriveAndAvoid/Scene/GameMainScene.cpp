@@ -227,6 +227,36 @@ eSceneType GameMainScene::Update()
 	}
 
 
+
+	//敵(ルンバ)の更新と当たり判定チェック
+	if (enemy_roomba != nullptr)
+	{
+
+		Vector2D diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
+		enemy_roomba->Update(counter);
+
+		//当たり判定の確認
+		if (IsHitCheck(player, enemy_roomba))
+		{
+			//敵(ルンバ)に当たるとダメージ
+			player->SetActive(false);
+			player->DecreaseHp(-50.0f);
+		}
+	}
+
+	////プレイヤーと障害物の当たり判定
+	//if (IsObjectHitCheck_P(player, object_kari[i]))
+	//{
+
+	//}
+	////敵と障害物の当たり判定
+	//if (IsObjectHitCheck_E(player, object_kari[i]))
+	//{
+
+	//}
+
+
+
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if ( player->GetHp() < 0.0f)
 	{
@@ -372,20 +402,58 @@ void GameMainScene::ReadHighScore()
 }
 
 //当たり判定（プレイヤーと敵）
-////bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
-//{
-//	//敵情報がなければ、当たり判定を無視する
-//	if (e == nullptr)
-//	{
-//		return false;
-//	}
-//
-//	//敵情報の差分を取得
-//	Vector2D diff_location = p->GetLocation() - e -> GetLocation();
-//
-//	//当たり判定サイズの大きさ取得
-//	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
-//
-//	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-//	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-//}
+bool GameMainScene::IsHitCheck(Player* p, Enemy_Roomba* e)
+{
+	//敵情報がなければ、当たり判定を無視する
+	if (e == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = p->GetLocation() - e->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}
+
+template<class T>
+bool GameMainScene::IsObjectHitCheck_P(Player* p, T* object)
+{
+	//情報がなければ、当たり判定を無視する
+	if (object == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = p->GetLocation() - object->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = p->GetBoxSize() + object->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}
+
+template<class T>
+bool GameMainScene::IsObjecHitCheck_E(Enemy_Roomba* e, T* object)
+{
+	//情報がなければ、当たり判定を無視する
+	if (object == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = e->GetLocation() - object->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = e->GetBoxSize() + object->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}

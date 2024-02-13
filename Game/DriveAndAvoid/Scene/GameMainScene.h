@@ -48,19 +48,20 @@ public:
 
 	virtual eSceneType GetNowScene() const override;
 
+
 private:
 	//ハイスコア読み込み処理
 	void ReadHighScore();
-
 	//プレイヤーと敵(ルンバ)の当たり判定
 	bool IsHitCheck(Player* p, Enemy_Roomba* e);
-
 	//プレイヤーと障害物の当たり判定
 	template <class T>
 	bool IsObjectHitCheck_P(Player* p, T* object);
-
-	//敵(ルンバ)と障害物の当たり判定
+	//敵(ルンバ)障害物の当たり判定
 	template <class T>
-	bool IsObjectHitCheck_P(Enemy_Roomba* e, T* object);
+	bool IsObjecHitCheck_E(Enemy_Roomba* e, T* object);
 
+	
 };
+
+
