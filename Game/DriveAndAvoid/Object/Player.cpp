@@ -4,8 +4,7 @@
 
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
 angle(0.0f),
-speed(0.0f), hp(0.0f), fuel(0.0f), barrier_count(0),
-barrier(nullptr)
+speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f)
 {
 
 }
@@ -19,85 +18,104 @@ Player::~Player()
 void Player::Initialize()
 {
 	is_active = true;
-	location = Vector2D(250.0f, 320.0f);
-	box_size = Vector2D(31.0f, 60.0f);
+	location = Vector2D(320.0f, 380.0f);
+	box_size = Vector2D(20.0f, 20.0f);
 	angle = 0.0f;
-	speed = 3.0f;
+	speed = 5.0f;
 	hp = 1000;
-	fuel = 20000;
-	barrier_count = 3;
+	stamina = 20000;
+	damage = 0;
+	image_size = 0.5f;
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/car1pol.bmp");
+	image = LoadGraph("Resource/images/player.png");
 
 	//エラーチェック
 	if (image == -1)
 	{
-		throw ("Resource/images/car1pol.bmpがありません\n");
+		throw ("Resource/images/player.pngがありません\n");
 	}
 }
 
 //更新処理
 void Player::Update()
 {
-	//操作不可状態であれば、自身を回転させる
+
 	if (!is_active)
 	{
-		angle += DX_PI_F / 24.0f;
+		damage++;
 		speed = 1.0f;
-		if (angle >= DX_PI_F * 4.0f)
+
+		if (damage > 60)
 		{
 			is_active = true;
+			damage = 0;
 		}
-		return;
 	}
 
-	//燃料の処理
-	fuel -= speed;
+	//スタミナの処理
+	stamina -= speed;
 
-	//移動処理
-	Movement();
+	if (stamina <= 0.0f)
+	{
 
-	//加減処理
-	Acceleration();
+	}
 
+	if (is_active)
+	{
+		//移動処理
+		Movement();
+	}
+	
+	if (damage == 0)
+	{
+		//加減処理
+		Acceleration();
+	}
+	
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 	{
 		is_active = false;
-	}
-
-	//バリア処理
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_B) && barrier_count > 0)
-	{
-		if (barrier == nullptr)
-		{
-			barrier_count--;
-			barrier = new Barrier;
-		}
-	}
-	//バリアが生成されていたら、更新を行う
-	if (barrier != nullptr)
-	{
-		//バリア時間が経過したか？していたら、削除する
-		if (barrier->IsFinished(this->speed))
-		{
-			delete barrier;
-			barrier = nullptr;
-		}
 	}
 }
 
 //描画処理
 void Player::Draw()
 {
-	//プレイヤー画像の描画
-	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
-
-	//バリアが生成されていたら、描画を行う
-	if (barrier != nullptr)
+	// 点滅用の変数の値が 30 未満のときだけ描画する
+	if (!is_active)
 	{
-		barrier->Draw(this->location);
+		if (damage < 10)
+		{
+			//プレイヤー画像の描画
+			DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
+		}
+		if (damage > 20 && damage < 30)
+		{
+			//プレイヤー画像の描画
+			DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
+		}
+		if (damage > 40 && damage < 50)
+		{
+			//プレイヤー画像の描画
+			DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
+		}
+		
 	}
+	else if(is_active)
+	{
+		//プレイヤー画像の描画
+		DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
+	}
+
+#ifdef _DEBUG
+
+	// 当たり判定確認用
+	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+	DrawFormatString(0, 0, 0x000000, "%d",is_active);
+
+#endif // _DEBUG
+
 }
 
 //終了時処理
@@ -105,12 +123,6 @@ void Player::Finalize()
 {
 	//読み込んだ画像を削除
 	DeleteGraph(image);
-
-	//バリアが生成されていたら、削除する
-	if (barrier != nullptr)
-	{
-		delete barrier;
-	}
 }
 
 //状態設定処理
@@ -144,27 +156,15 @@ float Player::GetSpeed() const
 }
 
 //燃料取得処理
-float Player::GetFuel() const
+float Player::GetStamina() const
 {
-	return this->fuel;
+	return this->stamina;
 }
 
 //体力取得処理
 float Player::GetHp() const
 {
 	return this->hp;
-}
-
-//バリア枚数取得処理
-int Player::GetBarrierCount() const
-{
-	return this->barrier_count;
-}
-
-//バリア有効か？を取得
-bool Player::IsBarrier() const
-{
-	return (barrier != nullptr);
 }
 
 //移動処理
@@ -195,27 +195,34 @@ void Player::Movement()
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x < box_size.x) || (location.x >= 640.0f - 180.0f) ||
-		(location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
+	if ((location.x < box_size.x) || (location.x >= 640.0f - 180.0f) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
 	{
 		location -= move;
 	}
 }
 
-//加速減速処理
+//加減速処理
 void Player::Acceleration()
 {
-	//LBボタンが押されたら、減速する
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_LEFT_SHOULDER) && speed >
-		1.0f)
+	// Bボタンが押されている間、加速する
+	if (InputControl::GetButton(XINPUT_BUTTON_B) && speed < 8.0f)
 	{
-		speed -= 1.0f;
+		speed += 0.05f;
 	}
+	else if(speed > 5.0f)
+	{
+		// Bボタンを離したら、少しずつ減速する 
+		speed -= 0.05f;
+	}
+	else
+	{
+		// 上記以外は1.0fで固定
+		speed = 5.0f;
+	}
+}
 
-	//RBボタンが押されたら、加速する
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_RIGHT_SHOULDER) && speed <
-		10.0f)
-	{
-		speed += 1.0f;
-	}
+//ダメージを受けた時の点滅処理
+void Player::DamageMove()
+{
+
 }
