@@ -1,18 +1,19 @@
 #include"GameMainScene.h"
 #include"../Object/RankingData.h"
-#include"DxLib.h"
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),
-mileage(0), player(nullptr),
-enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
 {
+	start_count = GetNowHiPerformanceCount();
+
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
 		enemy_count[i] = NULL;
 	}
+
+	roomba_image = NULL;
 }
 
 GameMainScene::~GameMainScene()
@@ -48,20 +49,24 @@ void GameMainScene::Initialize()
 
 	//オブジェクトの生成
 	player = new Player;
-	enemy = new Enemy * [10];
+	//enemy = new Enemy * [10];
+
+	enemy_roomba = new Enemy_Roomba;
 
 	//オブジェクトの初期化
 	player->Initialize();
+	enemy_roomba->Initialize();
 
-	for (int i = 0; i < 10; i++)
+	/*for (int i = 0; i < 10; i++)
 	{
 		enemy[i] = nullptr;
-	}
+	}*/
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
+
 	//プレイヤーの更新
 	player->Update();
 
@@ -78,47 +83,47 @@ eSceneType GameMainScene::Update()
 	
 
 	//敵生成処理
-	if (mileage / 20 % 100 == 0)
-	{
-		for (int i = 0; i < 10; i++)
-		{
-			if (enemy[i] == nullptr)
-			{
-				int type = GetRand(3) % 3;
-				enemy[i] = new Enemy(type, enemy_image[type]);
-				enemy[i]->Initialize();
-				break;
-			}
-		}
-	}
+	//if (mileage / 20 % 100 == 0)
+	//{
+	//	for (int i = 0; i < 10; i++)
+	//	{
+	//		if (enemy[i] == nullptr)
+	//		{
+	//			int type = GetRand(3) % 3;
+	//			enemy[i] = new Enemy(type, enemy_image[type]);
+	//			enemy[i]->Initialize();
+	//			break;
+	//		}
+	//	}
+	//}
 
 	//敵の更新と当たり判定チェック
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Update(player->GetSpeed());
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	if (enemy[i] != nullptr)
+	//	{
+	//		enemy[i]->Update(player->GetSpeed());
 
-			//画面外に行ったら、敵を削除してスコア加算
-			if (enemy[i]->GetLocation().y >= 640.0f)
-			{
-				enemy_count[enemy[i]->GetType()]++;
-				enemy[i]->Finalize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-			}
+	//		//画面外に行ったら、敵を削除してスコア加算
+	//		if (enemy[i]->GetLocation().y >= 640.0f)
+	//		{
+	//			enemy_count[enemy[i]->GetType()]++;
+	//			enemy[i]->Finalize();
+	//			delete enemy[i];
+	//			enemy[i] = nullptr;
+	//		}
 
-			//当たり判定の確認
-			if (IsHitCheck(player, enemy[i]))
-			{
-				player->SetActive(false);
-				player->DecreaseHp(-50.0f);
-				enemy[i]->Finalize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-			}
-		}
-	}
+	//		//当たり判定の確認
+	//		if (IsHitCheck(player, enemy[i]))
+	//		{
+	//			player->SetActive(false);
+	//			player->DecreaseHp(-50.0f);
+	//			enemy[i]->Finalize();
+	//			delete enemy[i];
+	//			enemy[i] = nullptr;
+	//		}
+	//	}
+	//}
 
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if ( player->GetHp() < 0.0f)
@@ -136,13 +141,16 @@ void GameMainScene::Draw() const
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
 	//敵の描画
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Draw();
-		}
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	if (enemy[i] != nullptr)
+	//	{
+	//		enemy[i]->Draw();
+	//	}
+	//}
+
+	//ルンバの描画
+	enemy_roomba->Draw();
 
 	//プレイヤーの描画
 	player->Draw();
@@ -221,17 +229,17 @@ void GameMainScene::Finalize()
 	player->Finalize();
 	delete player;
 
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Finalize();
-			delete enemy[i];
-			enemy[i] = nullptr;
-		}
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	if (enemy[i] != nullptr)
+	//	{
+	//		enemy[i]->Finalize();
+	//		delete enemy[i];
+	//		enemy[i] = nullptr;
+	//	}
+	//}
 
-	delete[] enemy;
+	//delete[] enemy;
 }
 
 //現在のシーン情報を取得
