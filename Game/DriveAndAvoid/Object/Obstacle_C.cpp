@@ -22,7 +22,7 @@ void Obstacle_C::Initialize()
 	//“–‚½‚è”»’è‚Ìİ’è
 	box_size = Vector2D(50.0f, 50.0f);
 	//‘¬‚³‚Ìİ’è
-	speed =10.0f;
+	speed =9.0f;
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	image = LoadGraph("Resource/images/pet_robot_soujiki_cat.png");
 }

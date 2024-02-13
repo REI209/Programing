@@ -22,7 +22,7 @@ void Obstacle_B::Initialize()
 	//“–‚½‚è”»’è‚Ìİ’è
 	box_size = Vector2D(50.0f, 50.0f);
 	//‘¬‚³‚Ìİ’è
-	speed =10.0f;
+	speed =8.0f;
 }
 
 void Obstacle_B::Update(float speed)

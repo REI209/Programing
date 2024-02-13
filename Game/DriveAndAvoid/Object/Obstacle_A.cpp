@@ -16,13 +16,13 @@ Obstacle_A::~Obstacle_A()
 void Obstacle_A::Initialize()
 {
 	//出現させるx座標パターンを取得
-	float random_x = (float)(GetRand(1) * 150 + 40);
+	float random_x = (float)(GetRand(1) * 800 + 100);
 	//生成位置の設定
 	location = Vector2D(random_x, -50.0f);
 	//当たり判定の設定
 	box_size = Vector2D(50.0f, 50.0f);
 	//速さの設定
-	speed=10.0f;
+	speed=5.0f;
 	//画像の読み込み
 	image = LoadGraph("Resource/images/kaden_senpuki.png");
 }
