@@ -245,9 +245,9 @@ eSceneType GameMainScene::Update()
 			}
 		}
 
-		//if (obstacle_c[i] != nullptr)
-		//{
-		//	obstacle_c[i]->Update(player->GetSpeed());
+		if (obstacle_c[i] != nullptr)
+		{
+			obstacle_c[i]->Update(player->GetSpeed());
 
 		////	////画面外に行ったら、敵を削除してスコア加算
 		////	//if (enemy[i]->GetLocation().y >= 640.0f)
@@ -258,16 +258,16 @@ eSceneType GameMainScene::Update()
 		////	//	enemy[i] = nullptr;
 		////	//}
 
-		//	//当たり判定の確認
-		//	if (IsHitCheck(player, [i]))
-		//	{
-		//		player->SetActive(false);
-		//		player->DecreaseHp(-50.0f);
-		//		enemy[i]->Finalize();
-		//		delete enemy[i];
-		//		enemy[i] = nullptr;
-		//	}
-		//}
+			//当たり判定の確認
+			if (IsObjectHitCheck_P(player, obstacle_c[i]))
+			{
+				player->SetActive(false);
+				player->DecreaseHp(-1000.0f);
+				obstacle_c[i]->Finalize();
+				delete obstacle_c[i];
+				obstacle_c[i] = nullptr;
+			}
+		}
 	}
 
 
@@ -275,9 +275,9 @@ eSceneType GameMainScene::Update()
 	//敵(ルンバ)の更新と当たり判定チェック
 	if (enemy_roomba != nullptr)
 	{
-
-		Vector2D diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
-		enemy_roomba->Update(counter);
+		
+		float diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
+		enemy_roomba->Update(counter,diff_x);
 
 		//当たり判定の確認
 		if (IsHitCheck(player, enemy_roomba))
