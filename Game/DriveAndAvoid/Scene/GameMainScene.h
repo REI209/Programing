@@ -5,10 +5,9 @@
 #include"../Object/Player.h"
 #include"../Object/Enemy.h"
 #include "../Object/Enemy_Roomba.h"
-//#include "../Object/Obstacle_A.h"
+#include "../Object/Obstacle_A.h"
 #include "../Object/Obstacle_B.h"
-//#include "../Object/Obstacle_C.h"
-#include "../Object/Family.h"
+#include "../Object/Obstacle_C.h"
 class GameMainScene :public SceneBase
 {
 private:
@@ -27,11 +26,16 @@ private:
 	Enemy_Roomba* enemy_roomba;	//ルンバ
 	int roomba_image;	//ルンバの画像
 
+	Obstacle_A** obstacle_a;//扇風機
+	int obstacle_a_image;//扇風機画像
+
+
 	Obstacle_B** obstacle_b;//積み木
 	int obstacle_b_image;//積み木画像
 
-	Family** family; //仲間
-	int family_image[2]; //仲間画像
+
+	Obstacle_C** obstacle_c;//掃除機
+	int obstacle_c_image;//掃除機画像
 
 public:
 	GameMainScene();
@@ -44,9 +48,20 @@ public:
 
 	virtual eSceneType GetNowScene() const override;
 
+
 private:
 	//ハイスコア読み込み処理
 	void ReadHighScore();
-	//当たり判定
-	bool IsHitCheck(Player* p, Enemy* e);
+	//プレイヤーと敵(ルンバ)の当たり判定
+	bool IsHitCheck(Player* p, Enemy_Roomba* e);
+	//プレイヤーと障害物の当たり判定
+	template <class T>
+	bool IsObjectHitCheck_P(Player* p, T* object);
+	//敵(ルンバ)障害物の当たり判定
+	template <class T>
+	bool IsObjecHitCheck_E(Enemy_Roomba* e, T* object);
+
+	
 };
+
+
