@@ -14,7 +14,8 @@ private:
 	float hp;            //体力
 	float stamina;       //スタミナ
 	int damage;          //点滅用変数
-	float image_size;      //表示する画像の大きさ
+	float image_size;    //表示する画像の大きさ
+	float sp;            // 
 
 public:
 	Player();
@@ -39,5 +40,4 @@ public:
 private:
 	void Movement();       //移動処理
 	void Acceleration();   //加減速処理
-	void DamageMove();     //ダメージを受けた時の点滅処理
 };

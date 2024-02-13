@@ -4,7 +4,7 @@
 
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
 angle(0.0f),
-speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f)
+speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),sp(0.0f)
 {
 
 }
@@ -19,13 +19,13 @@ void Player::Initialize()
 {
 	is_active = true;
 	location = Vector2D(320.0f, 380.0f);
-	box_size = Vector2D(20.0f, 20.0f);
+	box_size = Vector2D(40.0f, 40.0f);
 	angle = 0.0f;
 	speed = 5.0f;
 	hp = 1000;
 	stamina = 20000;
 	damage = 0;
-	image_size = 0.5f;
+	image_size = 1.0f;
 
 	//画像の読み込み
 	image = LoadGraph("Resource/images/player.png");
@@ -58,20 +58,18 @@ void Player::Update()
 
 	if (stamina <= 0.0f)
 	{
-
+		stamina = 0.0f;
 	}
 
 	if (is_active)
 	{
 		//移動処理
 		Movement();
-	}
-	
-	if (damage == 0)
-	{
+
 		//加減処理
 		Acceleration();
 	}
+	
 	
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
 	{
@@ -112,7 +110,9 @@ void Player::Draw()
 
 	// 当たり判定確認用
 	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
-	DrawFormatString(0, 0, 0x000000, "%d",is_active);
+	DrawFormatString(0, 0, 0x000000, "%f",location.y);
+	DrawFormatString(0, 50, 0x000000, "%f", sp);
+
 
 #endif // _DEBUG
 
@@ -176,28 +176,33 @@ void Player::Movement()
 	//十字移動処理
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
 	{
-		move += Vector2D(-1.0f, 0.0f);
-		angle = -DX_PI_F / 18;
+		move += Vector2D(-3.0f, 0.0f);
+		angle = -DX_PI_F / 30;
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
 	{
-		move += Vector2D(1.0f, 0.0f);
-		angle = DX_PI_F / 18;
+		move += Vector2D(3.0f, 0.0f);
+		angle = DX_PI_F / 30;
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
 	{
-		move += Vector2D(0.0f, -1.0f);
+		move += Vector2D(0.0f, -3.0f);
 	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
+	/*if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
 	{
-		move += Vector2D(0.0f, 1.0f);
-	}
+		move += Vector2D(0.0f, 3.0f);
+	}*/
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x < box_size.x) || (location.x >= 640.0f - 180.0f) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
+	if ((location.x < box_size.x) || (location.x >= 1280.0f - 340.0f) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
 	{
 		location -= move;
+	}
+
+	if (location.y < 100.0f)
+	{
+		location.y = 100.0f;
 	}
 }
 
@@ -205,24 +210,37 @@ void Player::Movement()
 void Player::Acceleration()
 {
 	// Bボタンが押されている間、加速する
-	if (InputControl::GetButton(XINPUT_BUTTON_B) && speed < 8.0f)
+	if (InputControl::GetButton(XINPUT_BUTTON_B))
 	{
-		speed += 0.05f;
-	}
-	else if(speed > 5.0f)
-	{
-		// Bボタンを離したら、少しずつ減速する 
-		speed -= 0.05f;
+		if (speed < 8.0f)
+		{
+			speed += 0.05f;
+		}
+		
+		if (location.y > 100.0f)
+		{
+			sp += 0.05f;
+			location.y += -sp;
+		}
 	}
 	else
 	{
-		// 上記以外は1.0fで固定
-		speed = 5.0f;
+		if (speed > 5.0f)
+		{
+			// Bボタンを離したら、少しずつ減速する 
+			speed -= 0.05f;
+		}
+		else
+		{
+			// 上記以外は1.0fで固定
+			speed = 5.0f;
+		}
+
+		
+
+		if (sp > 0)
+		{
+			sp = 0;
+		}
 	}
-}
-
-//ダメージを受けた時の点滅処理
-void Player::DamageMove()
-{
-
 }

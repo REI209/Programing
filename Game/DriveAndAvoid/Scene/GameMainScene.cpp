@@ -2,10 +2,14 @@
 #include"../Object/RankingData.h"
 #include<math.h>
 
+<<<<<<< HEAD
+GameMainScene::GameMainScene() :time(0),counter(0),high_score(0), back_ground(NULL),
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
+=======
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
 barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr),obstacle_b(nullptr),obstacle_c(nullptr)//,enemy(nullptr)
+>>>>>>> REI
 {
-	start_count = GetNowHiPerformanceCount();
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -26,6 +30,10 @@ void GameMainScene::Initialize()
 {
 	//高得点値を読み込む
 	ReadHighScore();
+
+	//制限時間の設定(秒) 
+	counter = 60;
+
 
 	//画像の読み込み
 	back_ground = LoadGraph("Resource/Images/back_img.png");
@@ -90,6 +98,17 @@ void GameMainScene::Initialize()
 //更新処理
 eSceneType GameMainScene::Update()
 {
+	//カウント
+	time++;
+	//1秒を数えて、60秒経過後リザルトへ
+	if (time % 60 == 0) {
+		counter -= 1;
+		if (counter < 0)
+		{
+			return eSceneType::E_RESULT;
+		}
+	}
+
 
 	//プレイヤーの更新
 	player->Update();
@@ -103,8 +122,6 @@ eSceneType GameMainScene::Update()
 	{
 		mileage += 1;
 	}
-
-	
 
 	//敵生成処理
 	if (mileage / 20 % 100 == 0)
@@ -210,11 +227,42 @@ eSceneType GameMainScene::Update()
 	}
 
 
+
+	//敵(ルンバ)の更新と当たり判定チェック
+	if (enemy_roomba != nullptr)
+	{
+
+		Vector2D diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
+		enemy_roomba->Update(counter);
+
+		//当たり判定の確認
+		if (IsHitCheck(player, enemy_roomba))
+		{
+			//敵(ルンバ)に当たるとダメージ
+			player->SetActive(false);
+			player->DecreaseHp(-50.0f);
+		}
+	}
+
+	////プレイヤーと障害物の当たり判定
+	//if (IsObjectHitCheck_P(player, object_kari[i]))
+	//{
+
+	//}
+	////敵と障害物の当たり判定
+	//if (IsObjectHitCheck_E(player, object_kari[i]))
+	//{
+
+	//}
+
+
+
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if ( player->GetHp() < 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
+
 	return GetNowScene();
 }
 
@@ -222,8 +270,8 @@ eSceneType GameMainScene::Update()
 void GameMainScene::Draw() const
 {
 	//背景画像の描画
-	DrawGraph(0, mileage % 480 - 480, back_ground, TRUE);
-	DrawGraph(0, mileage % 480, back_ground, TRUE);
+	DrawGraph(0, mileage % 720 - 720, back_ground, TRUE);
+	DrawGraph(0, mileage % 720, back_ground, TRUE);
 
 	//敵の描画
 	for (int i = 0; i < 10; i++)
@@ -249,8 +297,13 @@ void GameMainScene::Draw() const
 	player->Draw();
 
 	//UIの描画
-	DrawBox(500, 0, 640, 480, GetColor(0, 153, 0), TRUE);
+	DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
 	SetFontSize(16);
+
+	//制限時間の描画
+	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
+
+
 	DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
 	DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d",high_score);
 	DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
@@ -267,23 +320,19 @@ void GameMainScene::Draw() const
 	DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",
 		player->GetSpeed());
 
-	//燃料ゲージの描画
-	float fx = 510.0f;
+	//スタミナゲージの描画
+	float fx = 1005.0f;
 	float fy = 390.0f;
-	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "FUEL METER");
-	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetStamina() * 100 / 20000), fy +
-		40.0f, GetColor(0, 102, 204), TRUE);
-	DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
-		FALSE);
+	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "STAMINA METER");
+	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetStamina() * 250 / 20000), fy + 40.0f, GetColor(0, 102, 204), TRUE);
+	DrawBoxAA(fx, fy + 20.0f, fx + 250.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
 
 	//体力ゲージの描画
-	fx = 510.0f;
-	fy = 430.0f;
+	fx = 1005.0f;
+	fy = 450.0f;
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "PLAYER HP");
-	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetHp() * 100 / 1000), fy +
-		40.0f, GetColor(255, 0, 0), TRUE);
-	DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
-		FALSE);
+	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetHp() * 250 / 1000), fy + 40.0f, GetColor(255, 0, 0), TRUE);
+	DrawBoxAA(fx, fy + 20.0f, fx + 250.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
 }
 
 //終了時宣言
@@ -353,20 +402,58 @@ void GameMainScene::ReadHighScore()
 }
 
 //当たり判定（プレイヤーと敵）
-////bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
-//{
-//	//敵情報がなければ、当たり判定を無視する
-//	if (e == nullptr)
-//	{
-//		return false;
-//	}
-//
-//	//敵情報の差分を取得
-//	Vector2D diff_location = p->GetLocation() - e -> GetLocation();
-//
-//	//当たり判定サイズの大きさ取得
-//	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
-//
-//	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-//	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-//}
+bool GameMainScene::IsHitCheck(Player* p, Enemy_Roomba* e)
+{
+	//敵情報がなければ、当たり判定を無視する
+	if (e == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = p->GetLocation() - e->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}
+
+template<class T>
+bool GameMainScene::IsObjectHitCheck_P(Player* p, T* object)
+{
+	//情報がなければ、当たり判定を無視する
+	if (object == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = p->GetLocation() - object->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = p->GetBoxSize() + object->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}
+
+template<class T>
+bool GameMainScene::IsObjecHitCheck_E(Enemy_Roomba* e, T* object)
+{
+	//情報がなければ、当たり判定を無視する
+	if (object == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = e->GetLocation() - object->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = e->GetBoxSize() + object->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}

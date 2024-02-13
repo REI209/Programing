@@ -8,7 +8,9 @@ private:
 	int image;		//画像データ
 	Vector2D location;		//位置座標
 	Vector2D box_size;		//当たり判定の大きさ
-	float speed;	//速度
+
+	float speed;		//速度
+	float diff_x;	//プレイヤーとのx座標の差
 	float hp;		//体力
 
 public:
