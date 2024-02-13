@@ -237,9 +237,9 @@ eSceneType GameMainScene::Update()
 	//敵(ルンバ)の更新と当たり判定チェック
 	if (enemy_roomba != nullptr)
 	{
-
-		Vector2D diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
-		enemy_roomba->Update(counter);
+		
+		float diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
+		enemy_roomba->Update(counter,diff_x);
 
 		//当たり判定の確認
 		if (IsHitCheck(player, enemy_roomba))
