@@ -31,8 +31,8 @@ public:
 	}
 	const Vector2D operator+(const Vector2D& location)
 	{
-		float x = this->x = location.x;
-		float y = this->y = location.y;
+		float x = this->x + location.x;
+		float y = this->y + location.y;
 
 		return Vector2D(x, y);
 	}

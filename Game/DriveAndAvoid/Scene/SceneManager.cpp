@@ -8,6 +8,9 @@
 #include"RankingDispScene.h"
 #include"RankingInputScene.h"
 
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+
 SceneManager::SceneManager() :current_scene(nullptr)
 {
 
@@ -29,6 +32,8 @@ void SceneManager::Initialize()
 	{
 		throw("ウィンドウモードで起動できませんでした\n");
 	}
+
+	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
 
 	//DXライブラリの初期化
 	if (DxLib_Init() == -1)

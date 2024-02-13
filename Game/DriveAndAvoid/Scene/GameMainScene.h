@@ -1,12 +1,17 @@
 #pragma once
+#include"DxLib.h"
 
 #include"SceneBase.h"
 #include"../Object/Player.h"
 #include"../Object/Enemy.h"
+#include "../Object/Enemy_Roomba.h"
 
 class GameMainScene :public SceneBase
 {
 private:
+	LONGLONG start_count;	//経過時間
+	LONGLONG now_count;		//現在時間
+
 	int high_score;       //ハイスコア
 	int back_ground;      //背景画像
 	int barrier_image;    //バリア画像
@@ -14,7 +19,10 @@ private:
 	int enemy_image[3];   //敵画像
 	int enemy_count[3];   //通り過ぎた敵カウント
 	Player* player;       //プレイヤー
-	Enemy** enemy;        //敵
+	//Enemy** enemy;        //敵
+
+	Enemy_Roomba* enemy_roomba;	//ルンバ
+	int roomba_image;	//ルンバの画像
 
 public:
 	GameMainScene();

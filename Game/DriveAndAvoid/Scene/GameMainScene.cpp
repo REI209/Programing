@@ -1,18 +1,19 @@
 #include"GameMainScene.h"
 #include"../Object/RankingData.h"
-#include"DxLib.h"
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),
-mileage(0), player(nullptr),
-enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
 {
+	start_count = GetNowHiPerformanceCount();
+
 	for (int i = 0; i < 3; i++)
 	{
 		enemy_image[i] = NULL;
 		enemy_count[i] = NULL;
 	}
+
+	roomba_image = NULL;
 }
 
 GameMainScene::~GameMainScene()
@@ -27,7 +28,7 @@ void GameMainScene::Initialize()
 	ReadHighScore();
 
 	//画像の読み込み
-	back_ground = LoadGraph("Resource/Images/back.bmp");
+	back_ground = LoadGraph("Resource/Images/back_img.png");
 	barrier_image = LoadGraph("Resource/Images/barrier.png");
 	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
@@ -35,7 +36,7 @@ void GameMainScene::Initialize()
 	//エラーチェック
 	if (back_ground == -1)
 	{
-		throw("Resource/Images/back.bmpがありません\n");
+		throw("Resource/Images/back_img.pngがありません\n");
 	}
 	if (result == -1)
 	{
@@ -48,72 +49,84 @@ void GameMainScene::Initialize()
 
 	//オブジェクトの生成
 	player = new Player;
-	enemy = new Enemy * [10];
+	//enemy = new Enemy * [10];
+
+	enemy_roomba = new Enemy_Roomba;
 
 	//オブジェクトの初期化
 	player->Initialize();
+	enemy_roomba->Initialize();
 
-	for (int i = 0; i < 10; i++)
+	/*for (int i = 0; i < 10; i++)
 	{
 		enemy[i] = nullptr;
-	}
+	}*/
 }
 
 //更新処理
 eSceneType GameMainScene::Update()
 {
+
 	//プレイヤーの更新
 	player->Update();
 
 	//移動距離の更新
-	mileage += (int)player->GetSpeed
-	() + 5;
+	if (player->GetActiveFlg() == true)
+	{
+		mileage += (int)player->GetSpeed();
+	}
+	else
+	{
+		mileage += 1;
+	}
+
+	
 
 	//敵生成処理
-	if (mileage / 20 % 100 == 0)
-	{
-		for (int i = 0; i < 10; i++)
-		{
-			if (enemy[i] == nullptr)
-			{
-				int type = GetRand(3) % 3;
-				enemy[i] = new Enemy(type, enemy_image[type]);
-				enemy[i]->Initialize();
-				break;
-			}
-		}
-	}
+	//if (mileage / 20 % 100 == 0)
+	//{
+	//	for (int i = 0; i < 10; i++)
+	//	{
+	//		if (enemy[i] == nullptr)
+	//		{
+	//			int type = GetRand(3) % 3;
+	//			enemy[i] = new Enemy(type, enemy_image[type]);
+	//			enemy[i]->Initialize();
+	//			break;
+	//		}
+	//	}
+	//}
 
 	//敵の更新と当たり判定チェック
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Update(player->GetSpeed());
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	if (enemy[i] != nullptr)
+	//	{
+	//		enemy[i]->Update(player->GetSpeed());
 
-			//画面外に行ったら、敵を削除してスコア加算
-			if (enemy[i]->GetLocation().y >= 640.0f)
-			{
-				enemy_count[enemy[i]->GetType()]++;
-				enemy[i]->Finalize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-			}
+	//		//画面外に行ったら、敵を削除してスコア加算
+	//		if (enemy[i]->GetLocation().y >= 640.0f)
+	//		{
+	//			enemy_count[enemy[i]->GetType()]++;
+	//			enemy[i]->Finalize();
+	//			delete enemy[i];
+	//			enemy[i] = nullptr;
+	//		}
 
-			//当たり判定の確認
-			if (IsHitCheck(player, enemy[i]))
-			{
-				player->SetActive(false);
-				player->DecreaseHp(-50.0f);
-				enemy[i]->Finalize();
-				delete enemy[i];
-				enemy[i] = nullptr;
-			}
-		}
-	}
+	//		//当たり判定の確認
+	//		if (IsHitCheck(player, enemy[i]))
+	//		{
+	//			player->SetActive(false);
+	//			player->DecreaseHp(-50.0f);
+	//			enemy[i]->Finalize();
+	//			delete enemy[i];
+	//			enemy[i] = nullptr;
+	//		}
+	//	}
+	//}
 
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-	if (player->GetFuel() < 0.0f || player->GetHp() < 0.0f)
+	if ( player->GetHp() < 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
@@ -128,13 +141,16 @@ void GameMainScene::Draw() const
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
 	//敵の描画
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Draw();
-		}
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	if (enemy[i] != nullptr)
+	//	{
+	//		enemy[i]->Draw();
+	//	}
+	//}
+
+	//ルンバの描画
+	enemy_roomba->Draw();
 
 	//プレイヤーの描画
 	player->Draw();
@@ -158,16 +174,11 @@ void GameMainScene::Draw() const
 	DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",
 		player->GetSpeed());
 
-	//バリア枚数の描画
-	for (int i = 0; i < player->GetBarrierCount(); i++) {
-		DrawRotaGraph(520 + i * 25, 340, 0.2f, 0, barrier_image, TRUE, FALSE);
-	}
-
 	//燃料ゲージの描画
 	float fx = 510.0f;
 	float fy = 390.0f;
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "FUEL METER");
-	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetFuel() * 100 / 20000), fy +
+	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetStamina() * 100 / 20000), fy +
 		40.0f, GetColor(0, 102, 204), TRUE);
 	DrawBoxAA(fx, fy + 20.0f, fx + 100.0f, fy + 40.0f, GetColor(0, 0, 0),
 		FALSE);
@@ -218,17 +229,17 @@ void GameMainScene::Finalize()
 	player->Finalize();
 	delete player;
 
-	for (int i = 0; i < 10; i++)
-	{
-		if (enemy[i] != nullptr)
-		{
-			enemy[i]->Finalize();
-			delete enemy[i];
-			enemy[i] = nullptr;
-		}
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	if (enemy[i] != nullptr)
+	//	{
+	//		enemy[i]->Finalize();
+	//		delete enemy[i];
+	//		enemy[i] = nullptr;
+	//	}
+	//}
 
-	delete[] enemy;
+	//delete[] enemy;
 }
 
 //現在のシーン情報を取得
@@ -251,12 +262,6 @@ void GameMainScene::ReadHighScore()
 //当たり判定（プレイヤーと敵）
 bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 {
-	//プレイヤーがバリアを貼っていたら、当たり判定を無視する
-	if (p->IsBarrier())
-	{
-		return false;
-	}
-
 	//敵情報がなければ、当たり判定を無視する
 	if (e == nullptr)
 	{
@@ -270,6 +275,5 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy* e)
 	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
 
 	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) <
-		box_ex.y));
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
