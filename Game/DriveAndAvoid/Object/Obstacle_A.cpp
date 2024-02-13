@@ -1,4 +1,4 @@
-#include"ObstacleA.h"//障害物（扇風機）
+#include"Obstacle_A.h"//障害物（扇風機）
 #include"DxLib.h"
 
 ObstacleA::ObstacleA(int type, int handle) :type(type), image(handle), speed(0.0f),
@@ -16,7 +16,7 @@ ObstacleA::~ObstacleA()
 void ObstacleA::Initialize()
 {
 	//出現させるx座標パターンを取得
-	//float random_x = (float)(GetRand(4) * 105 + 40);
+	//float random_x = (float)(GetRand(1)*);
 	//生成位置の設定
 	//location = Vector2D(random_x, -50.0f);
 	//当たり判定の設定

@@ -5,7 +5,9 @@
 #include"../Object/Player.h"
 #include"../Object/Enemy.h"
 #include "../Object/Enemy_Roomba.h"
-
+//#include "../Object/Obstacle_A.h"
+#include "../Object/Obstacle_B.h"
+//#include "../Object/Obstacle_C.h"
 class GameMainScene :public SceneBase
 {
 private:
@@ -24,6 +26,8 @@ private:
 	Enemy_Roomba* enemy_roomba;	//ƒ‹ƒ“ƒo
 	int roomba_image;	//ƒ‹ƒ“ƒo‚Ì‰æ‘œ
 
+	ObstacleB* obstacle_b;//Ï‚İ–Ø
+	int obstacle_b_image;//Ï‚İ–Ø‰æ‘œ
 public:
 	GameMainScene();
 	virtual ~GameMainScene();

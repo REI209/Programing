@@ -1,4 +1,4 @@
-#include"ObstacleB.h"//障害物（積み木）
+#include"Obstacle_B.h"//障害物（積み木）
 #include"DxLib.h"
 
 ObstacleB::ObstacleB(int type, int handle) :type(type), image(handle), speed(0.0f),
@@ -15,16 +15,17 @@ ObstacleB::~ObstacleB()
 //初期化処理
 void ObstacleB::Initialize()
 {
-	//出現させるx座標パターンを取得(フレーム分けするのか？)
+	//画像分割
+	// int type=[3]
+	// 
+	//出現させるx座標パターンを取得
 	//float random_x = (float)(GetRand(4) * 105 + 40);
 	//生成位置の設定
 	//location = Vector2D(random_x, -50.0f);
 	//当たり判定の設定
-	//box_size = Vector2D(f, f);
+	//box_size = Vector2D(40f, 40f);
 	//速さの設定
 	//speed =;
-	//画像の読み込み
-	//image = LoadGraph("Resource/images/.bmp");
 }
 
 void ObstacleB::Update(float speed)
@@ -47,7 +48,7 @@ void ObstacleB::Finalize()
 //敵のタイプを取得
 int ObstacleB::GetType() const
 {
-	return type;//3
+	return type;//3?
 }
 
 //位置情報を取得
