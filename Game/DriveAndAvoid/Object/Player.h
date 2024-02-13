@@ -15,7 +15,7 @@ private:
 	float stamina;       //スタミナ
 	int damage;          //点滅用変数
 	float image_size;    //表示する画像の大きさ
-	float sp;            // 
+	float ly;            //ダメージを受けた時のプレイヤーY座標の移動量
 
 public:
 	Player();

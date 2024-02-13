@@ -3,7 +3,7 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr),obstacle_b(nullptr),obstacle_c(nullptr)//,enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr),obstacle_b(nullptr),obstacle_c(nullptr),family(nullptr)//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
@@ -47,6 +47,9 @@ void GameMainScene::Initialize()
 	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
 	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
 
+	family_image[0] = LoadGraph("Resource/Images/IMG_0111.jpg");
+	family_image[1] = LoadGraph("Resource/Images/IMG_0113.jpg");
+
 	//エラーチェック
 	if (back_ground == -1)
 	{
@@ -71,6 +74,14 @@ void GameMainScene::Initialize()
 	if (obstacle_c)
 	{
 		throw("Resource/Images/pet_robot_soujiki_cat.pngがありません\n");
+	}
+	if (family_image[0] == -1)
+	{
+		throw("Resource/Images/IMG_0111.jpgがありません\n");
+	}
+	if (family_image[1] == -1)
+	{
+		throw("Resource/Images/IMG_0113.jpgがありません\n");
 	}
 	//オブジェクトの生成
 	player = new Player;
@@ -97,6 +108,11 @@ void GameMainScene::Initialize()
 		obstacle_b[i] = nullptr;
 		obstacle_c[i] = nullptr;
 	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		family[i] = nullptr;
+	}
 }
 
 //更新処理
@@ -112,7 +128,6 @@ eSceneType GameMainScene::Update()
 			return eSceneType::E_RESULT;
 		}
 	}
-
 
 	//プレイヤーの更新
 	player->Update();
@@ -154,6 +169,20 @@ eSceneType GameMainScene::Update()
 		}
 	}
 	
+	//仲間生成処理
+	if (mileage / 20 % 100 == 0)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (family[i] == nullptr)
+			{
+				int type = GetRand(1);
+				family[i] = new Family(type,family_image[type]);
+				family[i]->Initialize();
+				break;
+			}
+		}
+	}
 
 
 	//敵の更新と当たり判定チェック
@@ -265,8 +294,41 @@ eSceneType GameMainScene::Update()
 
 	//}
 	
+	//仲間の更新と当たり判定チェック
+	for (int i = 0; i < 10; i++)
+	{
+		if (family[i] != nullptr)
+		{
+			family[i]->Update(player->GetSpeed());
 
+			if (family[i]->GetLocation().y >= 800.0f)
+			{
+				family[i]->Finalize();
+				delete family[i];
+				family[i] = nullptr;
+			}
 
+			//当たり判定の確認
+			if (IsObjectHitCheck_P(player, family[i]))
+			{
+				player->SetActive(false);
+				player->DecreaseHp(-50.0f);
+				family[i]->Finalize();
+				delete family[i];
+				family[i] = nullptr;
+			}
+
+			//敵と障害物の当たり判定
+			if (IsObjecHitCheck_E(enemy_roomba, family[i]))
+			{
+				enemy_roomba->SetActive(true);
+				//enemy_roomba->DecreaseHp(-50.0f);
+				family[i]->Finalize();
+				delete family[i];
+				family[i] = nullptr;
+			}
+		}
+	}
 
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if ( player->GetHp() < 0.0f)
@@ -301,7 +363,13 @@ void GameMainScene::Draw() const
 		}
 	}
 
-		DrawFormatString(980, 40, GetColor(255, 0, 0), "%d", family[i]);
+	//仲間の描画
+	for (int i = 0; i < 10; i++)
+	{
+		if (family[i] != nullptr)
+		{
+			family[i]->Draw();
+		}
 	}
 
 	//ルンバの描画
@@ -338,11 +406,13 @@ void GameMainScene::Draw() const
 		player->GetSpeed());*/
 
 	//スタミナゲージの描画
-	float fx = 1005.0f;
-	float fy = 390.0f;
+	float fx = player->GetLocation().x + 40.0f;
+	float fy = player->GetLocation().y - 20.0f;
+	int st = (int)player->GetStamina() % 100;
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "STAMINA METER");
-	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetStamina() * 250 / 20000), fy + 40.0f, GetColor(0, 102, 204), TRUE);
-	DrawBoxAA(fx, fy + 20.0f, fx + 250.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
+	DrawBoxAA(fx, fy, fx + 20.0f, fy + 100.0f, GetColor(0, 0, 0),FALSE);
+	DrawBox((int)fx, (int)fy + 100 - (int)player->GetStamina(), (int)fx + 20, (int)fy + 100, GetColor(0, 0, 255), TRUE);
+	DrawFormatString(1010, 220, GetColor(0, 255, 255), "%f", player->GetStamina());
 
 	//体力ゲージの描画
 	fx = 1005.0f;

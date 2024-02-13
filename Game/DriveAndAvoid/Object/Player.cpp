@@ -4,7 +4,7 @@
 
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
 angle(0.0f),
-speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),sp(0.0f)
+speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),ly(0.0f)
 {
 
 }
@@ -23,7 +23,7 @@ void Player::Initialize()
 	angle = 0.0f;
 	speed = 5.0f;
 	hp = 1000;
-	stamina = 20000;
+	stamina = 100.0f;
 	damage = 0;
 	image_size = 1.0f;
 
@@ -51,14 +51,6 @@ void Player::Update()
 			is_active = true;
 			damage = 0;
 		}
-	}
-
-	//スタミナの処理
-	stamina -= speed;
-
-	if (stamina <= 0.1f)
-	{
-		stamina = 0.0f;
 	}
 
 	if (is_active)
@@ -111,7 +103,7 @@ void Player::Draw()
 	// 当たり判定確認用
 	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
 	DrawFormatString(0, 0, 0x000000, "%f",location.y);
-	DrawFormatString(0, 50, 0x000000, "%f", sp);
+	DrawFormatString(0, 50, 0xffffff, "%f", stamina);
 
 
 #endif // _DEBUG
@@ -219,9 +211,11 @@ void Player::Acceleration()
 		
 		if (location.y > 100.0f)
 		{
-			sp += 0.05f;
-			location.y += -sp;
+			ly += 0.05f;
+			location.y += -ly;
 		}
+
+
 	}
 	else
 	{
@@ -236,11 +230,9 @@ void Player::Acceleration()
 			speed = 5.0f;
 		}
 
-		
-
-		if (sp > 0)
+		if (ly > 0)
 		{
-			sp = 0;
+			ly = 0;
 		}
 	}
 }

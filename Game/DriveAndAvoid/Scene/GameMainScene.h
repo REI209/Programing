@@ -8,6 +8,7 @@
 #include "../Object/Obstacle_A.h"
 #include "../Object/Obstacle_B.h"
 #include "../Object/Obstacle_C.h"
+#include "../Object/Family.h"
 class GameMainScene :public SceneBase
 {
 private:
@@ -37,6 +38,9 @@ private:
 	Obstacle_C** obstacle_c;//‘|œ‹@
 	int obstacle_c_image;//‘|œ‹@‰æ‘œ
 
+	Family** family; //’‡ŠÔ
+	int family_image[2]; //’‡ŠÔ‰æ‘œ
+
 public:
 	GameMainScene();
 	virtual ~GameMainScene();
@@ -60,8 +64,6 @@ private:
 	//“G(ƒ‹ƒ“ƒo)áŠQ•¨‚Ì“–‚½‚è”»’è
 	template <class T>
 	bool IsObjecHitCheck_E(Enemy_Roomba* e, T* object);
-
-	
 };
 
 
