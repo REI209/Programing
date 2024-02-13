@@ -19,13 +19,13 @@ void Player::Initialize()
 {
 	is_active = true;
 	location = Vector2D(320.0f, 380.0f);
-	box_size = Vector2D(20.0f, 20.0f);
+	box_size = Vector2D(40.0f, 40.0f);
 	angle = 0.0f;
 	speed = 5.0f;
 	hp = 1000;
 	stamina = 20000;
 	damage = 0;
-	image_size = 0.5f;
+	image_size = 1.0f;
 
 	//画像の読み込み
 	image = LoadGraph("Resource/images/player.png");
@@ -58,7 +58,7 @@ void Player::Update()
 
 	if (stamina <= 0.0f)
 	{
-
+		stamina = 0.0f;
 	}
 
 	if (is_active)
@@ -195,7 +195,7 @@ void Player::Movement()
 	location += move;
 
 	//画面外に行かないように制限する
-	if ((location.x < box_size.x) || (location.x >= 640.0f - 180.0f) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
+	if ((location.x < box_size.x) || (location.x >= 1280.0f - 340.0f) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
 	{
 		location -= move;
 	}
@@ -236,25 +236,11 @@ void Player::Acceleration()
 			speed = 5.0f;
 		}
 
-		float ly = 0.0f;
 		
-		ly = location.y;
-		
-		if (ly )
-		{
-
-			location.y += 3.0f;
-		}
 
 		if (sp > 0)
 		{
 			sp = 0;
 		}
 	}
-}
-
-//ダメージを受けた時の点滅処理
-void Player::DamageMove()
-{
-
 }
