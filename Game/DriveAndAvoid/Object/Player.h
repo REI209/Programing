@@ -15,6 +15,7 @@ private:
 	float stamina;       //スタミナ
 	int damage;          //点滅用変数
 	float image_size;      //表示する画像の大きさ
+	float sp;
 
 public:
 	Player();
