@@ -1,4 +1,4 @@
-#include"ObstacleC.h"//障害物（掃除機）
+#include"Obstacle_C.h"//障害物（掃除機）
 #include"DxLib.h"
 
 ObstacleC::ObstacleC(int type, int handle) :type(type), image(handle), speed(0.0f),

@@ -3,7 +3,7 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),obstacle_b(nullptr)//,enemy(nullptr)
 {
 	start_count = GetNowHiPerformanceCount();
 
@@ -32,6 +32,7 @@ void GameMainScene::Initialize()
 	barrier_image = LoadGraph("Resource/Images/barrier.png");
 	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
+	obstacle_b_image= LoadGraph("Resource/Images/omocha_tumiki.png");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -46,21 +47,27 @@ void GameMainScene::Initialize()
 	{
 		throw("Resource/Images/barrier.pngがありません\n");
 	}
-
+	if (obstacle_b)
+	{
+		throw("Resource/Images/omocha_tumiki.pngがありません\n");
+	}
 	//オブジェクトの生成
 	player = new Player;
 	//enemy = new Enemy * [10];
 
 	enemy_roomba = new Enemy_Roomba;
+	obstacle_b = new Obstacle_B*[10];
 
 	//オブジェクトの初期化
 	player->Initialize();
 	enemy_roomba->Initialize();
+	
+	//obstacle_b->Initialize();
 
-	/*for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		enemy[i] = nullptr;
-	}*/
+		obstacle_b[i] = nullptr;
+	}
 }
 
 //更新処理
@@ -83,26 +90,28 @@ eSceneType GameMainScene::Update()
 	
 
 	//敵生成処理
-	//if (mileage / 20 % 100 == 0)
-	//{
-	//	for (int i = 0; i < 10; i++)
-	//	{
-	//		if (enemy[i] == nullptr)
-	//		{
-	//			int type = GetRand(3) % 3;
-	//			enemy[i] = new Enemy(type, enemy_image[type]);
-	//			enemy[i]->Initialize();
-	//			break;
-	//		}
-	//	}
-	//}
+	if (mileage / 20 % 100 == 0)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			if (obstacle_b[i] == nullptr)
+			{
+				//int type = GetRand(3) % 3;
+				obstacle_b[i] = new Obstacle_B(obstacle_b_image);
+				obstacle_b[i]->Initialize();
+				break;
+			}
+		}
+	}
+	
+
 
 	//敵の更新と当たり判定チェック
 	//for (int i = 0; i < 10; i++)
 	//{
-	//	if (enemy[i] != nullptr)
+	//	if (obstacle_b[i] != nullptr)
 	//	{
-	//		enemy[i]->Update(player->GetSpeed());
+	//		obstacle_b[i]->Update(player->GetSpeed());
 
 	//		//画面外に行ったら、敵を削除してスコア加算
 	//		if (enemy[i]->GetLocation().y >= 640.0f)
@@ -125,6 +134,7 @@ eSceneType GameMainScene::Update()
 	//	}
 	//}
 
+
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if ( player->GetHp() < 0.0f)
 	{
@@ -141,13 +151,13 @@ void GameMainScene::Draw() const
 	DrawGraph(0, mileage % 480, back_ground, TRUE);
 
 	//敵の描画
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	if (enemy[i] != nullptr)
-	//	{
-	//		enemy[i]->Draw();
-	//	}
-	//}
+	for (int i = 0; i < 10; i++)
+	{
+		if (obstacle_b[i] != nullptr)
+		{
+			obstacle_b[i]->Draw();
+		}
+	}
 
 	//ルンバの描画
 	enemy_roomba->Draw();
