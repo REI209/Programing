@@ -80,7 +80,10 @@ eSceneType GameMainScene::Update()
 		mileage += 1;
 	}
 
-	
+	if ((now_count - start_count) < 60000000)
+	{
+		
+	}
 
 	//“G¶¬ˆ—
 	//if (mileage / 20 % 100 == 0)
