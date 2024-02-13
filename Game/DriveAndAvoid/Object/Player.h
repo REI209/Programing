@@ -14,6 +14,7 @@ private:
 	float hp;            //体力
 	float stamina;       //スタミナ
 	int damage;          //点滅用変数
+	float image_size;      //表示する画像の大きさ
 
 public:
 	Player();
@@ -32,6 +33,8 @@ public:
 	float GetSpeed() const;         //速さ取得処理
 	float GetStamina() const;          //燃料取得
 	float GetHp() const;            //体力取得
+	bool GetActiveFlg() { return is_active; } //有効フラグ取得
+	int GetDamageTime() { return damage;  }   //ダメージ時間取得 
 
 private:
 	void Movement();       //移動処理

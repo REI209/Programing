@@ -4,7 +4,7 @@
 
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
 angle(0.0f),
-speed(0.0f), hp(0.0f), stamina(0.0f),damage(0)
+speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f)
 {
 
 }
@@ -21,31 +21,53 @@ void Player::Initialize()
 	location = Vector2D(320.0f, 380.0f);
 	box_size = Vector2D(20.0f, 20.0f);
 	angle = 0.0f;
-	speed = 3.0f;
+	speed = 5.0f;
 	hp = 1000;
 	stamina = 20000;
 	damage = 0;
+	image_size = 0.5f;
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/car1pol.bmp");
+	image = LoadGraph("Resource/images/player.png");
 
 	//エラーチェック
 	if (image == -1)
 	{
-		throw ("Resource/images/car1pol.bmpがありません\n");
+		throw ("Resource/images/player.pngがありません\n");
 	}
 }
 
 //更新処理
 void Player::Update()
 {
+
+	if (!is_active)
+	{
+		damage++;
+		speed = 1.0f;
+
+		if (damage > 60)
+		{
+			is_active = true;
+			damage = 0;
+		}
+	}
+
 	//スタミナの処理
 	stamina -= speed;
 
-	//移動処理
-	Movement();
+	if (stamina <= 0.0f)
+	{
 
-	if (is_active == true)
+	}
+
+	if (is_active)
+	{
+		//移動処理
+		Movement();
+	}
+	
+	if (damage == 0)
 	{
 		//加減処理
 		Acceleration();
@@ -60,41 +82,37 @@ void Player::Update()
 //描画処理
 void Player::Draw()
 {
-	//プレイヤー画像の描画
-
-	// 点滅用の変数に 1 を足す
-	
-
-	// 点滅用の変数が 60 になっていたら 0 にする
-	if (damage == 120)
-	{
-		damage = 0;
-		is_active = true;
-	}
-
 	// 点滅用の変数の値が 30 未満のときだけ描画する
-	if (is_active == false)
+	if (!is_active)
 	{
-		if (++damage < 10)
+		if (damage < 10)
 		{
-			DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
+			//プレイヤー画像の描画
+			DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
 		}
-		if (damage > 70)
+		if (damage > 20 && damage < 30)
 		{
-			DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
+			//プレイヤー画像の描画
+			DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
+		}
+		if (damage > 40 && damage < 50)
+		{
+			//プレイヤー画像の描画
+			DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
 		}
 		
 	}
-	else if(is_active == true)
+	else if(is_active)
 	{
-		DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
+		//プレイヤー画像の描画
+		DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
 	}
 
 #ifdef _DEBUG
 
 	// 当たり判定確認用
-	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, TRUE);
-	DrawFormatString(0, 0, 0x000000, "%d",damage);
+	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+	DrawFormatString(0, 0, 0x000000, "%d",is_active);
 
 #endif // _DEBUG
 
@@ -187,11 +205,11 @@ void Player::Movement()
 void Player::Acceleration()
 {
 	// Bボタンが押されている間、加速する
-	if (InputControl::GetButton(XINPUT_BUTTON_B) && speed < 7.0f)
+	if (InputControl::GetButton(XINPUT_BUTTON_B) && speed < 8.0f)
 	{
 		speed += 0.05f;
 	}
-	else if(speed > 1.0f)
+	else if(speed > 5.0f)
 	{
 		// Bボタンを離したら、少しずつ減速する 
 		speed -= 0.05f;
@@ -199,7 +217,7 @@ void Player::Acceleration()
 	else
 	{
 		// 上記以外は1.0fで固定
-		speed = 1.0f;
+		speed = 5.0f;
 	}
 }
 

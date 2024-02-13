@@ -66,8 +66,16 @@ eSceneType GameMainScene::Update()
 	player->Update();
 
 	//ˆÚ“®‹——£‚ÌXV
-	mileage += (int)player->GetSpeed
-	() + 5;
+	if (player->GetActiveFlg() == true)
+	{
+		mileage += (int)player->GetSpeed();
+	}
+	else
+	{
+		mileage += 1;
+	}
+
+	
 
 	//“G¶¬ˆ—
 	if (mileage / 20 % 100 == 0)
@@ -113,7 +121,7 @@ eSceneType GameMainScene::Update()
 	}
 
 	//ƒvƒŒƒCƒ„[‚Ì”R—¿‰»‘Ì—Í‚ª‚O–¢–ž‚È‚çAƒŠƒUƒ‹ƒg‚É‘JˆÚ‚·‚é
-	if (player->GetStamina() < 0.0f || player->GetHp() < 0.0f)
+	if ( player->GetHp() < 0.0f)
 	{
 		return eSceneType::E_RESULT;
 	}
