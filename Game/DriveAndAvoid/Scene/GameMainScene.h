@@ -11,8 +11,8 @@
 class GameMainScene :public SceneBase
 {
 private:
-	LONGLONG start_count;	//経過時間
-	LONGLONG now_count;		//現在時間
+	int time;	//経過時間
+	int counter;		//現在時間
 
 	int high_score;       //ハイスコア
 	int back_ground;      //背景画像
