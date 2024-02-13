@@ -54,13 +54,13 @@
     <ClCompile Include="Scene\TitleScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Object\ObstacleA.cpp">
+    <ClCompile Include="Object\Obstacle_A.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Object\ObstacleB.cpp">
+    <ClCompile Include="Object\Obstacle_B.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Object\ObstacleC.cpp">
+    <ClCompile Include="Object\Obstacle_C.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Object\Enemy_Roomba.cpp">
@@ -110,13 +110,13 @@
     <ClInclude Include="Scene\TitleScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Object\ObstacleA.h">
+    <ClInclude Include="Object\Obstacle_A.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Object\ObstacleB.h">
+    <ClInclude Include="Object\Obstacle_B.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Object\ObstacleC.h">
+    <ClInclude Include="Object\Obstacle_C.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Object\Enemy_Roomba.h">

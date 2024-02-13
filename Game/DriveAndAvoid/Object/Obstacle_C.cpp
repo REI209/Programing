@@ -1,21 +1,21 @@
-#include"ObstacleB.h"//障害物（積み木）
+#include"Obstacle_C.h"//障害物（掃除機）
 #include"DxLib.h"
 
-ObstacleB::ObstacleB(int type, int handle) :type(type), image(handle), speed(0.0f),
+ObstacleC::ObstacleC(int type, int handle) :type(type), image(handle), speed(0.0f),
 location(0.0f), box_size(0.0f)
 {
 
 }
 
-ObstacleB::~ObstacleB()
+ObstacleC::~ObstacleC()
 {
 
 }
 
 //初期化処理
-void ObstacleB::Initialize()
+void ObstacleC::Initialize()
 {
-	//出現させるx座標パターンを取得(フレーム分けするのか？)
+	//出現させるx座標パターンを取得
 	//float random_x = (float)(GetRand(4) * 105 + 40);
 	//生成位置の設定
 	//location = Vector2D(random_x, -50.0f);
@@ -27,37 +27,31 @@ void ObstacleB::Initialize()
 	//image = LoadGraph("Resource/images/.bmp");
 }
 
-void ObstacleB::Update(float speed)
+void ObstacleC::Update(float speed)
 {
 	//位置情報に移動量を加算する
 	location += Vector2D(0.0f, this->speed + speed - 6);
 }
 
-void ObstacleB::Draw() const
+void ObstacleC::Draw() const
 {
 	//敵画像の描画
 	DrawRotaGraphF(location.x, location.y, 1.0, 0.0, image, TRUE);
 }
 
-void ObstacleB::Finalize()
+void ObstacleC::Finalize()
 {
 
-}
-
-//敵のタイプを取得
-int ObstacleB::GetType() const
-{
-	return type;//3
 }
 
 //位置情報を取得
-Vector2D ObstacleB::GetLocation() const
+Vector2D ObstacleC::GetLocation() const
 {
 	return location;
 }
 
 //当たり判定の大きさを取得
-Vector2D ObstacleB::GetBoxSize() const
+Vector2D ObstacleC::GetBoxSize() const
 {
 	return box_size;
 }
