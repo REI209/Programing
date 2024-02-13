@@ -2,10 +2,9 @@
 #include"../Object/RankingData.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
+GameMainScene::GameMainScene() :time(0),counter(0),high_score(0), back_ground(NULL),
 barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr)//,enemy(nullptr)
 {
-	start_count = GetNowHiPerformanceCount();
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -26,6 +25,10 @@ void GameMainScene::Initialize()
 {
 	//高得点値を読み込む
 	ReadHighScore();
+
+	//制限時間の設定(秒) 
+	counter = 60;
+
 
 	//画像の読み込み
 	back_ground = LoadGraph("Resource/Images/back_img.png");
@@ -66,6 +69,17 @@ void GameMainScene::Initialize()
 //更新処理
 eSceneType GameMainScene::Update()
 {
+	//カウント
+	time++;
+	//1秒を数えて、60秒経過後リザルトへ
+	if (time % 60 == 0) {
+		counter -= 1;
+		if (counter < 0)
+		{
+			return eSceneType::E_RESULT;
+		}
+	}
+
 
 	//プレイヤーの更新
 	player->Update();
@@ -78,11 +92,6 @@ eSceneType GameMainScene::Update()
 	else
 	{
 		mileage += 1;
-	}
-
-	if ((now_count - start_count) < 60000000)
-	{
-		
 	}
 
 	//敵生成処理
@@ -133,6 +142,7 @@ eSceneType GameMainScene::Update()
 	{
 		return eSceneType::E_RESULT;
 	}
+
 	return GetNowScene();
 }
 
@@ -161,10 +171,26 @@ void GameMainScene::Draw() const
 	//UIの描画
 	DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
 	SetFontSize(16);
-	DrawFormatString(1005, 200, GetColor(0, 0, 0), "走行距離");
-	DrawFormatString(1005, 220, GetColor(255, 255, 255), "%08d",mileage/10);
-	DrawFormatString(1005, 240, GetColor(0, 0, 0), "スピード");
-	DrawFormatString(1005, 260, GetColor(255, 255, 255), "%08.1f",player->GetSpeed());
+
+	//制限時間の描画
+	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
+
+
+	DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
+	DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d",high_score);
+	DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
+	for (int i = 0; i < 3; i++)
+	{
+		DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE,
+			FALSE);
+		DrawFormatString(510 + (i * 50), 140, GetColor(255, 255, 255), "%03d",
+			enemy_count[i]);
+	}
+	DrawFormatString(510, 200, GetColor(0, 0, 0), "走行距離");
+	DrawFormatString(555, 220, GetColor(255, 255, 255), "%08d",mileage/10);
+	DrawFormatString(555, 240, GetColor(0, 0, 0), "スピード");
+	DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",
+		player->GetSpeed());
 
 	//スタミナゲージの描画
 	float fx = 1005.0f;
