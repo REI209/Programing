@@ -1,15 +1,15 @@
 #include"SceneManager.h"
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
+#include "../Object/common.h"
 #include"TitleScene.h"
 #include"GameMainScene.h"
 #include"ResultScene.h"
 #include"HelpScene.h"
+#include "GameOverScene.h"
 #include"RankingDispScene.h"
 #include"RankingInputScene.h"
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
 
 SceneManager::SceneManager() :current_scene(nullptr)
 {
@@ -167,6 +167,8 @@ SceneBase* SceneManager::CreateScene(eSceneType scene_type)
 		return new ResultScene;
 	case eSceneType::E_HELP:
 		return new HelpScene;
+	case eSceneType::E_OVER:
+		return new GameOverScene;
 	case eSceneType::E_RANKING_DISP:
 		return new RankingDispScene;
 	case eSceneType::E_RANKING_INPUT:
