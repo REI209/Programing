@@ -3,7 +3,8 @@
 #include"DxLib.h"
 
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),angle(0.0f),
-speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),ly(0.0f)
+speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),ly(0.0f), acceleration_flg(false),fam_anim(0),time(0),
+fam_flg(false)
 {
 
 }
@@ -21,7 +22,7 @@ void Player::Initialize()
 	box_size = Vector2D(40.0f, 40.0f);
 	angle = 0.0f;
 	speed = 5.0f;
-	hp = 500000.0f;
+	hp = 100.0f;
 	stamina = 50.0f;
 	damage = 0;
 	image_size = 1.0f;
@@ -101,9 +102,9 @@ void Player::Draw()
 #ifdef _DEBUG
 
 	// “–‚½‚è”»’èŠm”F—p
-	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+	/*DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
 	DrawFormatString(0, 0, 0x000000, "%f",location.y);
-	DrawFormatString(0, 50, 0xffffff, "%f", stamina);
+	DrawFormatString(0, 50, 0xffffff, "%f", stamina);*/
 
 
 #endif // _DEBUG
@@ -260,4 +261,8 @@ void Player::Acceleration()
 			stamina += 0.1f;
 		}
 	}
+}
+
+void Player::RoombaAnim()
+{
 }

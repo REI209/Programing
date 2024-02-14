@@ -38,6 +38,13 @@ void Obstacle_C::Draw() const
 {
 	//“G‰æ‘œ‚Ì•`‰æ
 	DrawRotaGraphF(location.x, location.y, 0.5, 0.0, image, TRUE);
+
+#ifdef _DEBUG
+
+	// “–‚½‚è”»’èŠm”F—p
+	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+
+#endif // _DEBUG
 }
 
 void Obstacle_C::Finalize()

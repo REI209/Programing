@@ -5,14 +5,14 @@
 class Obstacle_A
 {
 private:
-	int type;            //タイプ
 	int image;           //画像
+	int type;
 	float speed;         //速さ
 	Vector2D location;   //位置情報
 	Vector2D box_size;   //当たり判定の大きさ
 
 public:
-	Obstacle_A(int image);
+	Obstacle_A(int type,int image);
 	~Obstacle_A();
 
 	void Initialize();         //初期化処理

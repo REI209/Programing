@@ -27,8 +27,7 @@ private:
 	int main_sound;       //ゲームメインサウンド
 	int gameover_sound;   //ゲームオーバーサウンド
 	int enemy_count[3];   //通り過ぎた敵カウント
-	int changescene;
-
+	int mainbgm;          //ゲームメインBGM
 	Player* player;       //プレイヤー
 	//Enemy** enemy;        //敵
 
@@ -49,6 +48,7 @@ private:
 
 	Family** family; //仲間
 	int family_image[2]; //仲間画像
+	int family_cnt[2]; //集めた仲間の数
 
 public:
 	GameMainScene();

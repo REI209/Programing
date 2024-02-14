@@ -25,6 +25,7 @@ void Enemy_Roomba::Initialize()
 
 	//画像の読み込み
 	image = LoadGraph(ENEMY_ROOMBA_IMAGE);
+
 	//エラーチェック
 	if (image == -1)
 	{

@@ -1,6 +1,7 @@
 #include "GameOverScene.h"
 #include "../Utility/InputControl.h"
 #include "DxLib.h"
+#include "../Object/common.h"
 
 GameOverScene::GameOverScene() :background_image(NULL)
 {
@@ -16,11 +17,18 @@ void GameOverScene::Initialize()
 	//画像の読み込み
 
 	//エラーチェック
+
+	//音源の読み込み
+	gameoverbgm = LoadSoundMem(GAMEOVER_BGM);
 }
 
 eSceneType GameOverScene::Update()
 {
-
+	//BGMを流す
+	if (GetNowScene() == E_OVER)
+	{
+		PlaySoundMem(gameoverbgm, DX_PLAYTYPE_LOOP, FALSE);
+	}
 	//Bボタンが押されたら、リザルトへ
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
@@ -40,7 +48,8 @@ void GameOverScene::Draw() const
 //終了宣言
 void GameOverScene::Finalize()
 {
-	//読み込んだ画像の削除
+	//読み込んだ音源の削除
+	DeleteSoundMem(gameoverbgm);
 }
 
 //現在のシーン情報を取得

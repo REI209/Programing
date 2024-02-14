@@ -1,7 +1,7 @@
 #include "Family.h"
 #include "DxLib.h"
 
-Family::Family(int type,int image) : type(0),image(image), speed(0.0f), location(0.0f), box_size(0.0f)
+Family::Family(int type,int image) : type(type),image(image), speed(0.0f), location(0.0f), box_size(0.0f)
 {
 
 }
@@ -33,6 +33,13 @@ void Family::Draw() const
 {
 	//“G‰æ‘œ‚Ì•`‰æ
 	DrawRotaGraphF(location.x, location.y, 0.5, 0.0, image, TRUE);
+
+#ifdef _DEBUG
+
+	// “–‚½‚è”»’èŠm”F—p
+	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+
+#endif // _DEBUG
 }
 
 void Family::Finalize()
