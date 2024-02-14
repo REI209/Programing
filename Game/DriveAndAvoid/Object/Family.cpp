@@ -1,7 +1,7 @@
 #include "Family.h"
 #include "DxLib.h"
 
-Family::Family(int type,int image) : type(0),image(image), speed(0.0f), location(0.0f), box_size(0.0f)
+Family::Family(int type,int image) : type(type),image(image), speed(0.0f), location(0.0f), box_size(0.0f)
 {
 
 }

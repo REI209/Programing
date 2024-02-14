@@ -33,6 +33,5 @@ public:
 	Vector2D GetBoxSize() const;
 
 	float TrackingPlayer(float _diff_x);
-
 };
 

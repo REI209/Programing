@@ -6,12 +6,13 @@ class Obstacle_A
 {
 private:
 	int image;           //‰æ‘œ
+	int type;
 	float speed;         //‘¬‚³
 	Vector2D location;   //ˆÊ’uî•ñ
 	Vector2D box_size;   //“–‚½‚è”»’è‚Ì‘å‚«‚³
 
 public:
-	Obstacle_A(int image);
+	Obstacle_A(int type,int image);
 	~Obstacle_A();
 
 	void Initialize();         //‰Šú‰»ˆ—

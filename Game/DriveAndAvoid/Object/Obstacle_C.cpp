@@ -20,7 +20,7 @@ void Obstacle_C::Initialize()
 	//¶¬ˆÊ’u‚Ìİ’è
 	location = Vector2D( -50.0f, random_y);
 	//“–‚½‚è”»’è‚Ìİ’è
-	box_size = Vector2D(30.0f, 30.0f);//Œã‚Å’²®
+	box_size = Vector2D(40.0f, 60.0f);//Œã‚Å’²®
 	//‘¬‚³‚Ìİ’è
 	speed =2.0f;
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
