@@ -41,12 +41,13 @@
 //音関係
 #define TITLE_BGM "Resource/sounds/Titlebgm.mp3"
 #define GAMEMAIN_BGM "Resource/sounds/たぬきちの冒険.mp3"
+#define GAMEOVER_BGM "Resource/sounds/zannense.mp3"
 
 #define CURSOL_SE "Resource/sounds/カーソル移動3.mp3"
 #define SELECT_SE "Resource/sounds/決定ボタンを押す3.mp3"
 
 #define FAN_WIND_SE "Resource/sounds/扇風機の強回転.mp3"
-#define CLEANER_SE "Resource/掃除機の電源を入れる.mp3"
+//#define CLEANER_SE "Resource/掃除機の電源を入れる.mp3"
 #define FAMILLY_GET_SE "Resource/sounds/シャキーン1.mp3"
 #define DAMAGE_SE "Resource/sounds/間抜け2.mp3"
 #define DEATH_SE "Resource/sounds/「ぐああーーっ！」.mp3"

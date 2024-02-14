@@ -6,6 +6,7 @@ class Enemy_Roomba
 private:
 	bool is_active;	//停止中かどうか
 	int image;		//画像データ
+	int roombabgm;
 	Vector2D location;		//位置座標
 	Vector2D box_size;		//当たり判定の大きさ
 
