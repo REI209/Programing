@@ -21,8 +21,8 @@ void Player::Initialize()
 	box_size = Vector2D(40.0f, 40.0f);
 	angle = 0.0f;
 	speed = 5.0f;
-	hp = 100.0f;
-	stamina = 100.0f;
+	hp = 50.0f;
+	stamina = 50.0f;
 	damage = 0;
 	image_size = 1.0f;
 
@@ -234,7 +234,7 @@ void Player::Acceleration()
 			ly = 0;
 		}
 
-		if (stamina <= 100.0f)
+		if (stamina <= 50.0f)
 		{
 			stamina += 0.1f;
 		}

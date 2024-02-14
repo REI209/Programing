@@ -380,8 +380,8 @@ void GameMainScene::Draw() const
 	player->Draw();
 
 	//UIの描画
-	DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
-	SetFontSize(16);
+	//DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
+	//SetFontSize(16);
 
 	//制限時間の描画
 	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
@@ -407,11 +407,10 @@ void GameMainScene::Draw() const
 		player->GetSpeed());*/
 
 	//スタミナゲージの描画
-	float fx = player->GetLocation().x + 40.0f;
-	float fy = player->GetLocation().y - 20.0f;
-	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "STAMINA METER");
-	DrawBoxAA(fx, fy, fx + 20.0f, fy + 100.0f, GetColor(0, 0, 0),FALSE);
-	DrawBox((int)fx, (int)fy + 100 - (int)player->GetStamina(), (int)fx + 20, (int)fy + 100, GetColor(0, 0, 255), TRUE);
+	float fx = player->GetLocation().x + 50.0f * player->GetPlayerSize();
+	float fy = player->GetLocation().y - 40.0f * player->GetPlayerSize();
+	DrawBoxAA(fx, fy, fx + 15.0f, fy + 50.0f, GetColor(0, 0, 0),FALSE);
+	DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
 
 	//体力ゲージの描画
 	fx = 1005.0f;
