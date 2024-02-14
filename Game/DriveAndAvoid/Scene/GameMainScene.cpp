@@ -204,6 +204,14 @@ eSceneType GameMainScene::Update()
 		{
 			obstacle_a[i]->Update(player->GetSpeed());
 
+			//画面外に行ったら削除
+			if (obstacle_a[i]->GetLocation().y >= 800.0f)
+			{
+				obstacle_a[i]->Finalize();
+				delete obstacle_a[i];
+				obstacle_a[i] = nullptr;
+			}
+
 			//敵と障害物の当たり判定
 			if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
 			{
@@ -237,19 +245,33 @@ eSceneType GameMainScene::Update()
 			//	delete obstacle_a[i];
 			//	obstacle_a[i] = nullptr;
 			//}
+
+			for (int j = 0; j < 10; j++)
+			{
+				if (obstacle_a[j] != nullptr && i != j)
+				{
+					//仲間同士の当たり判定
+					if (IsObjecHitCheck_O(obstacle_a[i], obstacle_a[j]))
+					{
+						obstacle_a[j]->Finalize();
+						delete obstacle_a[j];
+						obstacle_a[j] = nullptr;
+					}
+				}
+			}
+
 		}
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Update(player->GetSpeed());
 
-			//画面外に行ったら、敵を削除してスコア加算
-			/*if (obstacle_b[i]->GetLocation().y >= 640.0f)
+			//画面外に行ったら削除
+			if (obstacle_b[i]->GetLocation().y >= 800.0f)
 			{
-				enemy_count[obstacle_b[i]->GetType()]++;
 				obstacle_b[i]->Finalize();
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
-			}*/
+			}
 
 			//当たり判定の確認
 			if (IsObjectHitCheck_P(player, obstacle_b[i]))
@@ -275,20 +297,33 @@ eSceneType GameMainScene::Update()
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
 			}
+
+			for (int j = 0; j < 10; j++)
+			{
+				if (obstacle_b[j] != nullptr && i != j)
+				{
+					//仲間同士の当たり判定
+					if (IsObjecHitCheck_O(obstacle_b[i], obstacle_b[j]))
+					{
+						obstacle_b[j]->Finalize();
+						delete obstacle_b[j];
+						obstacle_b[j] = nullptr;
+					}
+				}
+			}
 		}
 
 		if (obstacle_c[i] != nullptr)
 		{
 			obstacle_c[i]->Update(player->GetSpeed());
 
-		////	////画面外に行ったら、敵を削除してスコア加算
-		////	//if (enemy[i]->GetLocation().y >= 640.0f)
-		////	//{
-		////	//	enemy_count[enemy[i]->GetType()]++;
-		////	//	enemy[i]->Finalize();
-		////	//	delete enemy[i];
-		////	//	enemy[i] = nullptr;
-		////	//}
+			//画面外に行ったら削除
+			if (obstacle_c[i]->GetLocation().y >= 800.0f)
+			{
+				obstacle_c[i]->Finalize();
+				delete obstacle_c[i];
+				obstacle_c[i] = nullptr;
+			}
 
 			//プレイヤーと障害物の当たり判定の確認
 			if (IsObjectHitCheck_P(player, obstacle_c[i]))
@@ -313,6 +348,20 @@ eSceneType GameMainScene::Update()
 				obstacle_c[i]->Finalize();
 				delete obstacle_c[i];
 				obstacle_c[i] = nullptr;
+			}
+
+			for (int j = 0; j < 10; j++)
+			{
+				if (obstacle_c[j] != nullptr && i != j)
+				{
+					//仲間同士の当たり判定
+					if (IsObjecHitCheck_O(obstacle_c[i], obstacle_c[j]))
+					{
+						obstacle_c[j]->Finalize();
+						delete obstacle_c[j];
+						obstacle_c[j] = nullptr;
+					}
+				}
 			}
 		}
 	}
