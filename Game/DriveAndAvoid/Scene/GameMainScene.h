@@ -68,6 +68,9 @@ private:
 	//“G(ƒ‹ƒ“ƒo)áŠQ•¨‚Ì“–‚½‚è”»’è
 	template <class T>
 	bool IsObjecHitCheck_E(Enemy_Roomba* e, T* object);
+	//áŠQ•¨“¯m‚Ì“–‚½‚è”»’è
+	template <class T>
+	bool IsObjecHitCheck_O(T* object1, T* object2);
 };
 
 

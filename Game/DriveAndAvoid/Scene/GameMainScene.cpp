@@ -325,6 +325,21 @@ eSceneType GameMainScene::Update()
 				delete family[i];
 				family[i] = nullptr;
 			}
+
+			for (int j = 0; j < 5; j++)
+			{
+				if (family[j] != nullptr && i != j)
+				{
+					//仲間同士の当たり判定
+					if (IsObjecHitCheck_O(family[i], family[j]))
+					{
+						family[j]->Finalize();
+						delete family[j];
+						family[j] = nullptr;
+					}
+				}
+			}
+			
 		}
 	}
 
@@ -368,6 +383,8 @@ void GameMainScene::Draw() const
 		{
 			family[i]->Draw();
 		}
+
+		DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
 	}
 
 	//ルンバの描画
@@ -464,6 +481,32 @@ void GameMainScene::Finalize()
 
 	//delete[] enemy;
 
+	for (int i = 0; i < 10; i++)
+	{
+		if (obstacle_a[i] != nullptr)
+		{
+			obstacle_a[i]->Finalize();
+			delete obstacle_a[i];
+			obstacle_a[i] = nullptr;
+		}
+		if (obstacle_b[i] != nullptr)
+		{
+			obstacle_b[i]->Finalize();
+			delete obstacle_b[i];
+			obstacle_b[i] = nullptr;
+		}
+		if (obstacle_c[i] != nullptr)
+		{
+			obstacle_c[i]->Finalize();
+			delete obstacle_c[i];
+			obstacle_c[i] = nullptr;
+		}
+	}
+
+	delete[] obstacle_a;
+	delete[] obstacle_b;
+	delete[] obstacle_c;
+
 	for (int i = 0; i < 5; i++)
 	{
 		if (family[i] != nullptr)
@@ -548,6 +591,26 @@ bool GameMainScene::IsObjecHitCheck_E(Enemy_Roomba* e, T* object)
 
 	//当たり判定サイズの大きさ取得
 	Vector2D box_ex = e->GetBoxSize() + object->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}
+
+//障害物同士の当たり判定
+template<class T>
+bool GameMainScene::IsObjecHitCheck_O(T* object1, T* object2)
+{
+	//情報がなければ、当たり判定を無視する
+	if (object1 == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = object1->GetLocation() - object2->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = object1->GetBoxSize() + object2->GetBoxSize();
 
 	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
 	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
