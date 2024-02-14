@@ -45,7 +45,7 @@ public:
 	void SetBoxSize(float size) { box_size.x += size, box_size.y += size; }  //プレイヤーのサイズ変更
 	void SetFamAnim(bool flg) { fam_flg = flg; }  //仲間に当たったかどうか
 	bool GetFamAnim() { return fam_flg; } //仲間にあったているかどうか
-
+	void SetX(float num) { location.x -= num; } //プレイヤーのX座標変更
 
 
 private:
