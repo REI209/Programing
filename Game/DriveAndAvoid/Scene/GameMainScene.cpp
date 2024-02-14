@@ -385,11 +385,12 @@ void GameMainScene::Draw() const
 		}
 	}
 
-	//ƒ‹ƒ“ƒo‚Ì•`‰æ
-	enemy_roomba->Draw();
 
 	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
 	player->Draw();
+
+	//ƒ‹ƒ“ƒo‚Ì•`‰æ
+	enemy_roomba->Draw();
 
 	//UI‚Ì•`‰æ
 	//DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);

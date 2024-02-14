@@ -3,7 +3,7 @@
 #include "DxLib.h"
 
 Enemy_Roomba::Enemy_Roomba() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
-speed(0.0f), diff_x(0.0f), hp(0.0f)
+angle(0.0f),speed(0.0f), diff_x(0.0f), hp(0.0f)
 {
 
 }
@@ -17,15 +17,13 @@ void Enemy_Roomba::Initialize()
 {
 	is_active = true;
 	location = Vector2D(480.0f, 600.0f);
-	box_size = Vector2D(25.0f, 25.0f);
+	box_size = Vector2D(60.0f, 60.0f);
 	speed = -0.08f;		//速度
 	angle = 0.0f;
 	hp = 300;			//体力
 
-	count_t = 0;
-
 	//画像の読み込み
-	image = LoadGraph("Resource/Images/roomba.png");
+	image = LoadGraph(ENEMY_ROOMBA_IMAGE);
 	//エラーチェック
 	if (image == -1)
 	{
@@ -35,9 +33,6 @@ void Enemy_Roomba::Initialize()
 
 void Enemy_Roomba::Update(float time,float _diff_x)
 {
-
-
-
 	//障害物にあたったら動きを2秒停止させる
 	if (!is_active)
 	{
