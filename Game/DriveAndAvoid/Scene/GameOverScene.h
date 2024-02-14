@@ -4,7 +4,7 @@ class GameOverScene :public SceneBase
 {
 private:
 	int background_image;	//îwåi
-
+	int gameoverbgm;        //âπåπ
 public:
 	GameOverScene();
 	~GameOverScene();

@@ -53,6 +53,9 @@ void GameMainScene::Initialize()
 	family_image[0] = LoadGraph("Resource/Images/IMG_0111.png");
 	family_image[1] = LoadGraph("Resource/Images/IMG_0113.png");
 
+	//音源の読み込み
+	mainbgm = LoadSoundMem(GAMEMAIN_BGM);
+
 	//エラーチェック
 	if (back_ground == -1)
 	{
@@ -123,6 +126,12 @@ eSceneType GameMainScene::Update()
 {
 	//カウント
 	time++;
+
+	//BGMを流す
+	if (GetNowScene() == E_MAIN)
+	{
+		PlaySoundMem(mainbgm, DX_PLAYTYPE_LOOP, FALSE);
+	}
 
 	//1秒を数えて、60秒経過後リザルトへ
 	if (time % 60 == 0) 
@@ -644,6 +653,7 @@ void GameMainScene::Finalize()
 	}
 
 	delete[] family;
+	DeleteSoundMem(mainbgm);
 }
 
 //現在のシーン情報を取得
