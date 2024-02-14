@@ -109,7 +109,7 @@ void GameMainScene::Initialize()
 		obstacle_c[i] = nullptr;
 	}
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		family[i] = nullptr;
 	}
@@ -172,7 +172,7 @@ eSceneType GameMainScene::Update()
 	//仲間生成処理
 	if (mileage / 20 % 100 == 0)
 	{
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			if (family[i] == nullptr)
 			{
@@ -188,9 +188,9 @@ eSceneType GameMainScene::Update()
 	//敵の更新と当たり判定チェック
 	for (int i = 0; i < 10; i++)
 	{
-		//if (obstacle_a[i] != nullptr)
-		//{
-		//	obstacle_a[i]->Update(player->GetSpeed());
+		if (obstacle_a[i] != nullptr)
+		{
+			obstacle_a[i]->Update(player->GetSpeed());
 
 		//	////画面外に行ったら、敵を削除してスコア加算
 		//	//if (enemy[i]->GetLocation().y >= 640.0f)
@@ -201,16 +201,16 @@ eSceneType GameMainScene::Update()
 		//	//	enemy[i] = nullptr;
 		//	//}
 
-		//	////当たり判定の確認
-		//	//if (IsHitCheck(player, enemy[i]))
-		//	//{
-		//	//	player->SetActive(false);
-		//	//	player->DecreaseHp(-50.0f);
-		//	//	enemy[i]->Finalize();
-		//	//	delete enemy[i];
-		//	//	enemy[i] = nullptr;
-		//	//}
-		//}
+			////当たり判定の確認
+			//if (IsObjectHitCheck_P(player, obstacle_a[i]))
+			//{
+			//	player->SetActive(false);
+			//	player->DecreaseHp(-50.0f;
+			//	obstacle_a[i]->Finalize();
+			//	delete obstacle_a[i];
+			//	obstacle_a[i] = nullptr;
+			//}
+		}
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Update(player->GetSpeed());
@@ -262,7 +262,7 @@ eSceneType GameMainScene::Update()
 			if (IsObjectHitCheck_P(player, obstacle_c[i]))
 			{
 				player->SetActive(false);
-				player->DecreaseHp(-1000.0f);
+				player->DecreaseHp(-10000.0f);
 				obstacle_c[i]->Finalize();
 				delete obstacle_c[i];
 				obstacle_c[i] = nullptr;
@@ -288,7 +288,7 @@ eSceneType GameMainScene::Update()
 	}
 	
 	//仲間の更新と当たり判定チェック
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		if (family[i] != nullptr)
 		{
@@ -304,8 +304,9 @@ eSceneType GameMainScene::Update()
 			//当たり判定の確認
 			if (IsObjectHitCheck_P(player, family[i]))
 			{
-				player->SetActive(false);
-				player->DecreaseHp(-50.0f);
+				player->DecreaseHp(10.0f);
+				player->SetSize(0.1f);
+				player->SetBoxSize(0.1f);
 				family[i]->Finalize();
 				delete family[i];
 				family[i] = nullptr;
@@ -357,7 +358,7 @@ void GameMainScene::Draw() const
 	}
 
 	//仲間の描画
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		if (family[i] != nullptr)
 		{
@@ -372,8 +373,8 @@ void GameMainScene::Draw() const
 	player->Draw();
 
 	//UIの描画
-	DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
-	SetFontSize(16);
+	//DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
+	//SetFontSize(16);
 
 	//制限時間の描画
 	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
@@ -399,13 +400,14 @@ void GameMainScene::Draw() const
 		player->GetSpeed());*/
 
 	//スタミナゲージの描画
-	float fx = player->GetLocation().x + 40.0f;
-	float fy = player->GetLocation().y - 20.0f;
-	int st = (int)player->GetStamina() % 100;
-	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "STAMINA METER");
-	DrawBoxAA(fx, fy, fx + 20.0f, fy + 100.0f, GetColor(0, 0, 0),FALSE);
-	DrawBox((int)fx, (int)fy + 100 - (int)player->GetStamina(), (int)fx + 20, (int)fy + 100, GetColor(0, 0, 255), TRUE);
-	DrawFormatString(1010, 220, GetColor(0, 255, 255), "%f", player->GetStamina());
+	float fx = player->GetLocation().x + 50.0f * player->GetPlayerSize();
+	float fy = player->GetLocation().y - 40.0f * player->GetPlayerSize();
+	DrawBoxAA(fx, fy, fx + 15.0f, fy + 50.0f, GetColor(0, 0, 0),FALSE);
+	if (player->GetStamina() > 0.0f)
+	{
+		DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
+	}
+	
 
 	//体力ゲージの描画
 	fx = 1005.0f;
@@ -463,7 +465,7 @@ void GameMainScene::Finalize()
 
 	//delete[] enemy;
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		if (family[i] != nullptr)
 		{

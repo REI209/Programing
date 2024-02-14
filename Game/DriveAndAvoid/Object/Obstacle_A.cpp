@@ -19,8 +19,8 @@ void Obstacle_A::Initialize()
 	float random_x = (float)(GetRand(1) * 800 + 100);
 	//¶¬ˆÊ’u‚Ìİ’è
 	location = Vector2D(random_x, -50.0f);
-	//“–‚½‚è”»’è‚Ìİ’è
-	box_size = Vector2D(50.0f, 50.0f);
+	////“–‚½‚è”»’è‚Ìİ’è
+	box_size = Vector2D(200.0f, 50.0f);
 	//‘¬‚³‚Ìİ’è
 	speed=5.0f;
 	//‰æ‘œ‚Ì“Ç‚İ‚İ

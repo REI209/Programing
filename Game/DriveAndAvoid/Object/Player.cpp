@@ -2,8 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 
-Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
-angle(0.0f),
+Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),angle(0.0f),
 speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),ly(0.0f)
 {
 
@@ -22,8 +21,8 @@ void Player::Initialize()
 	box_size = Vector2D(40.0f, 40.0f);
 	angle = 0.0f;
 	speed = 5.0f;
-	hp = 1000;
-	stamina = 100.0f;
+	hp = 50.0f;
+	stamina = 50.0f;
 	damage = 0;
 	image_size = 1.0f;
 
@@ -62,11 +61,7 @@ void Player::Update()
 		Acceleration();
 	}
 	
-	
-	if (InputControl::GetButtonDown(XINPUT_BUTTON_START))
-	{
-		is_active = false;
-	}
+	box_size = Vector2D(40.0f * image_size, 40.0f * image_size);
 }
 
 //ï`âÊèàóù
@@ -168,17 +163,17 @@ void Player::Movement()
 	//è\éöà⁄ìÆèàóù
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_LEFT))
 	{
-		move += Vector2D(-3.0f, 0.0f);
+		move += Vector2D(-(3.0f / image_size), 0.0f);
 		angle = -DX_PI_F / 30;
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_RIGHT))
 	{
-		move += Vector2D(3.0f, 0.0f);
+		move += Vector2D((3.0f / image_size), 0.0f);
 		angle = DX_PI_F / 30;
 	}
 	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
 	{
-		move += Vector2D(0.0f, -3.0f);
+		move += Vector2D(0.0f, -(3.0f / image_size));
 	}
 	/*if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
 	{
@@ -187,7 +182,7 @@ void Player::Movement()
 	location += move;
 
 	//âÊñ äOÇ…çsÇ©Ç»Ç¢ÇÊÇ§Ç…êßå¿Ç∑ÇÈ
-	if ((location.x < box_size.x) || (location.x >= 1280.0f - 340.0f) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
+	if ((location.x < box_size.x) || (location.x >= 1280.0f - box_size.x) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
 	{
 		location -= move;
 	}
@@ -215,6 +210,10 @@ void Player::Acceleration()
 			location.y += -ly;
 		}
 
+		if (stamina > 0.0f)
+		{
+			stamina -= 0.01f * speed;
+		}
 
 	}
 	else
@@ -233,6 +232,11 @@ void Player::Acceleration()
 		if (ly > 0)
 		{
 			ly = 0;
+		}
+
+		if (stamina <= 50.0f)
+		{
+			stamina += 0.1f;
 		}
 	}
 }
