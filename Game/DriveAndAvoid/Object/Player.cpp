@@ -176,14 +176,7 @@ void Player::Movement()
 		move += Vector2D((3.0f / image_size), 0.0f);
 		angle = DX_PI_F / 30;
 	}
-	if (InputControl::GetButton(XINPUT_BUTTON_DPAD_UP))
-	{
-		move += Vector2D(0.0f, -(3.0f / image_size));
-	}
-	/*if (InputControl::GetButton(XINPUT_BUTTON_DPAD_DOWN))
-	{
-		move += Vector2D(0.0f, 3.0f);
-	}*/
+
 	location += move;
 
 	//画面外に行かないように制限する
@@ -204,12 +197,12 @@ void Player::Acceleration()
 	// Bボタンが押されている間、加速する
 	if (InputControl::GetButton(XINPUT_BUTTON_B))
 	{
-		if (speed < 8.0f)
+		if (speed < 8.0f && stamina > 0.0f)
 		{
 			speed += 0.05f;
 		}
 		
-		if (location.y > 100.0f)
+		if (location.y > 100.0f && stamina > 0.0f)
 		{
 			ly += 0.05f;
 			location.y += -ly;
@@ -220,7 +213,7 @@ void Player::Acceleration()
 			stamina -= 0.01f * speed;
 		}
 
-		if (acceleration_flg == false)
+		if (acceleration_flg == false && stamina > 0.0f)
 		{
 			acceleration_flg = true;
 		}
@@ -228,6 +221,7 @@ void Player::Acceleration()
 	}
 	else
 	{
+
 		if (speed > 5.0f)
 		{
 			// Bボタンを離したら、少しずつ減速する 
@@ -239,22 +233,25 @@ void Player::Acceleration()
 			speed = 5.0f;
 		}
 
-		if (acceleration_flg == true)
+		if (stamina > 0.0f)
 		{
-			if (ly > 0)
+			if (acceleration_flg == true)
 			{
-				time = 180;
-				ly = 0;
-				acceleration_flg = false;
+				if (ly > 0)
+				{
+					time = 180;
+					ly = 0;
+					acceleration_flg = false;
+				}
 			}
-		}
 
-		if (time > 0)
-		{
-			time--;
-			if (location.y < 380.0f)
+			if (time > 0)
 			{
-				location.y += 2.0f;
+				time--;
+				if (location.y < 380.0f)
+				{
+					location.y += 2.0f;
+				}
 			}
 		}
 
