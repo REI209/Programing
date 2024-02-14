@@ -20,6 +20,8 @@ void TitleScene::Initialize()
 	background_image = LoadGraph("Resource/images/Title.bmp");
 	menu_image = LoadGraph("Resource/images/menu.bmp");
 	cursor_image = LoadGraph("Resource/images/cone.bmp");
+	//音源の読み込み
+	titlebgm = LoadSoundMem(TITLE_BGM);
 
 	//エラーチェック
 	if (background_image == -1)
@@ -39,6 +41,12 @@ void TitleScene::Initialize()
 //更新処理
 eSceneType TitleScene::Update()
 {
+	//BGMを流す
+	if (GetNowScene() == E_TITLE)
+	{
+		PlaySoundMem(titlebgm, DX_PLAYTYPE_LOOP, FALSE);
+	}
+	
 	//カーソル下移動
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
 	{
@@ -101,6 +109,7 @@ void TitleScene::Finalize()
 	DeleteGraph(background_image);
 	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
+	DeleteSoundMem(titlebgm);
 }
 
 //現在のシーン情報を取得
