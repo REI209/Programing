@@ -20,7 +20,6 @@ barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.
 
 	roomba_image = NULL;
 
-
 }
 
 GameMainScene::~GameMainScene()
@@ -54,6 +53,7 @@ void GameMainScene::Initialize()
 
 	//音源の読み込み
 	mainbgm = LoadSoundMem(GAMEMAIN_BGM);
+	//roombabgm = LoadSoundMem(ROOMBA_DEATH_SE);//ルンバ爆発BGM
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -614,6 +614,8 @@ void GameMainScene::Finalize()
 
 	delete[] family;
 	DeleteSoundMem(mainbgm);
+	//DeleteSoundMem(roombabgm);
+
 }
 
 //現在のシーン情報を取得
