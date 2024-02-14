@@ -14,6 +14,7 @@ class GameMainScene :public SceneBase
 private:
 	int time;	//経過時間
 	int counter;		//現在時間
+	int count_down;
 
 	int high_score;       //ハイスコア
 	int back_ground;      //背景画像

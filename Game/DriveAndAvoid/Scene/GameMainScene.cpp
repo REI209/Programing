@@ -35,6 +35,7 @@ void GameMainScene::Initialize()
 
 	//制限時間の設定(秒) 
 	counter = 60;
+	count_down = 3;
 
 
 	//画像の読み込み
@@ -120,15 +121,26 @@ eSceneType GameMainScene::Update()
 {
 	//カウント
 	time++;
+
 	//1秒を数えて、60秒経過後リザルトへ
-	if (time % 60 == 0) {
-		counter -= 1;
-		if (counter < 0)
+	if (time % 60 == 0) 
+	{
+		count_down -= 1;
+
+		if (count_down < 0)
 		{
-			return eSceneType::E_RESULT;
+			counter -= 1;
+			if (counter < 0)
+			{
+				return eSceneType::E_RESULT;
+			}
 		}
 	}
 
+	if (count_down < 0)
+	{
+
+	}
 	//プレイヤーの更新
 	player->Update();
 
