@@ -25,6 +25,11 @@ void Player::Initialize()
 	stamina = 50.0f;
 	damage = 0;
 	image_size = 1.0f;
+	ly = 0.0f;
+	fam_flg = false;
+	fam_anim = 0;
+	acceleration_flg = false;
+	time = 0;
 
 	//âÊëúÇÃì«Ç›çûÇ›
 	image = LoadGraph("Resource/images/player.png");
@@ -182,7 +187,7 @@ void Player::Movement()
 	location += move;
 
 	//âÊñ äOÇ…çsÇ©Ç»Ç¢ÇÊÇ§Ç…êßå¿Ç∑ÇÈ
-	if ((location.x < box_size.x) || (location.x >= 1280.0f - box_size.x) || (location.y < box_size.y) || (location.y >= 480.0f - box_size.y))
+	if ((location.x < box_size.x) || (location.x >= 1280.0f - box_size.x) || (location.y < box_size.y) || (location.y >= 720.0f - box_size.y))
 	{
 		location -= move;
 	}
@@ -215,6 +220,11 @@ void Player::Acceleration()
 			stamina -= 0.01f * speed;
 		}
 
+		if (acceleration_flg == false)
+		{
+			acceleration_flg = true;
+		}
+
 	}
 	else
 	{
@@ -229,9 +239,23 @@ void Player::Acceleration()
 			speed = 5.0f;
 		}
 
-		if (ly > 0)
+		if (acceleration_flg == true)
 		{
-			ly = 0;
+			if (ly > 0)
+			{
+				time = 180;
+				ly = 0;
+				acceleration_flg = false;
+			}
+		}
+
+		if (time > 0)
+		{
+			time--;
+			if (location.y < 380.0f)
+			{
+				location.y += 2.0f;
+			}
 		}
 
 		if (stamina <= 50.0f)

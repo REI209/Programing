@@ -197,6 +197,11 @@ eSceneType GameMainScene::Update()
 			{
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
+				if (player->GetPlayerSize() < 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
 				obstacle_a[i]->Finalize();
 				delete obstacle_a[i];
 				obstacle_a[i] = nullptr;
@@ -249,6 +254,11 @@ eSceneType GameMainScene::Update()
 			{
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
+				if (player->GetPlayerSize() < 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
 				obstacle_b[i]->Finalize();
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
@@ -273,6 +283,11 @@ eSceneType GameMainScene::Update()
 			{
 				player->SetActive(false);
 				player->DecreaseHp(-10000.0f);
+				if (player->GetPlayerSize() < 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
 				obstacle_c[i]->Finalize();
 				delete obstacle_c[i];
 				obstacle_c[i] = nullptr;
@@ -305,6 +320,11 @@ eSceneType GameMainScene::Update()
 			//敵(ルンバ)に当たるとダメージ
 			player->SetActive(false);
 			player->DecreaseHp(-50.0f);
+			if (player->GetPlayerSize() < 0.5f)
+			{
+				player->SetSize(-0.1f);
+				player->SetBoxSize(-0.1f);
+			}
 		}
 	}
 	
@@ -327,8 +347,11 @@ eSceneType GameMainScene::Update()
 			if (IsObjectHitCheck_P(player, family[i]))
 			{
 				player->DecreaseHp(10.0f);
-				player->SetSize(0.1f);
-				player->SetBoxSize(0.1f);
+				if (player->GetPlayerSize() > 2.0f)
+				{
+					player->SetSize(0.1f);
+					player->SetBoxSize(0.1f);
+				}
 				family[i]->Finalize();
 				delete family[i];
 				family[i] = nullptr;
