@@ -17,9 +17,9 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resource/images/Title.bmp");
+	background_image = LoadGraph("Resource/images/Title.png");
 	menu_image = LoadGraph("Resource/images/menu.bmp");
-	cursor_image = LoadGraph("Resource/images/cone.bmp");
+	cursor_image = LoadGraph("Resource/images/cursor.png");
 	//音源の読み込み
 	titlebgm = LoadSoundMem(TITLE_BGM);
 
@@ -95,11 +95,10 @@ void TitleScene::Draw() const
 	DrawGraph(0, 0, background_image, FALSE);
 
 	//メニュー画面の描画
-	DrawGraph(120, 200, menu_image, TRUE);
+	//DrawGraph(120, 200, menu_image, TRUE);
 
 	//カーソル画面の描画
-	DrawRotaGraph(90, 220 + menu_cursor * 40, 0.7, DX_PI / 2.0, cursor_image,
-		TRUE);
+	DrawGraph(320, 305 + menu_cursor * 100, cursor_image,TRUE);
 }
 
 //終了時宣言

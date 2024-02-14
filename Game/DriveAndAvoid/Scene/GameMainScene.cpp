@@ -231,7 +231,7 @@ eSceneType GameMainScene::Update()
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.5f)
+						if (player->GetPlayerSize() > 0.1f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -286,7 +286,7 @@ eSceneType GameMainScene::Update()
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.5f)
+						if (player->GetPlayerSize() > 0.1f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -341,7 +341,7 @@ eSceneType GameMainScene::Update()
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.5f)
+						if (player->GetPlayerSize() > 0.1f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -558,8 +558,8 @@ void GameMainScene::Draw() const
 	}
 
 	//スタミナゲージの描画
-	float fx = player->GetLocation().x + 50.0f * player->GetPlayerSize();
-	float fy = player->GetLocation().y - 40.0f * player->GetPlayerSize();
+	float fx = player->GetLocation().x + player->GetBoxSize().x + 13.0f;
+	float fy = player->GetLocation().y - player->GetBoxSize().y;
 	DrawBoxAA(fx, fy, fx + 15.0f, fy + 50.0f, GetColor(0, 0, 0),FALSE);
 	if (player->GetStamina() > 0.0f)
 	{

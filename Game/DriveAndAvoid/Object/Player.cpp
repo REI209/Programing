@@ -19,13 +19,13 @@ void Player::Initialize()
 {
 	is_active = true;
 	location = Vector2D(320.0f, 380.0f);
-	box_size = Vector2D(40.0f, 40.0f);
+	box_size = Vector2D(50.0f, 50.0f);
 	angle = 0.0f;
 	speed = 5.0f;
 	hp = 100.0f;
 	stamina = 50.0f;
 	damage = 0;
-	image_size = 1.0f;
+	image_size = 0.5f;
 	ly = 0.0f;
 	fam_flg = false;
 	fam_anim = 0;
@@ -33,7 +33,7 @@ void Player::Initialize()
 	time = 0;
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/player.png");
+	image = LoadGraph("Resource/images/player.PNG");
 
 	//エラーチェック
 	if (image == -1)
@@ -67,7 +67,7 @@ void Player::Update()
 		Acceleration();
 	}
 	
-	box_size = Vector2D(40.0f * image_size, 40.0f * image_size);
+	box_size = Vector2D(65.0f * image_size, 65.0f * image_size);
 }
 
 //描画処理
@@ -102,9 +102,9 @@ void Player::Draw()
 #ifdef _DEBUG
 
 	// 当たり判定確認用
-	/*DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
 	DrawFormatString(0, 0, 0x000000, "%f",location.y);
-	DrawFormatString(0, 50, 0xffffff, "%f", stamina);*/
+	DrawFormatString(0, 50, 0xffffff, "%f", stamina);
 
 
 #endif // _DEBUG
