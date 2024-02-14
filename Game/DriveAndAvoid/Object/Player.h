@@ -37,8 +37,8 @@ public:
 	bool GetActiveFlg() { return is_active; } //有効フラグ取得
 	int GetDamageTime() { return damage;  }   //ダメージ時間取得 
 	float GetPlayerSize() { return image_size; }  //プレイヤーのサイズ変更
-	void SetPlayerSize(float size) { image_size = size; }  //プレイヤーのサイズ変更
-	void SetPlayerBoxSize(float size) { ; }  //プレイヤーのサイズ変更
+	void SetSize(float size) { image_size += size; }  //プレイヤーのサイズ変更
+	void SetBoxSize(float size) { ; }  //プレイヤーのサイズ変更
 
 
 private:
