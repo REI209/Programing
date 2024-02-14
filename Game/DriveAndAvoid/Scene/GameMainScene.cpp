@@ -192,6 +192,16 @@ eSceneType GameMainScene::Update()
 		{
 			obstacle_a[i]->Update(player->GetSpeed());
 
+			//敵と障害物の当たり判定
+			if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
+			{
+				enemy_roomba->SetActive(false);
+				enemy_roomba->DecreaseHp(-50.0f);
+				obstacle_a[i]->Finalize();
+				delete obstacle_a[i];
+				obstacle_a[i] = nullptr;
+			}
+
 		//	////画面外に行ったら、敵を削除してスコア加算
 		//	//if (enemy[i]->GetLocation().y >= 640.0f)
 		//	//{
@@ -237,8 +247,8 @@ eSceneType GameMainScene::Update()
 			//敵と障害物の当たり判定
 			if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
 			{
-				enemy_roomba->SetActive(true);
-				//enemy_roomba->DecreaseHp(-50.0f);
+				enemy_roomba->SetActive(false);
+				enemy_roomba->DecreaseHp(-50.0f);
 				obstacle_b[i]->Finalize();
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
@@ -258,7 +268,7 @@ eSceneType GameMainScene::Update()
 		////	//	enemy[i] = nullptr;
 		////	//}
 
-			//当たり判定の確認
+			//プレイヤーと障害物の当たり判定の確認
 			if (IsObjectHitCheck_P(player, obstacle_c[i]))
 			{
 				player->SetActive(false);
@@ -267,10 +277,18 @@ eSceneType GameMainScene::Update()
 				delete obstacle_c[i];
 				obstacle_c[i] = nullptr;
 			}
+
+			//敵と障害物の当たり判定
+			if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
+			{
+				enemy_roomba->SetActive(false);
+				enemy_roomba->DecreaseHp(-50.0f);
+				obstacle_c[i]->Finalize();
+				delete obstacle_c[i];
+				obstacle_c[i] = nullptr;
+			}
 		}
 	}
-
-
 
 	//敵(ルンバ)の更新と当たり判定チェック
 	if (enemy_roomba != nullptr)
@@ -281,7 +299,7 @@ eSceneType GameMainScene::Update()
 		}
 		enemy_roomba->Update(counter,diff_x);
 
-		//当たり判定の確認
+		//プレイヤーと敵の当たり判定の確認
 		if (IsHitCheck(player, enemy_roomba))
 		{
 			//敵(ルンバ)に当たるとダメージ
@@ -318,8 +336,6 @@ eSceneType GameMainScene::Update()
 			//敵と障害物の当たり判定
 			if (IsObjecHitCheck_E(enemy_roomba, family[i]))
 			{
-				enemy_roomba->SetActive(true);
-				//enemy_roomba->DecreaseHp(-50.0f);
 				family[i]->Finalize();
 				delete family[i];
 				family[i] = nullptr;
