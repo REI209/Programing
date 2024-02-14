@@ -197,6 +197,11 @@ eSceneType GameMainScene::Update()
 			{
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
+				if (player->GetPlayerSize() < 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
 				obstacle_a[i]->Finalize();
 				delete obstacle_a[i];
 				obstacle_a[i] = nullptr;
@@ -249,6 +254,11 @@ eSceneType GameMainScene::Update()
 			{
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
+				if (player->GetPlayerSize() < 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
 				obstacle_b[i]->Finalize();
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
@@ -273,6 +283,11 @@ eSceneType GameMainScene::Update()
 			{
 				player->SetActive(false);
 				player->DecreaseHp(-10000.0f);
+				if (player->GetPlayerSize() < 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
 				obstacle_c[i]->Finalize();
 				delete obstacle_c[i];
 				obstacle_c[i] = nullptr;
@@ -305,6 +320,11 @@ eSceneType GameMainScene::Update()
 			//敵(ルンバ)に当たるとダメージ
 			player->SetActive(false);
 			player->DecreaseHp(-50.0f);
+			if (player->GetPlayerSize() < 0.5f)
+			{
+				player->SetSize(-0.1f);
+				player->SetBoxSize(-0.1f);
+			}
 		}
 	}
 	
@@ -315,6 +335,7 @@ eSceneType GameMainScene::Update()
 		{
 			family[i]->Update(player->GetSpeed());
 
+			//仲間が画面外に行ったら削除
 			if (family[i]->GetLocation().y >= 800.0f)
 			{
 				family[i]->Finalize();
@@ -326,8 +347,11 @@ eSceneType GameMainScene::Update()
 			if (IsObjectHitCheck_P(player, family[i]))
 			{
 				player->DecreaseHp(10.0f);
-				player->SetSize(0.1f);
-				player->SetBoxSize(0.1f);
+				if (player->GetPlayerSize() > 2.0f)
+				{
+					player->SetSize(0.1f);
+					player->SetBoxSize(0.1f);
+				}
 				family[i]->Finalize();
 				delete family[i];
 				family[i] = nullptr;
@@ -340,6 +364,21 @@ eSceneType GameMainScene::Update()
 				delete family[i];
 				family[i] = nullptr;
 			}
+
+			for (int j = 0; j < 5; j++)
+			{
+				if (family[j] != nullptr && i != j)
+				{
+					//仲間同士の当たり判定
+					if (IsObjecHitCheck_O(family[i], family[j]))
+					{
+						family[j]->Finalize();
+						delete family[j];
+						family[j] = nullptr;
+					}
+				}
+			}
+			
 		}
 	}
 
@@ -383,6 +422,8 @@ void GameMainScene::Draw() const
 		{
 			family[i]->Draw();
 		}
+
+		DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
 	}
 
 
@@ -398,11 +439,6 @@ void GameMainScene::Draw() const
 
 	//制限時間の描画
 	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
-
-	for (int i = 0; i < 10; i++)
-	{
-		DrawFormatString(980, 40 + i * 30, GetColor(255, 0, 0), "%d", family[i]);
-	}
 
 	/*DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
 	DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d",high_score);
@@ -430,8 +466,8 @@ void GameMainScene::Draw() const
 	
 
 	//体力ゲージの描画
-	fx = 1005.0f;
-	fy = 450.0f;
+	fx = 1000.0f;
+	fy = 10.0f;
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "PLAYER HP");
 	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetHp() * 250 / 1000), fy + 40.0f, GetColor(255, 0, 0), TRUE);
 	DrawBoxAA(fx, fy + 20.0f, fx + 250.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
@@ -484,6 +520,32 @@ void GameMainScene::Finalize()
 	//}
 
 	//delete[] enemy;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (obstacle_a[i] != nullptr)
+		{
+			obstacle_a[i]->Finalize();
+			delete obstacle_a[i];
+			obstacle_a[i] = nullptr;
+		}
+		if (obstacle_b[i] != nullptr)
+		{
+			obstacle_b[i]->Finalize();
+			delete obstacle_b[i];
+			obstacle_b[i] = nullptr;
+		}
+		if (obstacle_c[i] != nullptr)
+		{
+			obstacle_c[i]->Finalize();
+			delete obstacle_c[i];
+			obstacle_c[i] = nullptr;
+		}
+	}
+
+	delete[] obstacle_a;
+	delete[] obstacle_b;
+	delete[] obstacle_c;
 
 	for (int i = 0; i < 5; i++)
 	{
@@ -569,6 +631,26 @@ bool GameMainScene::IsObjecHitCheck_E(Enemy_Roomba* e, T* object)
 
 	//当たり判定サイズの大きさ取得
 	Vector2D box_ex = e->GetBoxSize() + object->GetBoxSize();
+
+	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
+	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
+}
+
+//障害物同士の当たり判定
+template<class T>
+bool GameMainScene::IsObjecHitCheck_O(T* object1, T* object2)
+{
+	//情報がなければ、当たり判定を無視する
+	if (object1 == nullptr)
+	{
+		return false;
+	}
+
+	//敵情報の差分を取得
+	Vector2D diff_location = object1->GetLocation() - object2->GetLocation();
+
+	//当たり判定サイズの大きさ取得
+	Vector2D box_ex = object1->GetBoxSize() + object2->GetBoxSize();
 
 	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
 	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
