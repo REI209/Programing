@@ -4,7 +4,8 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr)//,enemy(nullptr)
+barrier_image(NULL),bonus_image(NULL),bonus_size(0.0),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),
+obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr)//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
@@ -38,6 +39,7 @@ void GameMainScene::Initialize()
 	counter = 60;
 	count_down = 4;
 
+	bonus_size = 1.0f;
 
 	//‰æ‘œ‚Ì“Ç‚Ýž‚Ý
 	back_ground = LoadGraph("Resource/Images/back_img.png");
@@ -51,6 +53,8 @@ void GameMainScene::Initialize()
 
 	family_image[0] = LoadGraph("Resource/Images/IMG_0111.png");
 	family_image[1] = LoadGraph("Resource/Images/IMG_0113.png");
+
+	bonus_image = LoadGraph("Resource/Images/big_bonus.png");
 
 	//ƒGƒ‰[ƒ`ƒFƒbƒN
 	if (back_ground == -1)
@@ -153,29 +157,32 @@ eSceneType GameMainScene::Update()
 			mileage += 1;
 		}
 
-		//“G¶¬ˆ—
-		if (mileage / 20 % 100 == 0)
+		if (enemy_roomba->GetBonusFlg() != true)
 		{
-			for (int i = 0; i < 10; i++)
+			//“G¶¬ˆ—
+			if (mileage / 20 % 100 == 0)
 			{
-				if (obstacle_a[i] == nullptr)
+				for (int i = 0; i < 10; i++)
 				{
-					obstacle_a[i] = new Obstacle_A(obstacle_a_image);
-					obstacle_a[i]->Initialize();
-					break;
-				}
-				if (obstacle_b[i] == nullptr)
-				{
-					//int type = GetRand(3) % 3;
-					obstacle_b[i] = new Obstacle_B(obstacle_b_image);
-					obstacle_b[i]->Initialize();
-					break;
-				}
-				if (obstacle_c[i] == nullptr)
-				{
-					obstacle_c[i] = new Obstacle_C(obstacle_c_image);
-					obstacle_c[i]->Initialize();
-					break;
+					if (obstacle_a[i] == nullptr)
+					{
+						obstacle_a[i] = new Obstacle_A(obstacle_a_image);
+						obstacle_a[i]->Initialize();
+						break;
+					}
+					if (obstacle_b[i] == nullptr)
+					{
+						//int type = GetRand(3) % 3;
+						obstacle_b[i] = new Obstacle_B(obstacle_b_image);
+						obstacle_b[i]->Initialize();
+						break;
+					}
+					if (obstacle_c[i] == nullptr)
+					{
+						obstacle_c[i] = new Obstacle_C(obstacle_c_image);
+						obstacle_c[i]->Initialize();
+						break;
+					}
 				}
 			}
 		}
@@ -431,17 +438,28 @@ eSceneType GameMainScene::Update()
 
 	}
 
+	if (enemy_roomba->GetBonusFlg() == true)
+	{
+		
+	}
+
 	return GetNowScene();
 }
 
 //•`‰æˆ—
 void GameMainScene::Draw() const
 {
-
+	
 
 	//”wŒi‰æ‘œ‚Ì•`‰æ
 	DrawGraph(0, mileage % 720 - 720, back_ground, TRUE);
 	DrawGraph(0, mileage % 720, back_ground, TRUE);
+
+	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
+	player->Draw();
+
+	//ƒ‹ƒ“ƒo‚Ì•`‰æ
+	enemy_roomba->Draw();
 
 	//ˆêŽž’âŽ~’†‚È‚ç‰æ–Ê‚ð”–ˆÃ‚­‚·‚é
 	if (count_down > 0)
@@ -457,6 +475,11 @@ void GameMainScene::Draw() const
 	if (count_down == 1)
 	{
 		DrawFormatString(640, 365, GetColor(255, 255, 255), "GO!");
+	}
+
+	if (enemy_roomba->GetBonusFlg() == true)
+	{
+		DrawRotaGraph(640, 150, bonus_size, 0.0, bonus_image, TRUE);
 	}
 
 	SetFontSize(16);
@@ -490,11 +513,7 @@ void GameMainScene::Draw() const
 	}
 
 
-	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
-	player->Draw();
 
-	//ƒ‹ƒ“ƒo‚Ì•`‰æ
-	enemy_roomba->Draw();
 
 	//UI‚Ì•`‰æ
 	SetFontSize(16);

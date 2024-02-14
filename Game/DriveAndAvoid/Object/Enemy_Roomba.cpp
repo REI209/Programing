@@ -21,6 +21,7 @@ void Enemy_Roomba::Initialize()
 	speed = -0.08f;		//‘¬“x
 	angle = 0.0f;
 	hp = 300;			//‘Ì—Í
+	hit_count = 0;
 
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
 	image = LoadGraph(ENEMY_ROOMBA_IMAGE);
@@ -37,6 +38,8 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 	if (!is_active)
 	{
 		count_t++;
+		hit_count++;
+		//hit_count += 1;
 
 		speed = -0.02f;
 		angle += 0.3f;
@@ -74,6 +77,21 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 			break;
 		}
 	}
+
+	if (hit_count > 5)
+	{
+		bonus_flg = true;
+		draw_flg = true;
+		count_t = 0;
+		count_t++;
+		if (count_t > 120)
+		{
+			count_t = 0;
+			draw_flg = false;
+
+		}
+
+	}
 }
 
 void Enemy_Roomba::Draw() const
@@ -81,8 +99,14 @@ void Enemy_Roomba::Draw() const
 	//‰æ‘œ‚Ì•`‰æ
 	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
 	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
-	DrawFormatString(510, 300, GetColor(255, 255, 255), "diff_x:%f", diff_x);
+	DrawFormatString(510, 300, GetColor(255, 255, 255), "roomba_hp:%f", hp);
 	DrawFormatString(510, 350, GetColor(255, 255, 255), "location.x:%f location.y:%f", location.x, location.y);
+
+	if (draw_flg == true)
+	{
+		//Draw_bakuhatu
+	}
+
 }
 
 void Enemy_Roomba::Finalize()
@@ -112,7 +136,11 @@ float Enemy_Roomba::TrackingPlayer(float _diff_x)
 			return move_x;
 		}
 	}
+}
 
+bool Enemy_Roomba::GetBonusFlg()
+{
+	return this->bonus_flg;
 }
 
 

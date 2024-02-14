@@ -16,6 +16,9 @@ private:
 	float hp;		//体力
 
 	int count_t = 0;	//カウント用変数
+	int hit_count;		//ヒットカウント
+	bool bonus_flg;
+	bool draw_flg;
 
 public:
 	Enemy_Roomba();
@@ -32,6 +35,7 @@ public:
 	Vector2D GetBoxSize() const;
 
 	float TrackingPlayer(float _diff_x);
+	bool GetBonusFlg();
 
 };
 
