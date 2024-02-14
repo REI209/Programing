@@ -23,11 +23,11 @@ void Enemy_Roomba::Initialize()
 
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/roomba.png");
+	image = LoadGraph("Resource/Images/roomba.png");
 	//エラーチェック
 	if (image == -1)
 	{
-		throw("Resource/images/roomba.bmpがありません\n");
+		throw("Resource/Images/roomba.pngがありません\n");
 	}
 }
 

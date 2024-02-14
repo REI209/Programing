@@ -3,7 +3,7 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr)//,enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr)//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
@@ -47,8 +47,8 @@ void GameMainScene::Initialize()
 	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
 	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
 
-	family_image[0] = LoadGraph("Resource/Images/IMG_0111.jpg");
-	family_image[1] = LoadGraph("Resource/Images/IMG_0113.jpg");
+	family_image[0] = LoadGraph("Resource/Images/IMG_0111.png");
+	family_image[1] = LoadGraph("Resource/Images/IMG_0113.png");
 
 	//エラーチェック
 	if (back_ground == -1)
@@ -77,11 +77,11 @@ void GameMainScene::Initialize()
 	}
 	if (family_image[0] == -1)
 	{
-		throw("Resource/Images/IMG_0111.jpgがありません\n");
+		throw("Resource/Images/IMG_0111.pngがありません\n");
 	}
 	if (family_image[1] == -1)
 	{
-		throw("Resource/Images/IMG_0113.jpgがありません\n");
+		throw("Resource/Images/IMG_0113.pngがありません\n");
 	}
 	//オブジェクトの生成
 	player = new Player;
@@ -275,7 +275,10 @@ eSceneType GameMainScene::Update()
 	//敵(ルンバ)の更新と当たり判定チェック
 	if (enemy_roomba != nullptr)
 	{
-		float diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
+		if (time % 60 == 0)
+		{
+			diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
+		}
 		enemy_roomba->Update(counter,diff_x);
 
 		//当たり判定の確認
