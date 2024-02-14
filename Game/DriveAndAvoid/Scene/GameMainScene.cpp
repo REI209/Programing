@@ -301,6 +301,7 @@ eSceneType GameMainScene::Update()
 		{
 			family[i]->Update(player->GetSpeed());
 
+			//仲間が画面外に行ったら削除
 			if (family[i]->GetLocation().y >= 800.0f)
 			{
 				family[i]->Finalize();
@@ -386,11 +387,6 @@ void GameMainScene::Draw() const
 	//制限時間の描画
 	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
 
-	for (int i = 0; i < 10; i++)
-	{
-		DrawFormatString(980, 40 + i * 30, GetColor(255, 0, 0), "%d", family[i]);
-	}
-
 	/*DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
 	DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d",high_score);
 	DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
@@ -417,8 +413,8 @@ void GameMainScene::Draw() const
 	
 
 	//体力ゲージの描画
-	fx = 1005.0f;
-	fy = 450.0f;
+	fx = 1000.0f;
+	fy = 10.0f;
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "PLAYER HP");
 	DrawBoxAA(fx, fy + 20.0f, fx + (player->GetHp() * 250 / 1000), fy + 40.0f, GetColor(255, 0, 0), TRUE);
 	DrawBoxAA(fx, fy + 20.0f, fx + 250.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);

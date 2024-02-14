@@ -16,6 +16,10 @@ private:
 	int damage;          //点滅用変数
 	float image_size;    //表示する画像の大きさ
 	float ly;            //ダメージを受けた時のプレイヤーY座標の移動量
+	bool acceleration_flg;   //プレイヤーが加速したか？
+	bool fam_flg;        //仲間に当たったか？
+	int fam_anim;        //仲間に当たった時のアニメーション用
+	int time;            //加速した後の後ろに引き下げる用
 
 public:
 	Player();
@@ -38,11 +42,15 @@ public:
 	int GetDamageTime() { return damage;  }   //ダメージ時間取得 
 	float GetPlayerSize() { return image_size; }  //プレイヤーのサイズ変更
 	void SetSize(float size) { image_size += size; }  //プレイヤーのサイズ変更
-	void SetBoxSize(float size) { ; }  //プレイヤーのサイズ変更
+	void SetBoxSize(float size) { box_size.x += size, box_size.y += size; }  //プレイヤーのサイズ変更
+	void SetFamAnim(bool flg) { fam_flg = flg; }  //仲間に当たったかどうか
+	bool GetFamAnim() { return fam_flg; } //仲間にあったているかどうか
+
 
 
 private:
 	void Movement();       //移動処理
 	void Acceleration();   //加減速処理
+	void FamAnim();        //プレイヤーが仲間に当たった時のアニメーション
 
 };
