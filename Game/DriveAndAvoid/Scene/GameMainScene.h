@@ -43,6 +43,7 @@ private:
 
 	Family** family; //’‡ŠÔ
 	int family_image[2]; //’‡ŠÔ‰æ‘œ
+	int family_cnt[2]; //W‚ß‚½’‡ŠÔ‚Ì”
 
 public:
 	GameMainScene();

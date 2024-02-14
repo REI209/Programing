@@ -1,7 +1,7 @@
 #include"Obstacle_A.h"//障害物（扇風機）
 #include"DxLib.h"
 
-Obstacle_A::Obstacle_A(int image) :image(image), speed(0.0f),
+Obstacle_A::Obstacle_A(int type,int image) :image(image),type(type),speed(0.0f),
 location(0.0f), box_size(0.0f)
 {
 
@@ -16,11 +16,11 @@ Obstacle_A::~Obstacle_A()
 void Obstacle_A::Initialize()
 {
 	//出現させるx座標パターンを取得
-	float random_x = (float)(GetRand(1) * 196 + 100);
+	float random_x = (float)(GetRand(1) * (245 * 5) + 35);
 	//生成位置の設定
 	location = Vector2D(random_x, -50.0f);
 	////当たり判定の設定
-	box_size = Vector2D(200.0f, 50.0f);
+	box_size = Vector2D(73.0f, 87.0f);
 	//速さの設定
 	speed=5.0f;
 	//画像の読み込み
@@ -35,6 +35,13 @@ void Obstacle_A::Update(float speed)
 
 void Obstacle_A::Draw() const
 {
+	switch(type)
+	{
+	case 0:
+		break;
+	case 1:
+		break;
+	}
 	//画像の描画
 	DrawRotaGraphF(location.x, location.y, 0.3, 0.0, image, TRUE);
 

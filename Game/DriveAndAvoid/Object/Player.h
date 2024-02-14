@@ -46,11 +46,12 @@ public:
 	void SetFamAnim(bool flg) { fam_flg = flg; }  //仲間に当たったかどうか
 	bool GetFamAnim() { return fam_flg; } //仲間にあったているかどうか
 	void SetX(float num) { location.x -= num; } //プレイヤーのX座標変更
+	void SetY(float num) { location.y -= num; } //プレイヤーのX座標変更
 
 
 private:
 	void Movement();       //移動処理
 	void Acceleration();   //加減速処理
-	void FamAnim();        //プレイヤーが仲間に当たった時のアニメーション
+	void RoombaAnim();        //プレイヤーが仲間に当たった時のアニメーション
 
 };
