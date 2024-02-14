@@ -16,21 +16,22 @@ Obstacle_C::~Obstacle_C()
 void Obstacle_C::Initialize()
 {
 	//出現させるx座標パターンを取得
-	float random_x = (float)(GetRand(4) * 105 + 40);
+	float random_y = (float)(GetRand(4) * 105 + 40);
 	//生成位置の設定
-	location = Vector2D(random_x, -50.0f);
+	location = Vector2D( -50.0f, random_y);
 	//当たり判定の設定
-	box_size = Vector2D(50.0f, 50.0f);
+	box_size = Vector2D(30.0f, 30.0f);//後で調整
 	//速さの設定
-	speed =9.0f;
+	speed =2.0f;
 	//画像の読み込み
 	image = LoadGraph("Resource/images/pet_robot_soujiki_cat.png");
 }
 
 void Obstacle_C::Update(float speed)
 {
+
 	//位置情報に移動量を加算する
-	location += Vector2D(0.0f, this->speed + speed - 6);
+	location += Vector2D(this->speed, 0.0f);
 }
 
 void Obstacle_C::Draw() const
