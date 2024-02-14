@@ -36,8 +36,13 @@ public:
 	float GetHp() const;            //体力取得
 	bool GetActiveFlg() { return is_active; } //有効フラグ取得
 	int GetDamageTime() { return damage;  }   //ダメージ時間取得 
+	float GetPlayerSize() { return image_size; }  //プレイヤーのサイズ変更
+	void SetPlayerSize(float size) { image_size = size; }  //プレイヤーのサイズ変更
+	void SetPlayerBoxSize(float size) { ; }  //プレイヤーのサイズ変更
+
 
 private:
 	void Movement();       //移動処理
 	void Acceleration();   //加減速処理
+
 };
