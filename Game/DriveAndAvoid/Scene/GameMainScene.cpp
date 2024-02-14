@@ -410,7 +410,11 @@ void GameMainScene::Draw() const
 	float fx = player->GetLocation().x + 50.0f * player->GetPlayerSize();
 	float fy = player->GetLocation().y - 40.0f * player->GetPlayerSize();
 	DrawBoxAA(fx, fy, fx + 15.0f, fy + 50.0f, GetColor(0, 0, 0),FALSE);
-	DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
+	if (player->GetStamina() > 0.0f)
+	{
+		DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
+	}
+	
 
 	//‘Ì—ÍƒQ[ƒW‚Ì•`‰æ
 	fx = 1005.0f;
