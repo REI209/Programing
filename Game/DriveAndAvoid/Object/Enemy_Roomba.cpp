@@ -1,5 +1,5 @@
 #include "Enemy_Roomba.h"
-#include "Player.h"
+#include "common.h"
 #include "DxLib.h"
 
 Enemy_Roomba::Enemy_Roomba() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
@@ -23,11 +23,11 @@ void Enemy_Roomba::Initialize()
 
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/roomba.bmp");
+	image = LoadGraph("Resource/images/roomba.png");
 	//エラーチェック
 	if (image == -1)
 	{
-		throw("Resource/image/roomba.bmpがありません\n");
+		throw("Resource/images/roomba.bmpがありません\n");
 	}
 }
 

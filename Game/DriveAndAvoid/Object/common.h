@@ -25,7 +25,7 @@
 
 //‰æ‘œ—p
 #define PLAYER_IMAGE
-#define ENEMY_ROOMBA_IMAGE
+#define ENEMY_ROOMBA_IMAGE "Resource/images/roomba.png"
 #define OBSTACLE_A_IMAGE
 #define OBSTACLE_B_IMAGE
 #define OBSTACLE_C_IMAGE
