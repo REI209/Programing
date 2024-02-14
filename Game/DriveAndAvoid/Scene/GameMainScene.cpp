@@ -40,6 +40,9 @@ void GameMainScene::Initialize()
 	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
 	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
 
+	//音源の読み込み
+	main_sound= LoadSoundMem("Resource/sounds/たぬきちの冒険.mp3");
+	gameover_sound= LoadSoundMem("Resource/sounds/zannense.mp3");
 	//エラーチェック
 	if (back_ground == -1)
 	{
@@ -65,6 +68,16 @@ void GameMainScene::Initialize()
 	{
 		throw("Resource/Images/pet_robot_soujiki_cat.pngがありません\n");
 	}
+
+	if (main_sound == -1)
+	{
+		throw("Resource/sounds/たぬきちの冒険.mp3がありません\n");
+	}
+	if (gameover_sound == -1)
+	{
+		throw("Resource/sounds/zannense.mp3がありません\n");
+	}
+
 	//オブジェクトの生成
 	player = new Player;
 	//enemy = new Enemy * [10];
@@ -104,7 +117,13 @@ eSceneType GameMainScene::Update()
 		}
 	}
 
-
+	//BGMの再生
+	PlaySoundMem(main_sound, DX_PLAYTYPE_LOOP, FALSE);
+	/*if (changescene==)
+	{
+		PlaySoundMem(gameover_sound, DX_PLAYTYPE_BACK, FALSE);
+		StopSoundMem(main_sound);
+	}*/
 	//プレイヤーの更新
 	player->Update();
 
