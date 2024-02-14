@@ -3,7 +3,7 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr),obstacle_b(nullptr),obstacle_c(nullptr),family(nullptr)//,enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr), obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr)//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
@@ -275,7 +275,6 @@ eSceneType GameMainScene::Update()
 	//敵(ルンバ)の更新と当たり判定チェック
 	if (enemy_roomba != nullptr)
 	{
-		
 		float diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
 		enemy_roomba->Update(counter,diff_x);
 
@@ -287,12 +286,6 @@ eSceneType GameMainScene::Update()
 			player->DecreaseHp(-50.0f);
 		}
 	}
-
-	////プレイヤーと障害物の当たり判定
-	//if (IsObjectHitCheck_P(player, object_kari[i]))
-	//{
-
-	//}
 	
 	//仲間の更新と当たり判定チェック
 	for (int i = 0; i < 10; i++)
@@ -333,7 +326,7 @@ eSceneType GameMainScene::Update()
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if ( player->GetHp() < 0.0f)
 	{
-		return eSceneType::E_RESULT;
+		return eSceneType::E_OVER;
 	}
 
 	return GetNowScene();
@@ -519,6 +512,7 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy_Roomba* e)
 	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
 
+//当たり判定(プレイヤーとオブジェクト)
 template<class T>
 bool GameMainScene::IsObjectHitCheck_P(Player* p, T* object)
 {
@@ -538,6 +532,7 @@ bool GameMainScene::IsObjectHitCheck_P(Player* p, T* object)
 	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
 
+//当たり判定(敵(ルンバ)とオブジェクト)
 template<class T>
 bool GameMainScene::IsObjecHitCheck_E(Enemy_Roomba* e, T* object)
 {
