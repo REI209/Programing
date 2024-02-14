@@ -39,15 +39,15 @@
 #define RESULT_BACK_IMAGE
 
 //音関係
-#define TITLE_BGM
-#define GAMEMAIN_BGM
+#define TITLE_BGM "Resource/sounds/Titlebgm.mp3"
+#define GAMEMAIN_BGM "Resource/sounds/たぬきちの冒険.mp3"
 
-#define CURSOL_SE
-#define SELECT_SE
+#define CURSOL_SE "Resource/sounds/カーソル移動3.mp3"
+#define SELECT_SE "Resource/sounds/決定ボタンを押す3.mp3"
 
-#define FAN_WIND_SE
-#define CLEANER_SE
-#define FAMILLY_GET_SE
-#define DAMAGE_SE
-#define DEATH_SE
-#define ROOMBA_DEATH_SE
+#define FAN_WIND_SE "Resource/sounds/扇風機の強回転.mp3"
+#define CLEANER_SE "Resource/掃除機の電源を入れる.mp3"
+#define FAMILLY_GET_SE "Resource/sounds/シャキーン1.mp3"
+#define DAMAGE_SE "Resource/sounds/間抜け2.mp3"
+#define DEATH_SE "Resource/sounds/「ぐああーーっ！」.mp3"
+#define ROOMBA_DEATH_SE "Resource/sounds/爆発1.mp3"
