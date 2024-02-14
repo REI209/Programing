@@ -1,5 +1,6 @@
 #include"GameMainScene.h"
 #include"../Object/RankingData.h"
+#include "../Object/common.h"
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
@@ -35,7 +36,7 @@ void GameMainScene::Initialize()
 
 	//制限時間の設定(秒) 
 	counter = 60;
-	count_down = 3;
+	count_down = 4;
 
 
 	//画像の読み込み
@@ -137,316 +138,297 @@ eSceneType GameMainScene::Update()
 		}
 	}
 
-	if (count_down < 0)
+	if (count_down < 1)
 	{
+		//プレイヤーの更新
+		player->Update();
 
-	}
-	//プレイヤーの更新
-	player->Update();
+		//移動距離の更新
+		if (player->GetActiveFlg() == true)
+		{
+			mileage += (int)player->GetSpeed();
+		}
+		else
+		{
+			mileage += 1;
+		}
 
-	//移動距離の更新
-	if (player->GetActiveFlg() == true)
-	{
-		mileage += (int)player->GetSpeed();
-	}
-	else
-	{
-		mileage += 1;
-	}
+		//敵生成処理
+		if (mileage / 20 % 100 == 0)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				if (obstacle_a[i] == nullptr)
+				{
+					obstacle_a[i] = new Obstacle_A(obstacle_a_image);
+					obstacle_a[i]->Initialize();
+					break;
+				}
+				if (obstacle_b[i] == nullptr)
+				{
+					//int type = GetRand(3) % 3;
+					obstacle_b[i] = new Obstacle_B(obstacle_b_image);
+					obstacle_b[i]->Initialize();
+					break;
+				}
+				if (obstacle_c[i] == nullptr)
+				{
+					obstacle_c[i] = new Obstacle_C(obstacle_c_image);
+					obstacle_c[i]->Initialize();
+					break;
+				}
+			}
+		}
 
-	//敵生成処理
-	if (mileage / 20 % 100 == 0)
-	{
+		//仲間生成処理
+		if (mileage / 20 % 100 == 0)
+		{
+			for (int i = 0; i < 5; i++)
+			{
+				if (family[i] == nullptr)
+				{
+					int type = GetRand(1);
+					family[i] = new Family(type, family_image[type]);
+					family[i]->Initialize();
+					break;
+				}
+			}
+		}
+
+
+		//敵の更新と当たり判定チェック
 		for (int i = 0; i < 10; i++)
 		{
-			if (obstacle_a[i] == nullptr)
+			if (obstacle_a[i] != nullptr)
 			{
-				obstacle_a[i] = new Obstacle_A(obstacle_a_image);
-				obstacle_a[i]->Initialize();
-				break;
-			}
-			if (obstacle_b[i] == nullptr)
-			{
-				//int type = GetRand(3) % 3;
-				obstacle_b[i] = new Obstacle_B(obstacle_b_image);
-				obstacle_b[i]->Initialize();
-				break;
-			}
-			if (obstacle_c[i] == nullptr)
-			{
-				obstacle_c[i] = new Obstacle_C(obstacle_c_image);
-				obstacle_c[i]->Initialize();
-				break;
-			}
-		}
-	}
-	
-	//仲間生成処理
-	if (mileage / 20 % 100 == 0)
-	{
-		for (int i = 0; i < 5; i++)
-		{
-			if (family[i] == nullptr)
-			{
-				int type = GetRand(1);
-				family[i] = new Family(type,family_image[type]);
-				family[i]->Initialize();
-				break;
-			}
-		}
-	}
+				obstacle_a[i]->Update(player->GetSpeed());
 
-
-	//敵の更新と当たり判定チェック
-	for (int i = 0; i < 10; i++)
-	{
-		if (obstacle_a[i] != nullptr)
-		{
-			obstacle_a[i]->Update(player->GetSpeed());
-
-			//画面外に行ったら削除
-			if (obstacle_a[i]->GetLocation().y >= 800.0f)
-			{
-				obstacle_a[i]->Finalize();
-				delete obstacle_a[i];
-				obstacle_a[i] = nullptr;
-			}
-
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
-			{
-				enemy_roomba->SetActive(false);
-				enemy_roomba->DecreaseHp(-50.0f);
-				if (player->GetPlayerSize() < 0.5f)
+				//画面外に行ったら削除
+				if (obstacle_a[i]->GetLocation().y >= 800.0f)
 				{
-					player->SetSize(-0.1f);
-					player->SetBoxSize(-0.1f);
+					obstacle_a[i]->Finalize();
+					delete obstacle_a[i];
+					obstacle_a[i] = nullptr;
 				}
-				obstacle_a[i]->Finalize();
-				delete obstacle_a[i];
-				obstacle_a[i] = nullptr;
-			}
 
-		//	////画面外に行ったら、敵を削除してスコア加算
-		//	//if (enemy[i]->GetLocation().y >= 640.0f)
-		//	//{
-		//	//	enemy_count[enemy[i]->GetType()]++;
-		//	//	enemy[i]->Finalize();
-		//	//	delete enemy[i];
-		//	//	enemy[i] = nullptr;
-		//	//}
-
-			////当たり判定の確認
-			//if (IsObjectHitCheck_P(player, obstacle_a[i]))
-			//{
-			//	player->SetActive(false);
-			//	player->DecreaseHp(-50.0f;
-			//	obstacle_a[i]->Finalize();
-			//	delete obstacle_a[i];
-			//	obstacle_a[i] = nullptr;
-			//}
-
-			for (int j = 0; j < 10; j++)
-			{
-				if (obstacle_a[j] != nullptr && i != j)
+				//敵と障害物の当たり判定
+				if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
 				{
-					//仲間同士の当たり判定
-					if (IsObjecHitCheck_O(obstacle_a[i], obstacle_a[j]))
+					enemy_roomba->SetActive(false);
+					enemy_roomba->DecreaseHp(-50.0f);
+					if (player->GetPlayerSize() < 0.5f)
 					{
-						obstacle_a[j]->Finalize();
-						delete obstacle_a[j];
-						obstacle_a[j] = nullptr;
+						player->SetSize(-0.1f);
+						player->SetBoxSize(-0.1f);
+					}
+					obstacle_a[i]->Finalize();
+					delete obstacle_a[i];
+					obstacle_a[i] = nullptr;
+				}
+
+				for (int j = 0; j < 10; j++)
+				{
+					if (obstacle_a[j] != nullptr && i != j)
+					{
+						//仲間同士の当たり判定
+						if (IsObjecHitCheck_O(obstacle_a[i], obstacle_a[j]))
+						{
+							obstacle_a[j]->Finalize();
+							delete obstacle_a[j];
+							obstacle_a[j] = nullptr;
+						}
+					}
+				}
+
+			}
+			if (obstacle_b[i] != nullptr)
+			{
+				obstacle_b[i]->Update(player->GetSpeed());
+
+				//画面外に行ったら削除
+				if (obstacle_b[i]->GetLocation().y >= 800.0f)
+				{
+					obstacle_b[i]->Finalize();
+					delete obstacle_b[i];
+					obstacle_b[i] = nullptr;
+				}
+
+				//当たり判定の確認
+				if (IsObjectHitCheck_P(player, obstacle_b[i]))
+				{
+					player->SetActive(false);
+					player->DecreaseHp(-50.0f);
+					obstacle_b[i]->Finalize();
+					delete obstacle_b[i];
+					obstacle_b[i] = nullptr;
+				}
+
+				//敵と障害物の当たり判定
+				if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
+				{
+					enemy_roomba->SetActive(false);
+					enemy_roomba->DecreaseHp(-50.0f);
+					if (player->GetPlayerSize() < 0.5f)
+					{
+						player->SetSize(-0.1f);
+						player->SetBoxSize(-0.1f);
+					}
+					obstacle_b[i]->Finalize();
+					delete obstacle_b[i];
+					obstacle_b[i] = nullptr;
+				}
+
+				for (int j = 0; j < 10; j++)
+				{
+					if (obstacle_b[j] != nullptr && i != j)
+					{
+						//仲間同士の当たり判定
+						if (IsObjecHitCheck_O(obstacle_b[i], obstacle_b[j]))
+						{
+							obstacle_b[j]->Finalize();
+							delete obstacle_b[j];
+							obstacle_b[j] = nullptr;
+						}
 					}
 				}
 			}
 
-		}
-		if (obstacle_b[i] != nullptr)
-		{
-			obstacle_b[i]->Update(player->GetSpeed());
-
-			//画面外に行ったら削除
-			if (obstacle_b[i]->GetLocation().y >= 800.0f)
+			if (obstacle_c[i] != nullptr)
 			{
-				obstacle_b[i]->Finalize();
-				delete obstacle_b[i];
-				obstacle_b[i] = nullptr;
+				obstacle_c[i]->Update(player->GetSpeed());
+
+				//画面外に行ったら削除
+				if (obstacle_c[i]->GetLocation().y >= 800.0f)
+				{
+					obstacle_c[i]->Finalize();
+					delete obstacle_c[i];
+					obstacle_c[i] = nullptr;
+				}
+
+				//プレイヤーと障害物の当たり判定の確認
+				if (IsObjectHitCheck_P(player, obstacle_c[i]))
+				{
+					player->SetActive(false);
+					player->DecreaseHp(-10000.0f);
+					if (player->GetPlayerSize() < 0.5f)
+					{
+						player->SetSize(-0.1f);
+						player->SetBoxSize(-0.1f);
+					}
+					obstacle_c[i]->Finalize();
+					delete obstacle_c[i];
+					obstacle_c[i] = nullptr;
+				}
+
+				//敵と障害物の当たり判定
+				if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
+				{
+					enemy_roomba->SetActive(false);
+					enemy_roomba->DecreaseHp(-50.0f);
+					obstacle_c[i]->Finalize();
+					delete obstacle_c[i];
+					obstacle_c[i] = nullptr;
+				}
+
+				for (int j = 0; j < 10; j++)
+				{
+					if (obstacle_c[j] != nullptr && i != j)
+					{
+						//仲間同士の当たり判定
+						if (IsObjecHitCheck_O(obstacle_c[i], obstacle_c[j]))
+						{
+							obstacle_c[j]->Finalize();
+							delete obstacle_c[j];
+							obstacle_c[j] = nullptr;
+						}
+					}
+				}
 			}
+		}
 
-			//当たり判定の確認
-			if (IsObjectHitCheck_P(player, obstacle_b[i]))
+		//敵(ルンバ)の更新と当たり判定チェック
+		if (enemy_roomba != nullptr)
+		{
+			if (time % 60 == 0)
 			{
+				diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
+			}
+			enemy_roomba->Update(counter, diff_x);
+
+			//プレイヤーと敵の当たり判定の確認
+			if (IsHitCheck(player, enemy_roomba))
+			{
+				//敵(ルンバ)に当たるとダメージ
 				player->SetActive(false);
 				player->DecreaseHp(-50.0f);
-				obstacle_b[i]->Finalize();
-				delete obstacle_b[i];
-				obstacle_b[i] = nullptr;
-			}
-
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
-			{
-				enemy_roomba->SetActive(false);
-				enemy_roomba->DecreaseHp(-50.0f);
 				if (player->GetPlayerSize() < 0.5f)
 				{
 					player->SetSize(-0.1f);
 					player->SetBoxSize(-0.1f);
 				}
-				obstacle_b[i]->Finalize();
-				delete obstacle_b[i];
-				obstacle_b[i] = nullptr;
 			}
+		}
 
-			for (int j = 0; j < 10; j++)
+		//仲間の更新と当たり判定チェック
+		for (int i = 0; i < 5; i++)
+		{
+			if (family[i] != nullptr)
 			{
-				if (obstacle_b[j] != nullptr && i != j)
+				family[i]->Update(player->GetSpeed());
+
+				//仲間が画面外に行ったら削除
+				if (family[i]->GetLocation().y >= 800.0f)
 				{
-					//仲間同士の当たり判定
-					if (IsObjecHitCheck_O(obstacle_b[i], obstacle_b[j]))
+					family[i]->Finalize();
+					delete family[i];
+					family[i] = nullptr;
+				}
+
+				//当たり判定の確認
+				if (IsObjectHitCheck_P(player, family[i]))
+				{
+					player->DecreaseHp(10.0f);
+					if (player->GetPlayerSize() > 2.0f)
 					{
-						obstacle_b[j]->Finalize();
-						delete obstacle_b[j];
-						obstacle_b[j] = nullptr;
+						player->SetSize(0.1f);
+						player->SetBoxSize(0.1f);
+					}
+					family[i]->Finalize();
+					delete family[i];
+					family[i] = nullptr;
+				}
+
+				//敵と障害物の当たり判定
+				if (IsObjecHitCheck_E(enemy_roomba, family[i]))
+				{
+					family[i]->Finalize();
+					delete family[i];
+					family[i] = nullptr;
+				}
+
+				for (int j = 0; j < 5; j++)
+				{
+					if (family[j] != nullptr && i != j)
+					{
+						//仲間同士の当たり判定
+						if (IsObjecHitCheck_O(family[i], family[j]))
+						{
+							family[j]->Finalize();
+							delete family[j];
+							family[j] = nullptr;
+						}
 					}
 				}
+
 			}
 		}
 
-		if (obstacle_c[i] != nullptr)
+		//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
+		if (player->GetHp() < 0.0f)
 		{
-			obstacle_c[i]->Update(player->GetSpeed());
-
-			//画面外に行ったら削除
-			if (obstacle_c[i]->GetLocation().y >= 800.0f)
-			{
-				obstacle_c[i]->Finalize();
-				delete obstacle_c[i];
-				obstacle_c[i] = nullptr;
-			}
-
-			//プレイヤーと障害物の当たり判定の確認
-			if (IsObjectHitCheck_P(player, obstacle_c[i]))
-			{
-				player->SetActive(false);
-				player->DecreaseHp(-10000.0f);
-				if (player->GetPlayerSize() < 0.5f)
-				{
-					player->SetSize(-0.1f);
-					player->SetBoxSize(-0.1f);
-				}
-				obstacle_c[i]->Finalize();
-				delete obstacle_c[i];
-				obstacle_c[i] = nullptr;
-			}
-
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
-			{
-				enemy_roomba->SetActive(false);
-				enemy_roomba->DecreaseHp(-50.0f);
-				obstacle_c[i]->Finalize();
-				delete obstacle_c[i];
-				obstacle_c[i] = nullptr;
-			}
-
-			for (int j = 0; j < 10; j++)
-			{
-				if (obstacle_c[j] != nullptr && i != j)
-				{
-					//仲間同士の当たり判定
-					if (IsObjecHitCheck_O(obstacle_c[i], obstacle_c[j]))
-					{
-						obstacle_c[j]->Finalize();
-						delete obstacle_c[j];
-						obstacle_c[j] = nullptr;
-					}
-				}
-			}
+			return eSceneType::E_OVER;
 		}
-	}
 
-	//敵(ルンバ)の更新と当たり判定チェック
-	if (enemy_roomba != nullptr)
-	{
-		if (time % 60 == 0)
-		{
-			diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
-		}
-		enemy_roomba->Update(counter,diff_x);
-
-		//プレイヤーと敵の当たり判定の確認
-		if (IsHitCheck(player, enemy_roomba))
-		{
-			//敵(ルンバ)に当たるとダメージ
-			player->SetActive(false);
-			player->DecreaseHp(-50.0f);
-			if (player->GetPlayerSize() < 0.5f)
-			{
-				player->SetSize(-0.1f);
-				player->SetBoxSize(-0.1f);
-			}
-		}
-	}
-	
-	//仲間の更新と当たり判定チェック
-	for (int i = 0; i < 5; i++)
-	{
-		if (family[i] != nullptr)
-		{
-			family[i]->Update(player->GetSpeed());
-
-			//仲間が画面外に行ったら削除
-			if (family[i]->GetLocation().y >= 800.0f)
-			{
-				family[i]->Finalize();
-				delete family[i];
-				family[i] = nullptr;
-			}
-
-			//当たり判定の確認
-			if (IsObjectHitCheck_P(player, family[i]))
-			{
-				player->DecreaseHp(10.0f);
-				if (player->GetPlayerSize() > 2.0f)
-				{
-					player->SetSize(0.1f);
-					player->SetBoxSize(0.1f);
-				}
-				family[i]->Finalize();
-				delete family[i];
-				family[i] = nullptr;
-			}
-
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, family[i]))
-			{
-				family[i]->Finalize();
-				delete family[i];
-				family[i] = nullptr;
-			}
-
-			for (int j = 0; j < 5; j++)
-			{
-				if (family[j] != nullptr && i != j)
-				{
-					//仲間同士の当たり判定
-					if (IsObjecHitCheck_O(family[i], family[j]))
-					{
-						family[j]->Finalize();
-						delete family[j];
-						family[j] = nullptr;
-					}
-				}
-			}
-			
-		}
-	}
-
-	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-	if ( player->GetHp() < 0.0f)
-	{
-		return eSceneType::E_OVER;
 	}
 
 	return GetNowScene();
@@ -455,9 +437,29 @@ eSceneType GameMainScene::Update()
 //描画処理
 void GameMainScene::Draw() const
 {
+
+
 	//背景画像の描画
 	DrawGraph(0, mileage % 720 - 720, back_ground, TRUE);
 	DrawGraph(0, mileage % 720, back_ground, TRUE);
+
+	//一時停止中なら画面を薄暗くする
+	if (count_down > 0)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
+		DrawBox(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0x000000, true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+		SetFontSize(64);
+		DrawFormatString(640, 365, GetColor(255, 255, 255), "%d", count_down - 1);
+	}
+	
+	if (count_down == 1)
+	{
+		DrawFormatString(640, 365, GetColor(255, 255, 255), "GO!");
+	}
+
+	SetFontSize(16);
 
 	//敵の描画
 	for (int i = 0; i < 10; i++)
@@ -484,7 +486,7 @@ void GameMainScene::Draw() const
 			family[i]->Draw();
 		}
 
-		DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
+		//DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
 	}
 
 
@@ -495,26 +497,10 @@ void GameMainScene::Draw() const
 	enemy_roomba->Draw();
 
 	//UIの描画
-	//DrawBox(980, 0, 1280, 720, GetColor(255, 255, 255), TRUE);
-	//SetFontSize(16);
+	SetFontSize(16);
 
 	//制限時間の描画
-	DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
-
-	/*DrawFormatString(510, 20, GetColor(0, 0, 0), "ハイスコア");
-	DrawFormatString(560, 40, GetColor(255, 255, 255), "%08d",high_score);
-	DrawFormatString(510, 80, GetColor(0, 0, 0), "避けた数");
-	for (int i = 0; i < 3; i++)
-	{
-		DrawRotaGraph(523 + (i * 50), 120, 0.3, 0, enemy_image[i], TRUE,FALSE);
-		DrawFormatString(510 + (i * 50), 140, GetColor(255, 255, 255), "%03d",
-			enemy_count[i]);
-	}
-	DrawFormatString(510, 200, GetColor(0, 0, 0), "走行距離");
-	DrawFormatString(555, 220, GetColor(255, 255, 255), "%08d",mileage/10);
-	DrawFormatString(555, 240, GetColor(0, 0, 0), "スピード");
-	DrawFormatString(555, 260, GetColor(255, 255, 255), "%08.1f",
-		player->GetSpeed());*/
+	//DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
 
 	//スタミナゲージの描画
 	float fx = player->GetLocation().x + 50.0f * player->GetPlayerSize();
@@ -569,18 +555,7 @@ void GameMainScene::Finalize()
 	//動的確保したオブジェクトを削除する
 	player->Finalize();
 	delete player;
-
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	if (enemy[i] != nullptr)
-	//	{
-	//		enemy[i]->Finalize();
-	//		delete enemy[i];
-	//		enemy[i] = nullptr;
-	//	}
-	//}
-
-	//delete[] enemy;
+	delete enemy_roomba;
 
 	for (int i = 0; i < 10; i++)
 	{
