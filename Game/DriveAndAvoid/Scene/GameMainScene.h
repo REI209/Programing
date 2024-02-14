@@ -29,6 +29,7 @@ private:
 
 	Enemy_Roomba* enemy_roomba;	//ルンバ
 	int roomba_image;	//ルンバの画像
+	float diff_x;		//プレイヤーとの差
 
 	Obstacle_A** obstacle_a;//扇風機
 	int obstacle_a_image;//扇風機画像

@@ -1,5 +1,5 @@
 #include "Enemy_Roomba.h"
-#include "Player.h"
+#include "common.h"
 #include "DxLib.h"
 
 Enemy_Roomba::Enemy_Roomba() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
@@ -18,16 +18,16 @@ void Enemy_Roomba::Initialize()
 	is_active = true;
 	location = Vector2D(480.0f, 600.0f);
 	box_size = Vector2D(25.0f, 25.0f);
-	speed = -0.2f;		//速度
+	speed = -0.08f;		//速度
 	hp = 10000;			//体力
 
 
 	//画像の読み込み
-	image = LoadGraph("Resource/images/roomba.bmp");
+	image = LoadGraph("Resource/Images/roomba.png");
 	//エラーチェック
 	if (image == -1)
 	{
-		throw("Resource/image/roomba.bmpがありません\n");
+		throw("Resource/Images/roomba.pngがありません\n");
 	}
 }
 
@@ -46,15 +46,15 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 	switch ((int)time)
 	{
 	case 45:
-		speed = -0.3f;
+		speed = -0.1f;
 		break;
 
 	case 30:
-		speed = -0.5f;
+		speed = -0.28f;
 		break;
 
 	case 15:
-		speed = -0.7f;
+		speed = -0.32f;
 		break;
 	}
 
@@ -113,7 +113,7 @@ float Enemy_Roomba::TrackingPlayer(float _diff_x)
 	diff_x = _diff_x;
 	float move_x = 0.0f;
 
-	if (diff_x < 1.0f && diff_x > -1.0f)
+	if (diff_x < -1.0f || diff_x>1.0f)
 	{
 		//自分のx座標より差が大きかったら(右側)
 		if (0 < diff_x)
@@ -130,7 +130,5 @@ float Enemy_Roomba::TrackingPlayer(float _diff_x)
 			return move_x;
 		}
 	}
-	
 
-	
 }

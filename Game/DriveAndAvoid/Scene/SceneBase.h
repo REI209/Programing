@@ -8,6 +8,7 @@ enum eSceneType
 	E_HELP,
 	E_RANKING_DISP,
 	E_RANKING_INPUT,
+	E_OVER,
 	E_RESULT,
 	E_END
 };
