@@ -155,7 +155,6 @@ eSceneType GameMainScene::Update()
 			}
 			if (obstacle_b[i] == nullptr)
 			{
-				//int type = GetRand(3) % 3;
 				obstacle_b[i] = new Obstacle_B(obstacle_b_image);
 				obstacle_b[i]->Initialize();
 				break;
@@ -200,39 +199,30 @@ eSceneType GameMainScene::Update()
 				obstacle_a[i] = nullptr;
 			}
 
+			//当たり判定の確認
+			if (IsObjectHitCheck_P(player, obstacle_a[i]))
+			{
+				player->SetActive(false);
+				player->DecreaseHp(-50.0f);
+				if (player->GetPlayerSize() > 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
+				obstacle_b[i]->Finalize();
+				delete obstacle_b[i];
+				obstacle_b[i] = nullptr;
+			}
+
 			//敵と障害物の当たり判定
 			if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
 			{
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
-				if (player->GetPlayerSize() < 0.5f)
-				{
-					player->SetSize(-0.1f);
-					player->SetBoxSize(-0.1f);
-				}
 				obstacle_a[i]->Finalize();
 				delete obstacle_a[i];
 				obstacle_a[i] = nullptr;
 			}
-
-		//	////画面外に行ったら、敵を削除してスコア加算
-		//	//if (enemy[i]->GetLocation().y >= 640.0f)
-		//	//{
-		//	//	enemy_count[enemy[i]->GetType()]++;
-		//	//	enemy[i]->Finalize();
-		//	//	delete enemy[i];
-		//	//	enemy[i] = nullptr;
-		//	//}
-
-			////当たり判定の確認
-			//if (IsObjectHitCheck_P(player, obstacle_a[i]))
-			//{
-			//	player->SetActive(false);
-			//	player->DecreaseHp(-50.0f;
-			//	obstacle_a[i]->Finalize();
-			//	delete obstacle_a[i];
-			//	obstacle_a[i] = nullptr;
-			//}
 
 			for (int j = 0; j < 10; j++)
 			{
@@ -266,6 +256,11 @@ eSceneType GameMainScene::Update()
 			{
 				player->SetActive(false);
 				player->DecreaseHp(-50.0f);
+				if (player->GetPlayerSize() > 0.5f)
+				{
+					player->SetSize(-0.1f);
+					player->SetBoxSize(-0.1f);
+				}
 				obstacle_b[i]->Finalize();
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
@@ -276,11 +271,6 @@ eSceneType GameMainScene::Update()
 			{
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
-				if (player->GetPlayerSize() < 0.5f)
-				{
-					player->SetSize(-0.1f);
-					player->SetBoxSize(-0.1f);
-				}
 				obstacle_b[i]->Finalize();
 				delete obstacle_b[i];
 				obstacle_b[i] = nullptr;
@@ -317,8 +307,8 @@ eSceneType GameMainScene::Update()
 			if (IsObjectHitCheck_P(player, obstacle_c[i]))
 			{
 				player->SetActive(false);
-				player->DecreaseHp(-10000.0f);
-				if (player->GetPlayerSize() < 0.5f)
+				player->DecreaseHp(-100.0f);
+				if (player->GetPlayerSize() > 0.5f)
 				{
 					player->SetSize(-0.1f);
 					player->SetBoxSize(-0.1f);
@@ -396,7 +386,7 @@ eSceneType GameMainScene::Update()
 			if (IsObjectHitCheck_P(player, family[i]))
 			{
 				player->DecreaseHp(10.0f);
-				if (player->GetPlayerSize() > 2.0f)
+				if (player->GetPlayerSize() < 2.0f)
 				{
 					player->SetSize(0.1f);
 					player->SetBoxSize(0.1f);
@@ -471,7 +461,6 @@ void GameMainScene::Draw() const
 		{
 			family[i]->Draw();
 		}
-
 		DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
 	}
 

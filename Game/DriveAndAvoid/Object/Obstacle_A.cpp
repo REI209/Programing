@@ -16,7 +16,7 @@ Obstacle_A::~Obstacle_A()
 void Obstacle_A::Initialize()
 {
 	//出現させるx座標パターンを取得
-	float random_x = (float)(GetRand(1) * 800 + 100);
+	float random_x = (float)(GetRand(1) * 196 + 100);
 	//生成位置の設定
 	location = Vector2D(random_x, -50.0f);
 	////当たり判定の設定
@@ -37,6 +37,13 @@ void Obstacle_A::Draw() const
 {
 	//画像の描画
 	DrawRotaGraphF(location.x, location.y, 0.3, 0.0, image, TRUE);
+
+#ifdef _DEBUG
+
+	// 当たり判定確認用
+	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+
+#endif // _DEBUG
 }
 
 void Obstacle_A::Finalize()
