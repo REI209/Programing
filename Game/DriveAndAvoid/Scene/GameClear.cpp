@@ -28,7 +28,7 @@ eSceneType GameClear::Update()
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
 		PlaySoundMem(ok_se, DX_PLAYTYPE_BACK, TRUE);
-		return eSceneType::E_RESULT;
+		return eSceneType::E_TITLE;
 	}
 	return GetNowScene();
 }

@@ -25,6 +25,7 @@ void HelpScene::Initialize()
 	{
 		throw("Resource/images/game_help.png‚ª‚ ‚è‚Ü‚¹‚ñ\n");
 	}
+	ok_se = LoadSoundMem(SELECT_SE);
 }
 
 //XVˆ—
