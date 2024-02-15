@@ -82,8 +82,6 @@ void Enemy_Roomba::Draw() const
 	//‰æ‘œ‚Ì•`‰æ
 	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
 	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
-	DrawFormatString(510, 300, GetColor(255, 255, 255), "diff_x:%f", diff_x);
-	DrawFormatString(510, 350, GetColor(255, 255, 255), "location.x:%f location.y:%f", location.x, location.y);
 }
 
 void Enemy_Roomba::Finalize()

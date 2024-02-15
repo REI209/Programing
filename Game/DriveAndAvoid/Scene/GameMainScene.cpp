@@ -536,11 +536,15 @@ eSceneType GameMainScene::Update()
 //•`‰æˆ—
 void GameMainScene::Draw() const
 {
-
-
 	//”wŒi‰æ‘œ‚Ì•`‰æ
 	DrawGraph(0, mileage % 720 - 720, back_ground, TRUE);
 	DrawGraph(0, mileage % 720, back_ground, TRUE);
+
+	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
+	player->Draw();
+
+	//ƒ‹ƒ“ƒo‚Ì•`‰æ
+	enemy_roomba->Draw();
 
 	//ƒXƒ^ƒ~ƒiƒQ[ƒW‚Ì•`‰æ
 	float fx = player->GetLocation().x + player->GetBoxSize().x + 13.0f;
@@ -598,19 +602,19 @@ void GameMainScene::Draw() const
 	}
 
 	//ˆêŽž’âŽ~’†‚È‚ç‰æ–Ê‚ð”–ˆÃ‚­‚·‚é
-	if (count_down > 0)
+
+	SetFontSize(120);
+
+	if (count_down > 1)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 		DrawBox(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
-		SetFontSize(64);
-		DrawFormatString(600, 335, GetColor(255, 255, 255), "%d", count_down - 1);
+		DrawFormatString(600, 315, GetColor(255, 255, 255), "%d", count_down - 1);
 	}
-	
-	if (count_down == 1)
+	else if (count_down == 1)
 	{
-		DrawFormatString(580, 335, GetColor(255, 255, 255), "GO!");
+		DrawFormatString(570, 315, GetColor(0, 0, 0), "GO!");
 	}
 
 	SetFontSize(16);
@@ -642,18 +646,7 @@ void GameMainScene::Draw() const
 
 		//DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
 	}
-
-
-	//ƒvƒŒƒCƒ„[‚Ì•`‰æ
-	player->Draw();
-
-	//ƒ‹ƒ“ƒo‚Ì•`‰æ
-	enemy_roomba->Draw();
-
 	//UI‚Ì•`‰æ
-	
-	
-
 
 } 
 
