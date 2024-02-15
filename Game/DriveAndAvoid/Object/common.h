@@ -34,7 +34,7 @@
 
 #define ENEMY_ROOMBA_IMAGE "Resource/Images/roomba.png"
 #define ENEMY_ROOMBA_BOOM_IMAGE "Resource/Images/bakuhatsu.png"
-#define BONUS_IMAGE "Resource/Images/bonus_image.png"
+#define BONUS_IMAGE "Resource/Images/big_bonus.png"
 
 #define OBSTACLE_A_IMAGE 
 #define OBSTACLE_B_IMAGE "Resource/Images/omocha_tsumiki.png"

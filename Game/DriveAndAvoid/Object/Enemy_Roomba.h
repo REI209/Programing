@@ -21,6 +21,7 @@ private:
 	float hp;		//体力
 
 	int count_t = 0;	//カウント用変数
+	int hit_count;
 
 
 public:
@@ -32,8 +33,11 @@ public:
 	void Draw() const;
 	void Finalize();
 
+	bool GetActiveFlg() { return is_active; } //有効フラグ取得
 	void SetActive(bool flg);
 	void DecreaseHp(float value);
+	float GetHp() const;            //体力取得
+
 	Vector2D GetLocation() const;
 	Vector2D GetBoxSize() const;
 

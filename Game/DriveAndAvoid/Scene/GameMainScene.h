@@ -26,8 +26,6 @@ private:
 	int roomba_image;	//ルンバの画像
 	float diff_x;		//プレイヤーとの差
 	
-	int hit_count;
-	
 	int bonus_image;
 	float bonus_size;
 	bool bonus_flg;

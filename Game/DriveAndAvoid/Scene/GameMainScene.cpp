@@ -11,7 +11,7 @@
 #include "../Object/Obstacle_C.h"
 #include "../Object/Family.h"
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), hit_count(0),bonus_flg(false),
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), bonus_flg(false), bonus_size(0.0) , bonus_image(NULL),
 barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),/*obstacle_a(nullptr),*/ obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
 family_cnt{}, counter(0), count_down(0),/* obstacle_a_image(NULL),*/obstacle_c_image(NULL), time(0), mainbgm(0), se{}//,enemy(nullptr)
 {
@@ -46,6 +46,8 @@ void GameMainScene::Initialize()
 	counter = 60;
 	count_down = 4;
 
+	bonus_flg = false;
+	bonus_size = 1.0f;
 
 	//画像の読み込み
 	back_ground = LoadGraph(GAMEMAIN_BACK_IMAGE);
@@ -57,7 +59,7 @@ void GameMainScene::Initialize()
 	family_image[0] = LoadGraph(FAMILLY_IMAGE_01);
 	family_image[1] = LoadGraph(FAMILLY_IMAGE_02);
 
-	bonus_image=LoadGraph()
+	bonus_image = LoadGraph(BONUS_IMAGE);
 
 	//音源の読み込み
 	mainbgm = LoadSoundMem(GAMEMAIN_BGM);
@@ -96,6 +98,12 @@ void GameMainScene::Initialize()
 	{
 		throw("Resource/Images/family02.pngがありません\n");
 	}
+	if (bonus_image == -1)
+	{
+		throw("Resource/Images/big_bonus.pngがありません\n");
+	}
+
+
 	//オブジェクトの生成
 	player = new Player;
 	//enemy = new Enemy * [10];
@@ -438,18 +446,18 @@ eSceneType GameMainScene::Update()
 				diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
 			}
 			enemy_roomba->Update((float)counter, diff_x);
+			
 
 			if (player->GetActiveFlg() == true)
 			{
 				//プレイヤーと敵の当たり判定の確認
 				if (IsHitCheck(player, enemy_roomba))
 				{
-					hit_count += 1;
-
 					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 					player->SetRoomAnim(1);
 					//敵(ルンバ)に当たるとダメージ
 					player->SetActive(false);
+
 					if (player->GetPlayerSize() <= 0.5f)
 					{
 						player->SetHp();
@@ -536,15 +544,29 @@ eSceneType GameMainScene::Update()
 
 	}
 
-	if (hit_count <= 5)
-	{
-
-	}
-
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
 	if (player->GetHp() < 0.1f)
 	{
 		return eSceneType::E_OVER;
+	}
+
+	if (enemy_roomba->GetHp() < 0.0f)
+	{
+		if (time % 120 == 0)
+		{
+			enemy_roomba->Finalize();
+			delete enemy_roomba;
+			enemy_roomba = nullptr;
+
+		}
+		if (bonus_size > 1.3)
+		{
+			bonus_size -= 0.05f;
+		}
+		else if (bonus_size < 0.9);
+		{
+			bonus_size += 0.05f;
+		}
 	}
 
 	return GetNowScene();
@@ -664,6 +686,13 @@ void GameMainScene::Draw() const
 		//DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
 	}
 	//UIの描画
+
+	if (count_down < 0 && enemy_roomba->GetHp() < 0)
+	{
+		DrawRotaGraphF(640, 200, bonus_size, 0.0, bonus_image, TRUE);
+	}
+
+	DrawFormatString(1000, 180, GetColor(255, 255, 255), "%d", count_down);
 
 } 
 
