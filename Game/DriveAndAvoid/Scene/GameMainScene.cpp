@@ -3,7 +3,15 @@
 #include "../Object/common.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
+#include"../Object/Player.h"
+#include"../Object/Enemy.h"
+#include "../Object/Enemy_Roomba.h"
+#include "../Object/Obstacle_A.h"
+#include "../Object/Obstacle_B.h"
+#include "../Object/Obstacle_C.h"
+#include "../Object/Family.h"
+
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL), hit_count(0),bonus_flg(false),
 barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),/*obstacle_a(nullptr),*/ obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
 family_cnt{}, counter(0), count_down(0),/* obstacle_a_image(NULL),*/obstacle_c_image(NULL), time(0), mainbgm(0), se{}//,enemy(nullptr)
 {
@@ -48,6 +56,8 @@ void GameMainScene::Initialize()
 
 	family_image[0] = LoadGraph(FAMILLY_IMAGE_01);
 	family_image[1] = LoadGraph(FAMILLY_IMAGE_02);
+
+	bonus_image=LoadGraph()
 
 	//音源の読み込み
 	mainbgm = LoadSoundMem(GAMEMAIN_BGM);
@@ -434,6 +444,8 @@ eSceneType GameMainScene::Update()
 				//プレイヤーと敵の当たり判定の確認
 				if (IsHitCheck(player, enemy_roomba))
 				{
+					hit_count += 1;
+
 					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 					player->SetRoomAnim(1);
 					//敵(ルンバ)に当たるとダメージ
@@ -521,6 +533,11 @@ eSceneType GameMainScene::Update()
 
 			}
 		}
+
+	}
+
+	if (hit_count <= 5)
+	{
 
 	}
 

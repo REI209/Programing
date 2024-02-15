@@ -2,8 +2,8 @@
 #include "common.h"
 #include "DxLib.h"
 
-Enemy_Roomba::Enemy_Roomba() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
-angle(0.0f),speed(0.0f), diff_x(0.0f), hp(0.0f)
+Enemy_Roomba::Enemy_Roomba() :is_active(false), image(NULL), boom_image(NULL), hit_count(0), draw_flg(false), bonus_flg(false),
+location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), diff_x(0.0f), hp(0.0f)
 {
 
 }
@@ -24,11 +24,16 @@ void Enemy_Roomba::Initialize()
 
 	//画像の読み込み
 	image = LoadGraph(ENEMY_ROOMBA_IMAGE);
+	boom_image = LoadGraph(ENEMY_ROOMBA_BOOM_IMAGE);
 
 	//エラーチェック
 	if (image == -1)
 	{
 		throw("Resource/Images/roomba.pngがありません\n");
+	}
+	if (boom_image == -1)
+	{
+		throw("Resource/Images/bakuhatsu.pngがありません\n");
 	}
 }
 
@@ -75,12 +80,31 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 			break;
 		}
 	}
+
+	if (hit_count >= 5)
+	{
+		count_t++;
+		draw_flg = true;
+
+		if (count_t > 120)
+		{
+			draw_flg = false;
+			bonus_flg = true;
+			count_t = 0;
+		}
+	}
 }
 
 void Enemy_Roomba::Draw() const
 {
 	//画像の描画
 	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
+
+	if (draw_flg)
+	{
+		DrawRotaGraphF(location.x, location.y, 0.5, angle, boom_image, TRUE);
+	}
+
 }
 
 void Enemy_Roomba::Finalize()
@@ -110,7 +134,7 @@ float Enemy_Roomba::TrackingPlayer(float _diff_x)
 			return move_x;
 		}
 	}
-
+	return move_x;
 }
 
 

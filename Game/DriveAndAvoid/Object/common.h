@@ -33,6 +33,9 @@
 #define PLAYER_BOM_IMAGE "Resource/Images/player_bom.PNG"
 
 #define ENEMY_ROOMBA_IMAGE "Resource/Images/roomba.png"
+#define ENEMY_ROOMBA_BOOM_IMAGE "Resource/Images/bakuhatsu.png"
+#define BONUS_IMAGE "Resource/Images/bonus_image.png"
+
 #define OBSTACLE_A_IMAGE 
 #define OBSTACLE_B_IMAGE "Resource/Images/omocha_tsumiki.png"
 #define OBSTACLE_C_IMAGE "Resource/Images/pet_robot_soujiki_cat.png"

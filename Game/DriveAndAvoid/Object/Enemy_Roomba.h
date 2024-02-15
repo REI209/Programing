@@ -6,6 +6,10 @@ class Enemy_Roomba
 private:
 	bool is_active;	//停止中かどうか
 	int image;		//画像データ
+	
+	int boom_image;
+	bool draw_flg;
+
 	int roombabgm;
 	Vector2D location;		//位置座標
 	Vector2D box_size;		//当たり判定の大きさ
@@ -18,12 +22,13 @@ private:
 
 	int count_t = 0;	//カウント用変数
 
+
 public:
 	Enemy_Roomba();
 	~Enemy_Roomba();
 
 	void Initialize();
-	void Update(float time,float _diff_x);
+	void Update(float time, float _diff_x) ;
 	void Draw() const;
 	void Finalize();
 

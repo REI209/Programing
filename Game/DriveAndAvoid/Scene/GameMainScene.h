@@ -1,14 +1,9 @@
 #pragma once
 #include"DxLib.h"
-
 #include"SceneBase.h"
-#include"../Object/Player.h"
-#include"../Object/Enemy.h"
-#include "../Object/Enemy_Roomba.h"
-#include "../Object/Obstacle_A.h"
-#include "../Object/Obstacle_B.h"
-#include "../Object/Obstacle_C.h"
-#include "../Object/Family.h"
+
+class GameMainScene;
+
 class GameMainScene :public SceneBase
 {
 private:
@@ -23,31 +18,39 @@ private:
 	int enemy_image[3];   //敵画像
 	int enemy_count[3];   //通り過ぎた敵カウント
 	int mainbgm;          //ゲームメインBGM
-	Player* player;       //プレイヤー
+	
+	class Player* player;       //プレイヤー
 	//Enemy** enemy;        //敵
 
-	Enemy_Roomba* enemy_roomba;	//ルンバ
+	class Enemy_Roomba* enemy_roomba;	//ルンバ
 	int roomba_image;	//ルンバの画像
 	float diff_x;		//プレイヤーとの差
+	
+	int hit_count;
+	
+	int bonus_image;
+	float bonus_size;
+	bool bonus_flg;
 
 	//Obstacle_A** obstacle_a;//扇風機
 	//int obstacle_a_image;//扇風機画像
 
 
-	Obstacle_B** obstacle_b;//積み木
+	class Obstacle_B** obstacle_b;//積み木
 	int obstacle_b_image[3];//積み木画像
 
 
-	Obstacle_C** obstacle_c;//掃除機
+	class Obstacle_C** obstacle_c;//掃除機
 	int obstacle_c_image;//掃除機画像
 
-	Family** family; //仲間
+	class Family** family; //仲間
 	int family_image[2]; //仲間画像
 	int family_cnt[2]; //集めた仲間の数
 
 	int se[4];
 
 public:
+
 	GameMainScene();
 	virtual ~GameMainScene();
 
@@ -57,7 +60,6 @@ public:
 	virtual void Finalize() override;
 
 	virtual eSceneType GetNowScene() const override;
-
 
 private:
 	//ハイスコア読み込み処理

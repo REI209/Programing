@@ -38,6 +38,7 @@
     <ClCompile Include="Utility\InputControl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Object\IsHitCheck.h" />
     <ClInclude Include="Scene\GameClear.h" />
     <ClInclude Include="Scene\GameOverScene.h" />
     <ClInclude Include="Object\common.h" />
