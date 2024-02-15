@@ -49,6 +49,9 @@ private:
 	int family_image[2]; //’‡ŠÔ‰æ‘œ
 	int family_cnt[2]; //W‚ß‚½’‡ŠÔ‚Ì”
 
+	Wind** wind;  //•—
+	int wind_image[2]; //•—‰æ‘œ
+
 public:
 	GameMainScene* main;
 

@@ -153,7 +153,7 @@ eSceneType GameMainScene::Update()
 			if (counter < 0)
 			{
 				counter = 0;
-				return eSceneType::E_RESULT;
+				return eSceneType::E_CLEAR;
 			}
 		}
 	}
@@ -241,15 +241,15 @@ eSceneType GameMainScene::Update()
 					if (IsObjecHitCheck_O<Player, Obstacle_A>(player, obstacle_a[i]))
 					{
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						player->DecreaseHp(-20.0f);
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
 						}
-						obstacle_b[i]->Finalize();
-						delete obstacle_b[i];
-						obstacle_b[i] = nullptr;
+						obstacle_a[i]->Finalize();
+						delete obstacle_a[i];
+						obstacle_a[i] = nullptr;
 					}
 				}
 
@@ -301,8 +301,8 @@ eSceneType GameMainScene::Update()
 					if (IsObjecHitCheck_O<Player, Obstacle_B>(player, obstacle_b[i]))
 					{
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						player->DecreaseHp(-20.0f);
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -357,13 +357,24 @@ eSceneType GameMainScene::Update()
 					//プレイヤーと障害物の当たり判定の確認
 					if (IsObjecHitCheck_O<Player, Obstacle_C>(player, obstacle_c[i]))
 					{
+						player->SetRoomAnim(1);
+						//敵(ルンバ)に当たるとダメージ
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						if (player->GetPlayerSize() <= 0.5f)
+						{
+							player->SetHp();
+						}
+						else
+						{
+							player->SetSizeDef();
+						}
+
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
 						}
+						//player->SetY(100.0f);
 						obstacle_c[i]->Finalize();
 						delete obstacle_c[i];
 						obstacle_c[i] = nullptr;
@@ -411,18 +422,25 @@ eSceneType GameMainScene::Update()
 				//プレイヤーと敵の当たり判定の確認
 				if (IsHitCheck(player, enemy_roomba))
 				{
+					player->SetRoomAnim(1);
 					//敵(ルンバ)に当たるとダメージ
 					player->SetActive(false);
-					if (player->GetPlayerSize() <= 1.0f)
+					if (player->GetPlayerSize() <= 0.5f)
 					{
-						player->DecreaseHp(-100.0f);
+						player->SetHp();
 					}
-					if (player->GetPlayerSize() > 0.5f)
+					else
+					{
+						player->SetSizeDef();
+					}
+
+					if (player->GetPlayerSize() > 0.3f)
 					{
 						player->SetSize(-0.1f);
 						player->SetBoxSize(-0.1f);
 					}
 					player->SetY(100.0f);
+
 				}
 			}
 			if (bonus_flg == true)
@@ -494,11 +512,13 @@ eSceneType GameMainScene::Update()
 			}
 		}
 
-		//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-		if (player->GetHp() < 0.0f)
-		{
-			return eSceneType::E_OVER;
-		}
+	}
+
+	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
+	if (player->GetHp() < 0.1f)
+	{
+		return eSceneType::E_OVER;
+	}
 
 	}
 
@@ -609,25 +629,29 @@ void GameMainScene::Draw() const
 		DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
 	}
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+	DrawBox(995, 5, 1265, 115, GetColor(255, 255, 255), TRUE);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//体力ゲージの描画
-	fx = 1000.0f;
+	fx = 1015.0f;
 	fy = 10.0f;
 	SetFontSize(16);
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "HP");
-	DrawBoxAA(fx, fy + 20.0f, fx + player->GetHp() + 130, fy + 40.0f, GetColor(255, 0, 0), TRUE);
+	DrawBoxAA(fx, fy + 20.0f, fx + player->GetHp(), fy + 40.0f, GetColor(255, 0, 0), TRUE);
 	DrawBoxAA(fx, fy + 20.0f, fx + 230.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
 
 	SetFontSize(16);
 	//DrawFormatStringF(1000.0f, 60.0f, GetColor(0, 0, 0), "集めた仲間の数");
 
 	//集めた仲間の数
-	fx = 995.0f;
+	fx = 1010.0f;
 	fy = 60.0f;
 	SetFontSize(20);
 	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[0], TRUE);
 	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d",family_cnt[0]);
 
-	fx = 1130.0f;
+	fx = 1145.0f;
 	fy = 60.0f;
 	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[1], TRUE);
 	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d", family_cnt[1]);

@@ -23,8 +23,8 @@ void Obstacle_A::Initialize()
 	box_size = Vector2D(73.0f, 87.0f);
 	//‘¬‚³‚Ìİ’è
 	speed=5.0f;
-	//‰æ‘œ‚Ì“Ç‚İ‚İ
-	image = LoadGraph("Resource/images/kaden_senpuki.png");
+	////‰æ‘œ‚Ì“Ç‚İ‚İ
+	//image = LoadGraph("Resource/images/kaden_senpuki.png");
 }
 
 void Obstacle_A::Update(float speed)
@@ -35,16 +35,8 @@ void Obstacle_A::Update(float speed)
 
 void Obstacle_A::Draw() const
 {
-	switch(type)
-	{
-	case 0:
-		break;
-	case 1:
-		break;
-	}
-	//‰æ‘œ‚Ì•`‰æ
-	DrawRotaGraphF(location.x, location.y, 0.3, 0.0, image, TRUE);
-
+	DrawGraphF(location.x, location.y, image, TRUE);
+	
 #ifdef _DEBUG
 
 	// “–‚½‚è”»’èŠm”F—p

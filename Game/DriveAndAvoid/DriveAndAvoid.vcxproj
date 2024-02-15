@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
+    <ClCompile Include="Object\wind.cpp" />
+    <ClCompile Include="Scene\GameClear.cpp" />
     <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Object\Enemy_Roomba.cpp" />
     <ClCompile Include="Object\Barrier.cpp" />
@@ -32,14 +34,14 @@
     <ClCompile Include="Object\RankingData.cpp" />
     <ClCompile Include="Scene\GameMainScene.cpp" />
     <ClCompile Include="Scene\HelpScene.cpp" />
-    <ClCompile Include="Scene\RankingDispScene.cpp" />
-    <ClCompile Include="Scene\RankingInputScene.cpp" />
     <ClCompile Include="Scene\ResultScene.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\TitleScene.cpp" />
     <ClCompile Include="Utility\InputControl.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Object\wind.h" />
+    <ClInclude Include="Scene\GameClear.h" />
     <ClInclude Include="Scene\GameOverScene.h" />
     <ClInclude Include="Object\common.h" />
     <ClInclude Include="Object\Enemy_Roomba.h" />
@@ -53,8 +55,6 @@
     <ClInclude Include="Object\RankingData.h" />
     <ClInclude Include="Scene\GameMainScene.h" />
     <ClInclude Include="Scene\HelpScene.h" />
-    <ClInclude Include="Scene\RankingDispScene.h" />
-    <ClInclude Include="Scene\RankingInputScene.h" />
     <ClInclude Include="Scene\ResultScene.h" />
     <ClInclude Include="Scene\SceneBase.h" />
     <ClInclude Include="Scene\SceneManager.h" />
