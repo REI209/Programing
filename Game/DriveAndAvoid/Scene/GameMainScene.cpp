@@ -41,17 +41,14 @@ void GameMainScene::Initialize()
 
 
 	//画像の読み込み
-	back_ground = LoadGraph("Resource/Images/back_img.png");
-	barrier_image = LoadGraph("Resource/Images/barrier.png");
-	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
-		enemy_image);
+	back_ground = LoadGraph(GAMEMAIN_BACK_IMAGE);
 
 	//obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki1.png");
-	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
-	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
+	obstacle_b_image= LoadGraph(OBSTACLE_B_IMAGE);
+	obstacle_c_image = LoadGraph(OBSTACLE_C_IMAGE);
 
-	family_image[0] = LoadGraph("Resource/Images/IMG_0111.png");
-	family_image[1] = LoadGraph("Resource/Images/IMG_0113.png");
+	family_image[0] = LoadGraph(FAMILLY_IMAGE_01);
+	family_image[1] = LoadGraph(FAMILLY_IMAGE_02);
 
 	//音源の読み込み
 	mainbgm = LoadSoundMem(GAMEMAIN_BGM);
@@ -60,14 +57,6 @@ void GameMainScene::Initialize()
 	if (back_ground == -1)
 	{
 		throw("Resource/Images/back_img.pngがありません\n");
-	}
-	if (result == -1)
-	{
-		throw("Resource/Images/car.bmpがありません\n");
-	}
-	if (barrier_image == -1)
-	{
-		throw("Resource/Images/barrier.pngがありません\n");
 	}
 	/*if (obstacle_a)
 	{
@@ -83,11 +72,11 @@ void GameMainScene::Initialize()
 	}
 	if (family_image[0] == -1)
 	{
-		throw("Resource/Images/IMG_0111.pngがありません\n");
+		throw("Resource/Images/family01.pngがありません\n");
 	}
 	if (family_image[1] == -1)
 	{
-		throw("Resource/Images/IMG_0113.pngがありません\n");
+		throw("Resource/Images/family02.pngがありません\n");
 	}
 	//オブジェクトの生成
 	player = new Player;

@@ -16,8 +16,8 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	//‰æ‘œ‚Ì“Ç‚İ‚İ
-	background_image = LoadGraph("Resource/images/Title.png");
-	cursor_image = LoadGraph("Resource/images/cursor.png");
+	background_image = LoadGraph(TITLE_BACK_IMAGE);
+	cursor_image = LoadGraph(CURSOL_IMAGE);
 	//‰¹Œ¹‚Ì“Ç‚İ‚İ
 	titlebgm = LoadSoundMem(TITLE_BGM);
 

@@ -24,19 +24,26 @@
 #define OBSTACLE_C_HEIGHT
 
 //‰æ‘œ—p
-#define PLAYER_IMAGE
-#define ENEMY_ROOMBA_IMAGE "Resource/Images/roomba.png"
-#define OBSTACLE_A_IMAGE
-#define OBSTACLE_B_IMAGE
-#define OBSTACLE_C_IMAGE
-#define FAMILLY_IMAGE
+#define GAMEMAIN_BACK_IMAGE "Resource/Images/back_img.png"
+#define GAMEOVER_BACK_IMAGE "Resource/Images/game_over.png"
+#define GAMECLEAR_BACK_IMAGE "Resource/Images/game_clear.png"
+#define RESULT_BACK_IMAGE "Resource/Images/result.png"
 
-#define TITLE_BACK_IMAGE
-#define CURSOL_IMAGE
-#define HELP_BACK_IMAGE
-#define GAMEMAIN_BACK_IMAGE
-#define GAMEOVER_BACK_IMAGE
-#define RESULT_BACK_IMAGE
+#define PLAYER_IMAGE "Resource/Images/player.PNG"
+#define PLAYER_BOM_IMAGE "Resource/Images/player_bom.PNG"
+
+#define ENEMY_ROOMBA_IMAGE "Resource/Images/roomba.png"
+#define OBSTACLE_A_IMAGE 
+#define OBSTACLE_B_IMAGE "Resource/Images/omocha_tsumiki.png"
+#define OBSTACLE_C_IMAGE "Resource/Images/pet_robot_soujiki_cat.png"
+
+#define FAMILLY_IMAGE_01 "Resource/Images/family01.png"
+#define FAMILLY_IMAGE_02 "Resource/Images/family02.png"
+
+#define TITLE_BACK_IMAGE "Resource/Images/Title.png"
+#define CURSOL_IMAGE "Resource/Images/cursor.png"
+
+#define HELP_BACK_IMAGE "Resource/Images/game_help.png"
 
 //‰¹ŠÖŒW
 #define TITLE_BGM "Resource/sounds/Titlebgm.mp3"

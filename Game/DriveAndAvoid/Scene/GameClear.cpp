@@ -13,6 +13,13 @@ GameClear::~GameClear()
 
 void GameClear::Initialize()
 {
+	background_image = LoadGraph(GAMECLEAR_BACK_IMAGE);
+	if (background_image == -1)
+	{
+		throw("Resource/Images/game_clear.png‚ª‚ ‚è‚Ü‚¹‚ñ\n");
+	}
+
+
 }
 
 eSceneType GameClear::Update()
@@ -27,6 +34,7 @@ eSceneType GameClear::Update()
 
 void GameClear::Draw() const
 {
+	DrawGraph(0, 0, background_image, TRUE);
 	DrawString(0, 0, "Gasme Clear", 0xffffff);
 }
 

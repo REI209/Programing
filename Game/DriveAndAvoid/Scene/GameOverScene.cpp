@@ -15,8 +15,12 @@ GameOverScene::~GameOverScene()
 void GameOverScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resource/Images/gameover.png");
+	background_image = LoadGraph(GAMEOVER_BACK_IMAGE);
 	//エラーチェック
+	if (background_image == -1)
+	{
+		throw("Resource/Images/game_over.pngがありません\n");
+	}
 
 	//音源の読み込み
 	gameoverbgm = LoadSoundMem(GAMEOVER_BGM);
