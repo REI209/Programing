@@ -111,6 +111,8 @@ float Enemy_Roomba::TrackingPlayer(float _diff_x)
 		}
 	}
 
+	return move_x;
+
 }
 
 

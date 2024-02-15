@@ -1,11 +1,12 @@
-#include"GameMainScene.h"
-#include"../Object/RankingData.h"
+#include "GameMainScene.h"
+#include "../Object/RankingData.h"
 #include "../Object/common.h"
-#include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),/*obstacle_a(nullptr),*/ obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
-family_cnt{}, counter(0), count_down(0),/* obstacle_a_image(NULL),*/obstacle_c_image(NULL), time(0), mainbgm(0), se{}//,enemy(nullptr)
+
+
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),mainbgm(NULL),
+mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),/*obstacle_a(nullptr),*/ obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
+family_cnt{}, counter(0), count_down(0),/* obstacle_a_image(NULL),*/obstacle_c_image(NULL), time(0), se{}//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
@@ -306,7 +307,7 @@ eSceneType GameMainScene::Update()
 				if (player->GetActiveFlg() == true)
 				{
 					//当たり判定の確認
-					if (IsObjectHitCheck_P(player, obstacle_b[i]))
+					if (IsObjecHitCheck<class Player, class Obstacle_B>(player, obstacle_b[i]))
 					{
 						PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 						player->SetActive(false);
@@ -323,7 +324,7 @@ eSceneType GameMainScene::Update()
 				}
 
 			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
+			if (IsObjecHitCheck<class Enemy_Roomba, class Obstacle_B>(enemy_roomba, obstacle_b[i]))
 			{
 				PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 				enemy_roomba->SetActive(false);
@@ -338,7 +339,7 @@ eSceneType GameMainScene::Update()
 					if (obstacle_b[j] != nullptr && i != j)
 					{
 						//敵同士の当たり判定
-						if (IsObjecHitCheck_O(obstacle_b[i], obstacle_b[j]))
+						if (IsObjecHitCheck<class Obstacle_B,class Obstacle_B>(obstacle_b[i], obstacle_b[j]))
 						{
 							obstacle_b[j]->Finalize();
 							delete obstacle_b[j];
@@ -364,7 +365,7 @@ eSceneType GameMainScene::Update()
 				if (player->GetActiveFlg() == true)
 				{
 					//プレイヤーと障害物の当たり判定の確認
-					if (IsObjectHitCheck_P(player, obstacle_c[i]))
+					if (IsObjecHitCheck<class Player, class Obstacle_C>(player, obstacle_c[i]))
 					{
 						PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 						player->SetRoomAnim(1);
@@ -394,7 +395,7 @@ eSceneType GameMainScene::Update()
 				}
 
 				//敵と障害物の当たり判定
-				if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
+				if (IsObjecHitCheck<class Enemy_Roomba,class Obstacle_C>(enemy_roomba, obstacle_c[i]))
 				{
 					PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 					enemy_roomba->SetActive(false);
@@ -409,7 +410,7 @@ eSceneType GameMainScene::Update()
 					if (obstacle_c[j] != nullptr && i != j)
 					{
 						//仲間同士の当たり判定
-						if (IsObjecHitCheck_O(obstacle_c[i], obstacle_c[j]))
+						if (IsObjecHitCheck<class Obstacle_C,class Obstacle_C>(obstacle_c[i], obstacle_c[j]))
 						{
 							obstacle_c[j]->Finalize();
 							delete obstacle_c[j];
@@ -432,7 +433,7 @@ eSceneType GameMainScene::Update()
 			if (player->GetActiveFlg() == true)
 			{
 				//プレイヤーと敵の当たり判定の確認
-				if (IsHitCheck(player, enemy_roomba))
+				if (IsObjecHitCheck<class Player, class Enemy_Roomba>(player, enemy_roomba))
 				{
 					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 					player->SetRoomAnim(1);
@@ -476,7 +477,7 @@ eSceneType GameMainScene::Update()
 			//当たり判定の確認
 				if (player->GetActiveFlg() == true)
 				{
-					if (IsObjectHitCheck_P(player, family[i]))
+					if (IsObjecHitCheck<class Player, class Family>(player, family[i]))
 					{
 						PlaySoundMem(se[1], DX_PLAYTYPE_BACK, TRUE);
 						if (player->GetHp() < 230)
@@ -497,7 +498,7 @@ eSceneType GameMainScene::Update()
 			
 
 				//敵と障害物の当たり判定
-				if (IsObjecHitCheck_E(enemy_roomba, family[i]))
+				if (IsObjecHitCheck<class Enemy_Roomba, class Family>(enemy_roomba, family[i]))
 				{
 					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 					family[i]->Finalize();
@@ -510,7 +511,7 @@ eSceneType GameMainScene::Update()
 					if (family[j] != nullptr && i != j)
 					{
 						//仲間同士の当たり判定
-						if (IsObjecHitCheck_O(family[i], family[j]))
+						if (IsObjecHitCheck<class Family, class Family>(family[i], family[j]))
 						{
 							family[j]->Finalize();
 							delete family[j];
@@ -653,34 +654,34 @@ void GameMainScene::Draw() const
 //終了時宣言
 void GameMainScene::Finalize()
 {
-	//スコアを計算する
-	int score = (mileage / 10 * 10);
-	for (int i = 0; i < 3; i++)
-	{
-		score += (i + 1) * 50 * enemy_count[i];
-	}
-	//リザルトデータの書き込み
-	FILE* fp = nullptr;
-	//ファイルオープン
-	errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "w");
+	////スコアを計算する
+	//int score = (mileage / 10 * 10);
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	score += (i + 1) * 50 * enemy_count[i];
+	//}
+	////リザルトデータの書き込み
+	//FILE* fp = nullptr;
+	////ファイルオープン
+	//errno_t result = fopen_s(&fp, "Resource/dat/result_data.csv", "w");
 
-	//エラーチェック
-	if (result != 0)
-	{
-		throw("Resource/dat/result_data.csvが開けません\n");
-	}
+	////エラーチェック
+	//if (result != 0)
+	//{
+	//	throw("Resource/dat/result_data.csvが開けません\n");
+	//}
 
-	//スコアを保存
-	fprintf(fp, "%d,\n", score);
+	////スコアを保存
+	//fprintf(fp, "%d,\n", score);
 
-	//避けた数と得点を保存
-	for (int i = 0; i < 3; i++)
-	{
-		fprintf(fp,"%d,\n",enemy_count[i]);
-	}
+	////避けた数と得点を保存
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	fprintf(fp,"%d,\n",enemy_count[i]);
+	//}
 
-	//ファイルクローズ
-	fclose(fp);
+	////ファイルクローズ
+	//fclose(fp);
 
 	//動的確保したオブジェクトを削除する
 	player->Finalize();
@@ -742,83 +743,4 @@ void GameMainScene::ReadHighScore()
 	high_score = data.GetScore(0);
 
 	data.Finalize();
-}
-
-//当たり判定（プレイヤーと敵）
-bool GameMainScene::IsHitCheck(Player* p, Enemy_Roomba* e)
-{
-	//敵情報がなければ、当たり判定を無視する
-	if (e == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = p->GetLocation() - e->GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-}
-
-//当たり判定(プレイヤーとオブジェクト)
-template<class T>
-bool GameMainScene::IsObjectHitCheck_P(Player* p, T* object)
-{
-	//情報がなければ、当たり判定を無視する
-	if (object == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = p->GetLocation() - object->GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = p->GetBoxSize() + object->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-}
-
-//当たり判定(敵(ルンバ)とオブジェクト)
-template<class T>
-bool GameMainScene::IsObjecHitCheck_E(Enemy_Roomba* e, T* object)
-{
-	//情報がなければ、当たり判定を無視する
-	if (object == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = e->GetLocation() - object->GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = e->GetBoxSize() + object->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-}
-
-//障害物同士の当たり判定
-template<class T>
-bool GameMainScene::IsObjecHitCheck_O(T* object1, T* object2)
-{
-	//情報がなければ、当たり判定を無視する
-	if (object1 == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = object1->GetLocation() - object2->GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = object1->GetBoxSize() + object2->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
 }
