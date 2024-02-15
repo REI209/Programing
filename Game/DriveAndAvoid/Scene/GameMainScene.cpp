@@ -4,8 +4,8 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
-family_cnt{}, counter(0), count_down(0), obstacle_a_image(NULL), obstacle_b_image(NULL), obstacle_c_image(NULL), time(0),mainbgm(0)//,enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),/*obstacle_a(nullptr),*/ obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
+family_cnt{}, counter(0), count_down(0),/* obstacle_a_image(NULL),*/ obstacle_b_image(NULL), obstacle_c_image(NULL), time(0), mainbgm(0)//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
@@ -46,7 +46,7 @@ void GameMainScene::Initialize()
 	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
 
-	obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki1.png");
+	//obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki1.png");
 	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
 	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
 
@@ -69,10 +69,10 @@ void GameMainScene::Initialize()
 	{
 		throw("Resource/Images/barrier.png‚ª‚ ‚è‚Ü‚¹‚ñ\n");
 	}
-	if (obstacle_a)
+	/*if (obstacle_a)
 	{
 		throw("Resource/Images/kaden_senpuki.png‚ª‚ ‚è‚Ü‚¹‚ñ\n");
-	}
+	}*/
 	if (obstacle_b)
 	{
 		throw("Resource/Images/omocha_tumiki.png‚ª‚ ‚è‚Ü‚¹‚ñ\n");
@@ -94,7 +94,7 @@ void GameMainScene::Initialize()
 	//enemy = new Enemy * [10];
 
 	enemy_roomba = new Enemy_Roomba;
-	obstacle_a = new Obstacle_A * [10];
+	//obstacle_a = new Obstacle_A * [10];
 	obstacle_b = new Obstacle_B*[10];
 	obstacle_c = new Obstacle_C * [10];
 
@@ -110,7 +110,7 @@ void GameMainScene::Initialize()
 
 	for (int i = 0; i < 10; i++)
 	{
-		obstacle_a[i] = nullptr;
+		//obstacle_a[i] = nullptr;
 		obstacle_b[i] = nullptr;
 		obstacle_c[i] = nullptr;
 	}
@@ -165,18 +165,25 @@ eSceneType GameMainScene::Update()
 			mileage += 1;
 		}
 
-		//“G¶¬ˆ—
-		if (mileage / 30 % 100 == 0)
+		////“G¶¬ˆ—
+		//if (mileage / 20 % 100 == 0)
+		//{
+		//	for (int i = 0; i < 10; i++)
+		//	{
+		//		if (obstacle_a[i] == nullptr)
+		//		{
+		//			int type = GetRand(1);
+		//			obstacle_a[i] = new Obstacle_A(type,obstacle_a_image);
+		//			obstacle_a[i]->Initialize();
+		//			break;
+		//		}
+		//	}
+		//}
+
+		if (mileage / 10 % 50 == 0)
 		{
 			for (int i = 0; i < 10; i++)
 			{
-				if (obstacle_a[i] == nullptr)
-				{
-					int type = GetRand(1);
-					obstacle_a[i] = new Obstacle_A(type,obstacle_a_image);
-					obstacle_a[i]->Initialize();
-					break;
-				}
 				if (obstacle_b[i] == nullptr)
 				{
 					//int type = GetRand(3) % 3;
@@ -184,6 +191,13 @@ eSceneType GameMainScene::Update()
 					obstacle_b[i]->Initialize();
 					break;
 				}
+			}
+		}
+
+		if (mileage / 20 % 10000 == 0)
+		{
+			for (int i = 0; i < 10; i++)
+			{
 				if (obstacle_c[i] == nullptr)
 				{
 					obstacle_c[i] = new Obstacle_C(obstacle_c_image);
@@ -212,61 +226,61 @@ eSceneType GameMainScene::Update()
 		//“G‚ÌXV‚Æ“–‚½‚è”»’èƒ`ƒFƒbƒN
 		for (int i = 0; i < 10; i++)
 		{
-			if (obstacle_a[i] != nullptr)
-			{
-				obstacle_a[i]->Update(player->GetSpeed());
+			//if (obstacle_a[i] != nullptr)
+			//{
+			//	obstacle_a[i]->Update(player->GetSpeed());
 
-				//‰æ–ÊŠO‚És‚Á‚½‚çíœ
-				if (obstacle_a[i]->GetLocation().y >= 800.0f)
-				{
-					obstacle_a[i]->Finalize();
-					delete obstacle_a[i];
-					obstacle_a[i] = nullptr;
-				}
+			//	//‰æ–ÊŠO‚És‚Á‚½‚çíœ
+			//	if (obstacle_a[i]->GetLocation().y >= 800.0f)
+			//	{
+			//		obstacle_a[i]->Finalize();
+			//		delete obstacle_a[i];
+			//		obstacle_a[i] = nullptr;
+			//	}
 
-				if (player->GetActiveFlg() == true)
-				{
-					//“–‚½‚è”»’è‚ÌŠm”F
-					if (IsObjectHitCheck_P(player, obstacle_a[i]))
-					{
-						player->SetActive(false);
-						player->DecreaseHp(-20.0f);
-						if (player->GetPlayerSize() > 0.3f)
-						{
-							player->SetSize(-0.1f);
-							player->SetBoxSize(-0.1f);
-						}
-						obstacle_a[i]->Finalize();
-						delete obstacle_a[i];
-						obstacle_a[i] = nullptr;
-					}
-				}
+			//	if (player->GetActiveFlg() == true)
+			//	{
+			//		//“–‚½‚è”»’è‚ÌŠm”F
+			//		if (IsObjectHitCheck_P(player, obstacle_a[i]))
+			//		{
+			//			player->SetActive(false);
+			//			player->DecreaseHp(-20.0f);
+			//			if (player->GetPlayerSize() > 0.3f)
+			//			{
+			//				player->SetSize(-0.1f);
+			//				player->SetBoxSize(-0.1f);
+			//			}
+			//			obstacle_a[i]->Finalize();
+			//			delete obstacle_a[i];
+			//			obstacle_a[i] = nullptr;
+			//		}
+			//	}
 
-			//“G‚ÆáŠQ•¨‚Ì“–‚½‚è”»’è
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
-			{
-				enemy_roomba->SetActive(false);
-				enemy_roomba->DecreaseHp(-10.0f);
-				obstacle_a[i]->Finalize();
-				delete obstacle_a[i];
-				obstacle_a[i] = nullptr;
-			}
+			////“G‚ÆáŠQ•¨‚Ì“–‚½‚è”»’è
+			//if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
+			//{
+			//	enemy_roomba->SetActive(false);
+			//	enemy_roomba->DecreaseHp(-10.0f);
+			//	obstacle_a[i]->Finalize();
+			//	delete obstacle_a[i];
+			//	obstacle_a[i] = nullptr;
+			//}
 
-				for (int j = 0; j < 10; j++)
-				{
-					if (obstacle_a[j] != nullptr && i != j)
-					{
-						//’‡ŠÔ“¯Žm‚Ì“–‚½‚è”»’è
-						if (IsObjecHitCheck_O(obstacle_a[i], obstacle_a[j]))
-						{
-							obstacle_a[j]->Finalize();
-							delete obstacle_a[j];
-							obstacle_a[j] = nullptr;
-						}
-					}
-				}
+			//	for (int j = 0; j < 10; j++)
+			//	{
+			//		if (obstacle_a[j] != nullptr && i != j)
+			//		{
+			//			//’‡ŠÔ“¯Žm‚Ì“–‚½‚è”»’è
+			//			if (IsObjecHitCheck_O(obstacle_a[i], obstacle_a[j]))
+			//			{
+			//				obstacle_a[j]->Finalize();
+			//				delete obstacle_a[j];
+			//				obstacle_a[j] = nullptr;
+			//			}
+			//		}
+			//	}
 
-			}
+			//}
 			if (obstacle_b[i] != nullptr)
 			{
 				obstacle_b[i]->Update(player->GetSpeed());
@@ -529,10 +543,10 @@ void GameMainScene::Draw() const
 	//“G‚Ì•`‰æ
 	for (int i = 0; i < 10; i++)
 	{
-		if (obstacle_a[i] != nullptr)
+		/*if (obstacle_a[i] != nullptr)
 		{
 			obstacle_a[i]->Draw();
-		}
+		}*/
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Draw();
@@ -651,12 +665,12 @@ void GameMainScene::Finalize()
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (obstacle_a[i] != nullptr)
+		/*if (obstacle_a[i] != nullptr)
 		{
 			obstacle_a[i]->Finalize();
 			delete obstacle_a[i];
 			obstacle_a[i] = nullptr;
-		}
+		}*/
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Finalize();
@@ -671,7 +685,7 @@ void GameMainScene::Finalize()
 		}
 	}
 
-	delete[] obstacle_a;
+	//delete[] obstacle_a;
 	delete[] obstacle_b;
 	delete[] obstacle_c;
 

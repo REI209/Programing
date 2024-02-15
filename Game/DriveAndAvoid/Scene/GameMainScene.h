@@ -9,7 +9,6 @@
 #include "../Object/Obstacle_B.h"
 #include "../Object/Obstacle_C.h"
 #include "../Object/Family.h"
-#include "../Object/wind.h"
 class GameMainScene :public SceneBase
 {
 private:
@@ -31,8 +30,8 @@ private:
 	int roomba_image;	//ルンバの画像
 	float diff_x;		//プレイヤーとの差
 
-	Obstacle_A** obstacle_a;//扇風機
-	int obstacle_a_image;//扇風機画像
+	//Obstacle_A** obstacle_a;//扇風機
+	//int obstacle_a_image;//扇風機画像
 
 
 	Obstacle_B** obstacle_b;//積み木
@@ -45,9 +44,6 @@ private:
 	Family** family; //仲間
 	int family_image[2]; //仲間画像
 	int family_cnt[2]; //集めた仲間の数
-
-	Wind** wind;  //風
-	int wind_image[2]; //風画像
 
 public:
 	GameMainScene();
