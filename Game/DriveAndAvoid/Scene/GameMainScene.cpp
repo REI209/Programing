@@ -145,7 +145,7 @@ eSceneType GameMainScene::Update()
 			if (counter < 0)
 			{
 				counter = 0;
-				return eSceneType::E_RESULT;
+				return eSceneType::E_CLEAR;
 			}
 		}
 	}
@@ -236,9 +236,9 @@ eSceneType GameMainScene::Update()
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
 						}
-						obstacle_b[i]->Finalize();
-						delete obstacle_b[i];
-						obstacle_b[i] = nullptr;
+						obstacle_a[i]->Finalize();
+						delete obstacle_a[i];
+						obstacle_a[i] = nullptr;
 					}
 				}
 
@@ -344,7 +344,7 @@ eSceneType GameMainScene::Update()
 						player->SetActive(false);
 						if (player->GetPlayerSize() <= 0.5f)
 						{
-							player->DecreaseHp(-100.0f);
+							player->SetHp();
 						}
 						else
 						{
@@ -356,7 +356,7 @@ eSceneType GameMainScene::Update()
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
 						}
-						player->SetX(100.0f);
+						//player->SetY(100.0f);
 						obstacle_c[i]->Finalize();
 						delete obstacle_c[i];
 						obstacle_c[i] = nullptr;
@@ -408,7 +408,7 @@ eSceneType GameMainScene::Update()
 					player->SetActive(false);
 					if (player->GetPlayerSize() <= 0.5f)
 					{
-						player->DecreaseHp(-100.0f);
+						player->SetHp();
 					}
 					else
 					{
@@ -488,12 +488,12 @@ eSceneType GameMainScene::Update()
 			}
 		}
 
-		//ƒvƒŒƒCƒ„[‚Ì”R—¿‰»‘Ì—Í‚ª‚O–¢–ž‚È‚çAƒŠƒUƒ‹ƒg‚É‘JˆÚ‚·‚é
-		if (player->GetHp() < 0.0f)
-		{
-			return eSceneType::E_OVER;
-		}
+	}
 
+	//ƒvƒŒƒCƒ„[‚Ì”R—¿‰»‘Ì—Í‚ª‚O–¢–ž‚È‚çAƒŠƒUƒ‹ƒg‚É‘JˆÚ‚·‚é
+	if (player->GetHp() < 0.1f)
+	{
+		return eSceneType::E_OVER;
 	}
 
 	return GetNowScene();
@@ -593,7 +593,7 @@ void GameMainScene::Draw() const
 	fy = 10.0f;
 	SetFontSize(16);
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "HP");
-	DrawBoxAA(fx, fy + 20.0f, fx + player->GetHp() + 130, fy + 40.0f, GetColor(255, 0, 0), TRUE);
+	DrawBoxAA(fx, fy + 20.0f, fx + player->GetHp(), fy + 40.0f, GetColor(255, 0, 0), TRUE);
 	DrawBoxAA(fx, fy + 20.0f, fx + 230.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
 
 	SetFontSize(16);

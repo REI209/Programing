@@ -3,7 +3,7 @@
 #include "DxLib.h"
 #include "../Object/common.h"
 
-GameOverScene::GameOverScene() :background_image(NULL)
+GameOverScene::GameOverScene() :background_image(NULL),gameoverbgm(0)
 {
 }
 
@@ -15,7 +15,7 @@ GameOverScene::~GameOverScene()
 void GameOverScene::Initialize()
 {
 	//画像の読み込み
-
+	background_image = LoadGraph("Resource/Images/gameover.png");
 	//エラーチェック
 
 	//音源の読み込み
@@ -24,11 +24,8 @@ void GameOverScene::Initialize()
 
 eSceneType GameOverScene::Update()
 {
-	//BGMを流す
-	if (GetNowScene() == E_OVER)
-	{
-		PlaySoundMem(gameoverbgm, DX_PLAYTYPE_LOOP, FALSE);
-	}
+	
+	PlaySoundMem(gameoverbgm, DX_PLAYTYPE_BACK, FALSE);
 	//Bボタンが押されたら、リザルトへ
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
@@ -41,6 +38,7 @@ eSceneType GameOverScene::Update()
 void GameOverScene::Draw() const
 {
 	//背景画像の描画
+	DrawGraph(0, 0, background_image, TRUE);
 	DrawString(20, 120, "GameOver", 0xffffff, 0);
 
 }

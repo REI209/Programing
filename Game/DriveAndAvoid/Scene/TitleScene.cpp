@@ -2,8 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 #include "../Object/common.h"
-TitleScene::TitleScene() :background_image(NULL), menu_image(NULL),
-cursor_image(NULL), menu_cursor(0)
+TitleScene::TitleScene() :background_image(NULL),cursor_image(NULL), menu_cursor(0),titlebgm(0)
 {
 
 }
@@ -18,7 +17,6 @@ void TitleScene::Initialize()
 {
 	//画像の読み込み
 	background_image = LoadGraph("Resource/images/Title.png");
-	menu_image = LoadGraph("Resource/images/menu.bmp");
 	cursor_image = LoadGraph("Resource/images/cursor.png");
 	//音源の読み込み
 	titlebgm = LoadSoundMem(TITLE_BGM);
@@ -27,10 +25,6 @@ void TitleScene::Initialize()
 	if (background_image == -1)
 	{
 		throw("Resource/images/Title.bmpがありません\n");
-	}
-	if (menu_image == -1)
-	{
-		throw("Resource/images/menu.bmpがありません\n");
 	}
 	if (cursor_image == -1)
 	{
@@ -52,7 +46,7 @@ eSceneType TitleScene::Update()
 	{
 		menu_cursor++;
 		//一番下に到達したら、一番上にする
-		if (menu_cursor > 3)
+		if (menu_cursor > 2)
 		{
 			menu_cursor = 0;
 		}
@@ -65,7 +59,7 @@ eSceneType TitleScene::Update()
 		//一番上に到達したら、一番下にする
 		if (menu_cursor < 0)
 		{
-			menu_cursor = 3;
+			menu_cursor = 2;
 		}
 	}
 
@@ -77,11 +71,11 @@ eSceneType TitleScene::Update()
 		case 0:
 			return eSceneType::E_MAIN;
 		case 1:
-			return eSceneType::E_RANKING_DISP;
-		case 2:
 			return eSceneType::E_HELP;
-		default:
+		case 2:
 			return eSceneType::E_END;
+		default:
+			break;	
 		}
 	}
 	//現在のシーンタイプを返す
@@ -94,9 +88,6 @@ void TitleScene::Draw() const
 	//タイトル画面の描画
 	DrawGraph(0, 0, background_image, FALSE);
 
-	//メニュー画面の描画
-	//DrawGraph(120, 200, menu_image, TRUE);
-
 	//カーソル画面の描画
 	DrawGraph(320, 305 + menu_cursor * 100, cursor_image,TRUE);
 }
@@ -106,7 +97,6 @@ void TitleScene::Finalize()
 {
 	//読み込んだ画像の削除
 	DeleteGraph(background_image);
-	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
 	DeleteSoundMem(titlebgm);
 }

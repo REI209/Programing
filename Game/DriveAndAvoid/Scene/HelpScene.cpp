@@ -15,14 +15,14 @@ HelpScene::~HelpScene()
 //初期化処理
 void HelpScene::Initialize()
 {
-	//画像の読み込み
-	background_image = LoadGraph("Resource/images/Title.bpm");
+	////画像の読み込み
+	//background_image = LoadGraph("Resource/images/Title.bpm");
 
-	//エラーチェック
-	if (background_image == -1)
-	{
-		throw("Resource/images/Title.bpmがありません\n");
-	}
+	////エラーチェック
+	//if (background_image == -1)
+	//{
+	//	throw("Resource/images/Title.bpmがありません\n");
+	//}
 }
 
 //更新処理
@@ -40,7 +40,7 @@ eSceneType HelpScene::Update()
 void HelpScene::Draw() const
 {
 	//背景画像の描画
-	DrawGraph(0, 0, background_image, FALSE);
+	//DrawGraph(0, 0, background_image, FALSE);
 
 	//ゲーム説明
 	SetFontSize(16);
@@ -58,7 +58,7 @@ void HelpScene::Draw() const
 void HelpScene::Finalize()
 {
 	//読み込んだ画像削除
-	DeleteGraph(background_image);
+	//DeleteGraph(background_image);
 }
 
 //現在のシーン情報を取得

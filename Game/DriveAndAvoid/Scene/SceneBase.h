@@ -6,8 +6,7 @@ enum eSceneType
 	E_TITLE,
 	E_MAIN,
 	E_HELP,
-	E_RANKING_DISP,
-	E_RANKING_INPUT,
+	E_CLEAR,
 	E_OVER,
 	E_RESULT,
 	E_END

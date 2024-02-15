@@ -6,7 +6,7 @@ class Player
 {
 private:
 	bool is_active;      //有効状態か？
-	int image;           //画像データ
+	int image[2];           //画像データ
 	Vector2D location;   //位置座標
 	Vector2D box_size;   //当たり判定の大きさ
 	float angle;         //角度
@@ -49,6 +49,7 @@ public:
 	void SetY(float num) { location.y -= num; } //プレイヤーのX座標変更
 	void SetRoomAnim(int num) { room_anim = num; } //プレイヤーがルンバに当たったら
 	void SetSizeDef() { image_size = 0.5f; }
+	void SetHp() { hp = 0.0f; }
 
 private:
 	void Movement();       //移動処理

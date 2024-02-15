@@ -7,8 +7,7 @@
 #include"ResultScene.h"
 #include"HelpScene.h"
 #include "GameOverScene.h"
-#include"RankingDispScene.h"
-#include"RankingInputScene.h"
+#include "GameClear.h"
 
 
 SceneManager::SceneManager() :current_scene(nullptr)
@@ -169,10 +168,8 @@ SceneBase* SceneManager::CreateScene(eSceneType scene_type)
 		return new HelpScene;
 	case eSceneType::E_OVER:
 		return new GameOverScene;
-	case eSceneType::E_RANKING_DISP:
-		return new RankingDispScene;
-	case eSceneType::E_RANKING_INPUT:
-		return new RankingInputScene;
+	case eSceneType::E_CLEAR:
+		return new GameClear;
 	default:
 		return nullptr;
 	}
