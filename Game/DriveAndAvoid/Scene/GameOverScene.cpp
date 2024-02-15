@@ -38,7 +38,7 @@ eSceneType GameOverScene::Update()
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
 		PlaySoundMem(ok_se, DX_PLAYTYPE_BACK, TRUE);
-		return eSceneType::E_RESULT;
+		return eSceneType::E_TITLE;
 	}
 	return GetNowScene();
 
@@ -48,8 +48,6 @@ void GameOverScene::Draw() const
 {
 	//”wŒi‰æ‘œ‚Ì•`‰æ
 	DrawGraph(0, 0, background_image, TRUE);
-	DrawString(20, 120, "GameOver", 0xffffff, 0);
-
 }
 
 //I—¹éŒ¾
