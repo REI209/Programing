@@ -16,7 +16,7 @@ Obstacle_B::~Obstacle_B()
 void Obstacle_B::Initialize()
 {
 	//出現させるx座標パターンを取得
-	float random_x = (float)(GetRand(4) * 105 + 40);
+	float random_x = (float)(GetRand(4) * 256 + 50);
 	//生成位置の設定
 	location = Vector2D(random_x, -50.0f);
 	//当たり判定の設定

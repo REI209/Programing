@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AppMain.cpp" />
-    <ClCompile Include="Object\wind.cpp" />
     <ClCompile Include="Scene\GameClear.cpp" />
     <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Object\Enemy_Roomba.cpp" />
@@ -40,7 +39,6 @@
     <ClCompile Include="Utility\InputControl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Object\wind.h" />
     <ClInclude Include="Scene\GameClear.h" />
     <ClInclude Include="Scene\GameOverScene.h" />
     <ClInclude Include="Object\common.h" />
