@@ -34,7 +34,7 @@ void Player::Initialize()
 
 	//画像の読み込み
 	image[0] = LoadGraph("Resource/Images/player.PNG");
-	image[1] = LoadGraph("Resource/Images/IMG_0118.PNG");
+	image[1] = LoadGraph("Resource/Images/player_bom.PNG");
 
 
 	//エラーチェック
@@ -44,7 +44,7 @@ void Player::Initialize()
 	}
 	if (image[1] == -1)
 	{
-		throw ("Resource/images/IMG_0118.PNGがありません\n");
+		throw ("Resource/images/player_bom.PNGがありません\n");
 	}
 }
 

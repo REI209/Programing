@@ -19,7 +19,7 @@ ResultScene::~ResultScene()
 void ResultScene::Initialize()
 {
 	//画像の読み込み
-	back_ground = LoadGraph("Resource/Images/result.png");
+	back_ground = LoadGraph(RESULT_BACK_IMAGE);
 
 	//エラーチェック
 	if (back_ground == -1)
