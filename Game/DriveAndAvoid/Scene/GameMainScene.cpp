@@ -3,6 +3,12 @@
 #include "../Object/common.h"
 
 
+#include "../Object/Obstacle_A.h"
+#include "../Object/Obstacle_B.h"
+#include "../Object/Obstacle_C.h"
+#include "../Object/Family.h"
+
+
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),mainbgm(NULL),
 mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),/*obstacle_a(nullptr),*/ obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
@@ -307,7 +313,7 @@ eSceneType GameMainScene::Update()
 				if (player->GetActiveFlg() == true)
 				{
 					//“–‚½‚è”»’è‚ÌŠm”F
-					if (IsObjecHitCheck<class Player, class Obstacle_B>(player, obstacle_b[i]))
+					if (IsObjecHitCheck<Player,Obstacle_B>(player, obstacle_b[i]))
 					{
 						PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 						player->SetActive(false);
@@ -324,7 +330,7 @@ eSceneType GameMainScene::Update()
 				}
 
 			//“G‚ÆáŠQ•¨‚Ì“–‚½‚è”»’è
-			if (IsObjecHitCheck<class Enemy_Roomba, class Obstacle_B>(enemy_roomba, obstacle_b[i]))
+			if (IsObjecHitCheck<Enemy_Roomba, Obstacle_B>(enemy_roomba, obstacle_b[i]))
 			{
 				PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 				enemy_roomba->SetActive(false);
@@ -339,7 +345,7 @@ eSceneType GameMainScene::Update()
 					if (obstacle_b[j] != nullptr && i != j)
 					{
 						//“G“¯m‚Ì“–‚½‚è”»’è
-						if (IsObjecHitCheck<class Obstacle_B,class Obstacle_B>(obstacle_b[i], obstacle_b[j]))
+						if (IsObjecHitCheck<Obstacle_B,Obstacle_B>(obstacle_b[i], obstacle_b[j]))
 						{
 							obstacle_b[j]->Finalize();
 							delete obstacle_b[j];
@@ -365,7 +371,7 @@ eSceneType GameMainScene::Update()
 				if (player->GetActiveFlg() == true)
 				{
 					//ƒvƒŒƒCƒ„[‚ÆáŠQ•¨‚Ì“–‚½‚è”»’è‚ÌŠm”F
-					if (IsObjecHitCheck<class Player, class Obstacle_C>(player, obstacle_c[i]))
+					if (IsObjecHitCheck<Player, Obstacle_C>(player, obstacle_c[i]))
 					{
 						PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 						player->SetRoomAnim(1);
@@ -395,7 +401,7 @@ eSceneType GameMainScene::Update()
 				}
 
 				//“G‚ÆáŠQ•¨‚Ì“–‚½‚è”»’è
-				if (IsObjecHitCheck<class Enemy_Roomba,class Obstacle_C>(enemy_roomba, obstacle_c[i]))
+				if (IsObjecHitCheck<Enemy_Roomba, Obstacle_C>(enemy_roomba, obstacle_c[i]))
 				{
 					PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 					enemy_roomba->SetActive(false);
@@ -410,7 +416,7 @@ eSceneType GameMainScene::Update()
 					if (obstacle_c[j] != nullptr && i != j)
 					{
 						//’‡ŠÔ“¯m‚Ì“–‚½‚è”»’è
-						if (IsObjecHitCheck<class Obstacle_C,class Obstacle_C>(obstacle_c[i], obstacle_c[j]))
+						if (IsObjecHitCheck<Obstacle_C,Obstacle_C>(obstacle_c[i], obstacle_c[j]))
 						{
 							obstacle_c[j]->Finalize();
 							delete obstacle_c[j];
@@ -433,7 +439,7 @@ eSceneType GameMainScene::Update()
 			if (player->GetActiveFlg() == true)
 			{
 				//ƒvƒŒƒCƒ„[‚Æ“G‚Ì“–‚½‚è”»’è‚ÌŠm”F
-				if (IsObjecHitCheck<class Player, class Enemy_Roomba>(player, enemy_roomba))
+				if (IsObjecHitCheck<Player, Enemy_Roomba>(player, enemy_roomba))
 				{
 					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 					player->SetRoomAnim(1);
@@ -477,7 +483,7 @@ eSceneType GameMainScene::Update()
 			//“–‚½‚è”»’è‚ÌŠm”F
 				if (player->GetActiveFlg() == true)
 				{
-					if (IsObjecHitCheck<class Player, class Family>(player, family[i]))
+					if (IsObjecHitCheck<Player, Family>(player, family[i]))
 					{
 						PlaySoundMem(se[1], DX_PLAYTYPE_BACK, TRUE);
 						if (player->GetHp() < 230)
@@ -498,7 +504,7 @@ eSceneType GameMainScene::Update()
 			
 
 				//“G‚ÆáŠQ•¨‚Ì“–‚½‚è”»’è
-				if (IsObjecHitCheck<class Enemy_Roomba, class Family>(enemy_roomba, family[i]))
+				if (IsObjecHitCheck<Enemy_Roomba, Family>(enemy_roomba, family[i]))
 				{
 					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 					family[i]->Finalize();
@@ -511,7 +517,7 @@ eSceneType GameMainScene::Update()
 					if (family[j] != nullptr && i != j)
 					{
 						//’‡ŠÔ“¯m‚Ì“–‚½‚è”»’è
-						if (IsObjecHitCheck<class Family, class Family>(family[i], family[j]))
+						if (IsObjecHitCheck<Family, Family>(family[i], family[j]))
 						{
 							family[j]->Finalize();
 							delete family[j];

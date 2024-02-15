@@ -6,10 +6,6 @@
 #include"../Object/Player.h"
 #include"../Object/Enemy.h"
 #include "../Object/Enemy_Roomba.h"
-#include "../Object/Obstacle_A.h"
-#include "../Object/Obstacle_B.h"
-#include "../Object/Obstacle_C.h"
-#include "../Object/Family.h"
 
 class GameMainScene :public SceneBase
 {
@@ -58,12 +54,10 @@ public:
 
 	virtual eSceneType GetNowScene() const override;
 
-
 private:
 	//ハイスコア読み込み処理
 	void ReadHighScore();
 
-public:
 	//障害物同士の当たり判定
 	template <class T, class U>
 	inline bool IsObjecHitCheck(T* object1, U* object2)
