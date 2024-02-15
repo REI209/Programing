@@ -43,7 +43,7 @@ void GameMainScene::Initialize()
 	back_ground = LoadGraph(GAMEMAIN_BACK_IMAGE);
 
 	//obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki1.png");
-	obstacle_b_image= LoadGraph(OBSTACLE_B_IMAGE);
+	int obs_b_image= LoadDivGraph(OBSTACLE_B_IMAGE,3,3,1,180,180,obstacle_b_image,TRUE);
 	obstacle_c_image = LoadGraph(OBSTACLE_C_IMAGE);
 
 	family_image[0] = LoadGraph(FAMILLY_IMAGE_01);

@@ -46,17 +46,6 @@ void HelpScene::Draw() const
 {
 	//背景画像の描画
 	DrawGraph(0, 0, background_image, FALSE);
-
-	//ゲーム説明
-	SetFontSize(16);
-	DrawString(20, 120, "ヘルプ画面", 0xffffff, 0);
-
-	DrawString(20, 160, "これは障害物を避けながら", 0xffffff, 0);
-	DrawString(20, 180, "走り続けるゲームです", 0xffffff, 0);
-	DrawString(20, 200, "燃料が尽きるか障害物に", 0xffffff, 0);
-	DrawString(20, 220, "数回当たるとゲームオーバーです", 0xffffff, 0);
-
-	DrawString(150, 450, "---- Bボタンを押してタイトルへ戻る ----", 0xffffff, 0);
 }
 
 //終了宣言
