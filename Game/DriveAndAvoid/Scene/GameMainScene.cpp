@@ -166,7 +166,7 @@ eSceneType GameMainScene::Update()
 		}
 
 		//“G¶¬ˆ—
-		if (mileage / 20 % 100 == 0)
+		if (mileage / 30 % 100 == 0)
 		{
 			for (int i = 0; i < 10; i++)
 			{
@@ -327,7 +327,7 @@ eSceneType GameMainScene::Update()
 				obstacle_c[i]->Update(player->GetSpeed());
 
 				//‰æ–ÊŠO‚És‚Á‚½‚çíœ
-				if (obstacle_c[i]->GetLocation().y >= 800.0f)
+				if (obstacle_c[i]->GetLocation().x >= 1290.0f)
 				{
 					obstacle_c[i]->Finalize();
 					delete obstacle_c[i];
@@ -446,7 +446,7 @@ eSceneType GameMainScene::Update()
 				{
 					if (IsObjectHitCheck_P(player, family[i]))
 					{
-						if (player->GetHp() < 100)
+						if (player->GetHp() < 230)
 						{
 							player->DecreaseHp(10.0f);
 						}

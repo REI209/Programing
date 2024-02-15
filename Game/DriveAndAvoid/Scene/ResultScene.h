@@ -7,8 +7,7 @@ class ResultScene :public SceneBase
 private:
 	int back_ground;
 	int score;
-	int enemy_count[3];
-	int enemy_image[3];
+	int bgm;
 
 public:
 	ResultScene();

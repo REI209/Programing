@@ -1,15 +1,13 @@
 #include"ResultScene.h"
 #include"../Object/RankingData.h"
 #include"../Utility/InputControl.h"
+#include"../Object/common.h"
 #include"DxLib.h"
 
-ResultScene::ResultScene() :back_ground(NULL), score(0)
+
+ResultScene::ResultScene() :back_ground(NULL), score(0),bgm(0)
 {
-	for (int i = 0; i < 3; i++)
-	{
-		enemy_image[i] = NULL;
-		enemy_count[i] = NULL;
-	}
+
 }
 
 ResultScene::~ResultScene()
@@ -29,6 +27,9 @@ void ResultScene::Initialize()
 		throw("Resource/images/back.bmpがありません\n");
 	}
 
+	//音源の読み込み
+	bgm = LoadSoundMem(TITLE_BGM);
+
 	//ゲーム結果の読み込み
 	ReadResultData();
 }
@@ -36,6 +37,8 @@ void ResultScene::Initialize()
 //更新処理
 eSceneType ResultScene::Update()
 {
+	PlaySoundMem(bgm, DX_PLAYTYPE_LOOP, FALSE);
+
 	//Bボタンでに遷移する
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
@@ -77,10 +80,7 @@ void ResultScene::Finalize()
 {
 	//読み込んだ画像を削除
 	DeleteGraph(back_ground);
-	for (int i = 0; i < 3; i++)
-	{
-		DeleteGraph(enemy_image[i]);
-	}
+	DeleteSoundMem(bgm);
 }
 
 //現在のシーン情報を取得
@@ -105,11 +105,11 @@ void ResultScene::ReadResultData()
 	//結果を読み込む
 	fscanf_s(fp, "%6d,\n", &score);
 
-	//避けた数と得点を取得
-	for (int i = 0; i < 3; i++)
-	{
-		fscanf_s(fp, "%6d\n", &enemy_count[i]);
-	}
+	////避けた数と得点を取得
+	//for (int i = 0; i < 3; i++)
+	//{
+	//	fscanf_s(fp, "%6d\n", &enemy_count[i]);
+	//}
 
 	//ファイルクローズ
 	fclose(fp);
