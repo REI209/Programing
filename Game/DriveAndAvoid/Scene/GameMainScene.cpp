@@ -1,24 +1,18 @@
 #include"GameMainScene.h"
 #include"../Object/RankingData.h"
 #include "../Object/common.h"
-#include<math.h>
 
+#include "../Object/wind.h"
 #include "../Object/Enemy_Roomba.h"
 #include "../Object/Obstacle_A.h"
 #include "../Object/Obstacle_B.h"
 #include "../Object/Obstacle_C.h"
 #include "../Object/Family.h"
+
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),bonus_flg(false),
 barrier_image(NULL),bonus_image(NULL),bonus_size(0.0),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),
 obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr)//,enemy(nullptr)
 {
-
-	for (int i = 0; i < 3; i++)
-	{
-		enemy_image[i] = NULL;
-		enemy_count[i] = NULL;
-	}
-
 	for (int i = 0; i < 2; i++)
 	{
 		family_image[i] = NULL;
@@ -111,10 +105,7 @@ void GameMainScene::Initialize()
 	//オブジェクトの初期化
 	player->Initialize();
 	enemy_roomba->Initialize();
-	
-	//obstacle_a->Initialize();
-	//obstacle_b->Initialize();
-	//obstacle_c->Initialize();
+
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -518,8 +509,6 @@ eSceneType GameMainScene::Update()
 	if (player->GetHp() < 0.1f)
 	{
 		return eSceneType::E_OVER;
-	}
-
 	}
 
 	if (bonus_flg == true)

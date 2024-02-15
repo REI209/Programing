@@ -25,7 +25,6 @@
     <ClCompile Include="Scene\GameOverScene.cpp" />
     <ClCompile Include="Object\Enemy_Roomba.cpp" />
     <ClCompile Include="Object\Barrier.cpp" />
-    <ClCompile Include="Object\Enemy.cpp" />
     <ClCompile Include="Object\Family.cpp" />
     <ClCompile Include="Object\Obstacle_A.cpp" />
     <ClCompile Include="Object\Obstacle_B.cpp" />
@@ -46,7 +45,6 @@
     <ClInclude Include="Object\common.h" />
     <ClInclude Include="Object\Enemy_Roomba.h" />
     <ClInclude Include="Object\Barrier.h" />
-    <ClInclude Include="Object\Enemy.h" />
     <ClInclude Include="Object\Family.h" />
     <ClInclude Include="Object\Obstacle_A.h" />
     <ClInclude Include="Object\Obstacle_B.h" />

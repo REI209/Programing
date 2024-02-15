@@ -96,7 +96,7 @@ void Enemy_Roomba::Update(GameMainScene* main,float time,float _diff_x)
 
 	}
 
-	main->GetBonusFlg(bonus_flg);
+	//main->GetBonusFlg(bonus_flg);
 }
 
 void Enemy_Roomba::Draw() const

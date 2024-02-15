@@ -2,9 +2,9 @@
 #include"DxLib.h"
 
 #include"../Object/Player.h"
-#include"../Object/Enemy.h"
 #include"SceneBase.h"
-#include <cmath>
+#include<math.h>
+
 
 class GameMainScene :public SceneBase
 {
@@ -17,18 +17,16 @@ private:
 	int back_ground;      //背景画像
 	int barrier_image;    //バリア画像
 	int mileage;          //走行距離
-	int enemy_image[3];   //敵画像
 
 	int bonus_image;		//ボーナス画像
 	float bonus_size;			//サイズ変更
-	bool bonus_flg;
+
 
 	int main_sound;       //ゲームメインサウンド
 	int gameover_sound;   //ゲームオーバーサウンド
 	int enemy_count[3];   //通り過ぎた敵カウント
 	int mainbgm;          //ゲームメインBGM
 	class Player* player;       //プレイヤー
-	//Enemy** enemy;        //敵
 
 	class Enemy_Roomba* enemy_roomba;	//ルンバ
 	int roomba_image;	//ルンバの画像
@@ -49,8 +47,11 @@ private:
 	int family_image[2]; //仲間画像
 	int family_cnt[2]; //集めた仲間の数
 
-	Wind** wind;  //風
+	class Wind** wind;  //風
 	int wind_image[2]; //風画像
+
+public:
+	bool bonus_flg;
 
 public:
 	GameMainScene* main;
