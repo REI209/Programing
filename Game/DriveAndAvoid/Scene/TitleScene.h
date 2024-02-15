@@ -11,6 +11,8 @@ private:
 	int cursor_image;      //カーソル画像
 	int menu_cursor;       //メニューカーソル番号
 	int titlebgm;          //BGM
+	int cursor_se;
+	int ok_se;
 public:
 	TitleScene();
 	virtual ~TitleScene();

@@ -1,8 +1,9 @@
 #include"HelpScene.h"
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
+#include "../Object/common.h"
 
-HelpScene::HelpScene() :background_image(NULL)
+HelpScene::HelpScene() :background_image(NULL),bgm(0),ok_se(0)
 {
 
 }
@@ -23,14 +24,20 @@ void HelpScene::Initialize()
 	//{
 	//	throw("Resource/images/Title.bpmがありません\n");
 	//}
+
+	bgm = LoadSoundMem(TITLE_BGM);
+	ok_se = LoadSoundMem(SELECT_SE);
 }
 
 //更新処理
 eSceneType HelpScene::Update()
 {
+	PlaySoundMem(bgm, DX_PLAYTYPE_LOOP, FALSE);
+
 	//Bボタンが押されたら、タイトルに戻る
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(ok_se, DX_PLAYTYPE_BACK, TRUE);
 		return eSceneType::E_TITLE;
 	}
 	return GetNowScene();
@@ -59,6 +66,9 @@ void HelpScene::Finalize()
 {
 	//読み込んだ画像削除
 	//DeleteGraph(background_image);
+
+	DeleteSoundMem(bgm);
+	//DeleteSoundMem(ok_se);
 }
 
 //現在のシーン情報を取得

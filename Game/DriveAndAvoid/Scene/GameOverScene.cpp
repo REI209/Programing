@@ -3,7 +3,7 @@
 #include "DxLib.h"
 #include "../Object/common.h"
 
-GameOverScene::GameOverScene() :background_image(NULL),gameoverbgm(0)
+GameOverScene::GameOverScene() :background_image(NULL),gameoverbgm{},ok_se(0)
 {
 }
 
@@ -19,16 +19,21 @@ void GameOverScene::Initialize()
 	//エラーチェック
 
 	//音源の読み込み
-	gameoverbgm = LoadSoundMem(GAMEOVER_BGM);
+	gameoverbgm[0] = LoadSoundMem(GAMEOVER_BGM);
+	gameoverbgm[1] = LoadSoundMem(DEATH_SE);
+	ok_se = LoadSoundMem(SELECT_SE);
 }
 
 eSceneType GameOverScene::Update()
 {
-	
-	PlaySoundMem(gameoverbgm, DX_PLAYTYPE_BACK, FALSE);
+	SetVolumeMusic(120);
+	PlaySoundMem(gameoverbgm[0], DX_PLAYTYPE_BACK, FALSE);
+	PlaySoundMem(gameoverbgm[1], DX_PLAYTYPE_BACK, FALSE);
+
 	//Bボタンが押されたら、リザルトへ
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(ok_se, DX_PLAYTYPE_BACK, TRUE);
 		return eSceneType::E_RESULT;
 	}
 	return GetNowScene();
@@ -47,7 +52,9 @@ void GameOverScene::Draw() const
 void GameOverScene::Finalize()
 {
 	//読み込んだ音源の削除
-	DeleteSoundMem(gameoverbgm);
+	DeleteSoundMem(gameoverbgm[0]);
+	DeleteSoundMem(gameoverbgm[1]);
+
 }
 
 //現在のシーン情報を取得

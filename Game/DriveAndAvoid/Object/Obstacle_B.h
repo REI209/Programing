@@ -11,7 +11,7 @@ private:
 	Vector2D box_size;   //“–‚½‚è”»’è‚Ì‘å‚«‚³
 
 public:
-	Obstacle_B(int image);
+	Obstacle_B(int type,int image);
 	~Obstacle_B();
 
 	void Initialize();         //‰Šú‰»ˆ—

@@ -5,10 +5,12 @@
 class GameClear :public SceneBase
 {
 private:
-
+	
 private:
 	int background_image;  //”wŒi‰æ‘œ
 	int clearbgm;          //BGM
+	int ok_se;
+
 public:
 	GameClear();
 	virtual ~GameClear();
