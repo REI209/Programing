@@ -22,7 +22,7 @@ private:
 	int mileage;          //走行距離
 	int enemy_image[3];   //敵画像
 	int bonus_image;		//ボーナス画像
-	int bonus_size;			//サイズ変更
+	float bonus_size;			//サイズ変更
 
 	int main_sound;       //ゲームメインサウンド
 	int gameover_sound;   //ゲームオーバーサウンド

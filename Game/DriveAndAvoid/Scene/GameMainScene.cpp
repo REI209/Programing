@@ -39,7 +39,7 @@ void GameMainScene::Initialize()
 	counter = 60;
 	count_down = 4;
 
-	bonus_size = 1.0f;
+	bonus_size = 0.9f;
 
 	//画像の読み込み
 	back_ground = LoadGraph("Resource/Images/back_img.png");
@@ -175,7 +175,8 @@ eSceneType GameMainScene::Update()
 				{
 					if (obstacle_a[i] == nullptr)
 					{
-						obstacle_a[i] = new Obstacle_A(obstacle_a_image);
+						int type = GetRand(1);
+						obstacle_a[i] = new Obstacle_A(type, obstacle_a_image);
 						obstacle_a[i]->Initialize();
 						break;
 					}
@@ -215,6 +216,7 @@ eSceneType GameMainScene::Update()
 		//敵の更新と当たり判定チェック
 		for (int i = 0; i < 10; i++)
 		{
+			//扇風機
 			if (obstacle_a[i] != nullptr)
 			{
 				obstacle_a[i]->Update(player->GetSpeed());
@@ -483,7 +485,14 @@ eSceneType GameMainScene::Update()
 
 	if (enemy_roomba->GetBonusFlg() == true)
 	{
-		
+		if (bonus_size < 1.3)
+		{
+			bonus_size += 0.05f;
+		}
+		else if (bonus_size > 0.9)
+		{
+			bonus_size -= 0.05f;
+		}
 	}
 
 	return GetNowScene();
@@ -526,6 +535,8 @@ void GameMainScene::Draw() const
 	}
 
 	SetFontSize(16);
+	DrawFormatString(640, 465, GetColor(255, 255, 255), "%f", bonus_size);
+
 
 	//敵の描画
 	for (int i = 0; i < 10; i++)
