@@ -18,7 +18,7 @@ private:
 	float ly;            //ダメージを受けた時のプレイヤーY座標の移動量
 	bool acceleration_flg;   //プレイヤーが加速したか？
 	bool fam_flg;        //仲間に当たったか？
-	int fam_anim;        //仲間に当たった時のアニメーション用
+	int room_anim;        //仲間に当たった時のアニメーション用
 	int time;            //加速した後の後ろに引き下げる用
 
 public:
@@ -47,11 +47,12 @@ public:
 	bool GetFamAnim() { return fam_flg; } //仲間にあったているかどうか
 	void SetX(float num) { location.x -= num; } //プレイヤーのX座標変更
 	void SetY(float num) { location.y -= num; } //プレイヤーのX座標変更
-
+	void SetRoomAnim(int num) { room_anim = num; } //プレイヤーがルンバに当たったら
+	void SetSizeDef() { image_size = 0.5f; }
 
 private:
 	void Movement();       //移動処理
 	void Acceleration();   //加減速処理
-	void RoombaAnim();        //プレイヤーが仲間に当たった時のアニメーション
+	void RoombaAnim();     //プレイヤーがルンバに当たった時のアニメーション
 
 };

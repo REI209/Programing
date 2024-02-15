@@ -46,7 +46,7 @@ void GameMainScene::Initialize()
 	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
 		enemy_image);
 
-	obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki.png");
+	obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki1.png");
 	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
 	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
 
@@ -230,8 +230,8 @@ eSceneType GameMainScene::Update()
 					if (IsObjectHitCheck_P(player, obstacle_a[i]))
 					{
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						player->DecreaseHp(-20.0f);
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -285,8 +285,8 @@ eSceneType GameMainScene::Update()
 					if (IsObjectHitCheck_P(player, obstacle_b[i]))
 					{
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						player->DecreaseHp(-20.0f);
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -339,13 +339,24 @@ eSceneType GameMainScene::Update()
 					//プレイヤーと障害物の当たり判定の確認
 					if (IsObjectHitCheck_P(player, obstacle_c[i]))
 					{
+						player->SetRoomAnim(1);
+						//敵(ルンバ)に当たるとダメージ
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						if (player->GetPlayerSize() <= 0.5f)
+						{
+							player->DecreaseHp(-100.0f);
+						}
+						else
+						{
+							player->SetSizeDef();
+						}
+
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
 						}
+						player->SetX(100.0f);
 						obstacle_c[i]->Finalize();
 						delete obstacle_c[i];
 						obstacle_c[i] = nullptr;
@@ -392,18 +403,25 @@ eSceneType GameMainScene::Update()
 				//プレイヤーと敵の当たり判定の確認
 				if (IsHitCheck(player, enemy_roomba))
 				{
+					player->SetRoomAnim(1);
 					//敵(ルンバ)に当たるとダメージ
 					player->SetActive(false);
-					if (player->GetPlayerSize() <= 1.0f)
+					if (player->GetPlayerSize() <= 0.5f)
 					{
 						player->DecreaseHp(-100.0f);
 					}
-					if (player->GetPlayerSize() > 0.5f)
+					else
+					{
+						player->SetSizeDef();
+					}
+
+					if (player->GetPlayerSize() > 0.3f)
 					{
 						player->SetSize(-0.1f);
 						player->SetBoxSize(-0.1f);
 					}
 					player->SetY(100.0f);
+
 				}
 			}
 		}
@@ -566,8 +584,12 @@ void GameMainScene::Draw() const
 		DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
 	}
 
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+	DrawBox(995, 5, 1265, 115, GetColor(255, 255, 255), TRUE);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 	//体力ゲージの描画
-	fx = 1000.0f;
+	fx = 1015.0f;
 	fy = 10.0f;
 	SetFontSize(16);
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "HP");
@@ -578,13 +600,13 @@ void GameMainScene::Draw() const
 	//DrawFormatStringF(1000.0f, 60.0f, GetColor(0, 0, 0), "集めた仲間の数");
 
 	//集めた仲間の数
-	fx = 995.0f;
+	fx = 1010.0f;
 	fy = 60.0f;
 	SetFontSize(20);
 	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[0], TRUE);
 	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d",family_cnt[0]);
 
-	fx = 1130.0f;
+	fx = 1145.0f;
 	fy = 60.0f;
 	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[1], TRUE);
 	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d", family_cnt[1]);

@@ -3,7 +3,7 @@
 #include"DxLib.h"
 
 Player::Player() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),angle(0.0f),
-speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),ly(0.0f), acceleration_flg(false),fam_anim(0),time(0),
+speed(0.0f), hp(0.0f), stamina(0.0f),damage(0),image_size(0.0f),ly(0.0f), acceleration_flg(false), room_anim(0),time(0),
 fam_flg(false)
 {
 
@@ -28,7 +28,7 @@ void Player::Initialize()
 	image_size = 0.5f;
 	ly = 0.0f;
 	fam_flg = false;
-	fam_anim = 0;
+	room_anim = 0;
 	acceleration_flg = false;
 	time = 0;
 
@@ -48,6 +48,11 @@ void Player::Update()
 
 	if (!is_active)
 	{
+		if (room_anim != 0)
+		{
+			RoombaAnim();
+		}
+
 		damage++;
 		speed = 1.0f;
 
@@ -68,6 +73,11 @@ void Player::Update()
 	}
 	
 	box_size = Vector2D(65.0f * image_size, 65.0f * image_size);
+
+	if (hp <= 0)
+	{
+		image = LoadGraph("Resource/Images/IMG_0118.PNG");
+	}
 }
 
 //描画処理
@@ -98,13 +108,18 @@ void Player::Draw()
 		//プレイヤー画像の描画
 		DrawRotaGraphF(location.x, location.y, image_size, angle, image, TRUE);
 	}
+	else if (room_anim != 0)
+	{
+		//プレイヤー画像の描画
+		DrawRotaGraphF(location.x, location.y, 0.1, angle, image, TRUE);
+	}
 
 #ifdef _DEBUG
 
 	// 当たり判定確認用
-	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
+	/*DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
 	DrawFormatString(0, 0, 0x000000, "%f",location.y);
-	DrawFormatString(0, 50, 0xffffff, "%f", stamina);
+	DrawFormatString(0, 50, 0xffffff, "%f", stamina);*/
 
 
 #endif // _DEBUG
@@ -196,8 +211,9 @@ void Player::Movement()
 void Player::Acceleration()
 {
 	// Bボタンが押されている間、加速する
-	if (InputControl::GetButton(XINPUT_BUTTON_B))
+	if (InputControl::GetButton(XINPUT_BUTTON_B) == true && stamina > 0.0f)
 	{
+
 		if (speed < 8.0f && stamina > 0.0f)
 		{
 			speed += 0.05f;
@@ -220,9 +236,49 @@ void Player::Acceleration()
 		}
 
 	}
-	else
+	else if(stamina <= 0.0f)
 	{
 
+		if (speed > 5.0f)
+		{
+			// Bボタンを離したら、少しずつ減速する 
+			speed -= 0.05f;
+		}
+		else
+		{
+			// 上記以外は1.0fで固定
+			speed = 5.0f;
+		}
+
+		if (stamina > 0.0f)
+		{
+			if (acceleration_flg == true)
+			{
+				if (ly > 0)
+				{
+					time = 180;
+					ly = 0;
+					acceleration_flg = false;
+				}
+			}
+
+			if (time > 0)
+			{
+				time--;
+				if (location.y < 380.0f)
+				{
+					location.y += 2.0f;
+				}
+			}
+		}
+
+		if (stamina <= 50.0f)
+		{
+			stamina += 0.1f;
+		}
+	}
+	else
+	{
 		if (speed > 5.0f)
 		{
 			// Bボタンを離したら、少しずつ減速する 
@@ -265,4 +321,16 @@ void Player::Acceleration()
 
 void Player::RoombaAnim()
 {
+	image = LoadGraph("Resource/Images/IMG_0118.PNG");
+
+	if (room_anim < 60)
+	{
+		room_anim++;
+	}
+	else
+	{
+		room_anim = 0;
+		image = LoadGraph("Resource/Images/player.PNG");
+	}
+	
 }
