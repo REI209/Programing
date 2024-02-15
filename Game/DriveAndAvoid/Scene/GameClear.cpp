@@ -3,7 +3,7 @@
 #include "DxLib.h"
 #include "../Object/common.h"
 
-GameClear::GameClear():background_image(0),clearbgm(0)
+GameClear::GameClear():background_image(0),clearbgm(0),ok_se(0)
 {
 }
 
@@ -27,6 +27,7 @@ eSceneType GameClear::Update()
 	//Bボタンが押されたら、タイトルに戻る
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(ok_se, DX_PLAYTYPE_BACK, TRUE);
 		return eSceneType::E_RESULT;
 	}
 	return GetNowScene();

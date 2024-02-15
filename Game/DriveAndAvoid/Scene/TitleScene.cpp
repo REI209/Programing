@@ -2,7 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 #include "../Object/common.h"
-TitleScene::TitleScene() :background_image(NULL),cursor_image(NULL), menu_cursor(0),titlebgm(0)
+TitleScene::TitleScene() :background_image(NULL),cursor_image(NULL), menu_cursor(0),titlebgm(0), cursor_se(0), ok_se(0)
 {
 
 }
@@ -20,6 +20,8 @@ void TitleScene::Initialize()
 	cursor_image = LoadGraph(CURSOL_IMAGE);
 	//音源の読み込み
 	titlebgm = LoadSoundMem(TITLE_BGM);
+	cursor_se = LoadSoundMem(CURSOL_SE);
+	ok_se = LoadSoundMem(SELECT_SE);
 
 	//エラーチェック
 	if (background_image == -1)
@@ -44,6 +46,7 @@ eSceneType TitleScene::Update()
 	//カーソル下移動
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
 	{
+		PlaySoundMem(cursor_se, DX_PLAYTYPE_BACK, TRUE);
 		menu_cursor++;
 		//一番下に到達したら、一番上にする
 		if (menu_cursor > 2)
@@ -55,6 +58,7 @@ eSceneType TitleScene::Update()
 	//カーソル上移動
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
 	{
+		PlaySoundMem(cursor_se, DX_PLAYTYPE_BACK, TRUE);
 		menu_cursor--;
 		//一番上に到達したら、一番下にする
 		if (menu_cursor < 0)
@@ -66,6 +70,8 @@ eSceneType TitleScene::Update()
 	//カーソル決定(決定した画面に遷移する)
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(ok_se, DX_PLAYTYPE_BACK, TRUE);
+
 		switch (menu_cursor)
 		{
 		case 0:
@@ -75,7 +81,7 @@ eSceneType TitleScene::Update()
 		case 2:
 			return eSceneType::E_END;
 		default:
-			break;	
+			break;
 		}
 	}
 	//現在のシーンタイプを返す
@@ -99,6 +105,8 @@ void TitleScene::Finalize()
 	DeleteGraph(background_image);
 	DeleteGraph(cursor_image);
 	DeleteSoundMem(titlebgm);
+	//DeleteSoundMem(ok_se);
+	DeleteSoundMem(cursor_se);
 }
 
 //現在のシーン情報を取得

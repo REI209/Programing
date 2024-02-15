@@ -35,7 +35,7 @@ private:
 
 
 	Obstacle_B** obstacle_b;//Ï‚İ–Ø
-	int obstacle_b_image;//Ï‚İ–Ø‰æ‘œ
+	int obstacle_b_image[3];//Ï‚İ–Ø‰æ‘œ
 
 
 	Obstacle_C** obstacle_c;//‘|œ‹@
@@ -44,6 +44,8 @@ private:
 	Family** family; //’‡ŠÔ
 	int family_image[2]; //’‡ŠÔ‰æ‘œ
 	int family_cnt[2]; //W‚ß‚½’‡ŠÔ‚Ì”
+
+	int se[4];
 
 public:
 	GameMainScene();

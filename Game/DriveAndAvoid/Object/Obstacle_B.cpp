@@ -1,7 +1,7 @@
 #include"Obstacle_B.h"//áŠQ•¨iÏ‚İ–Øj
 #include"DxLib.h"
 
-Obstacle_B::Obstacle_B(int image) :image(image), speed(0.0f),
+Obstacle_B::Obstacle_B(int type,int image) :image(image), speed(0.0f),
 location(0.0f), box_size(0.0f)
 {
 
@@ -20,7 +20,7 @@ void Obstacle_B::Initialize()
 	//¶¬ˆÊ’u‚Ìİ’è
 	location = Vector2D(random_x, -50.0f);
 	//“–‚½‚è”»’è‚Ìİ’è
-	box_size = Vector2D(50.0f, 50.0f);
+	box_size = Vector2D(50.0f, 90.0f);
 	//‘¬‚³‚Ìİ’è
 	speed =8.0f;
 }
@@ -34,7 +34,7 @@ void Obstacle_B::Update(float speed)
 void Obstacle_B::Draw() const
 {
 	//“G‰æ‘œ‚Ì•`‰æ
-	DrawRotaGraphF(location.x, location.y, 0.1, 0.0, image, TRUE);
+	DrawRotaGraphF(location.x, location.y, 1.0, 0.0, image, TRUE);
 
 #ifdef _DEBUG
 
