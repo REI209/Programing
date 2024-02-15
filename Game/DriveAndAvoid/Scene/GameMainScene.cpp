@@ -3,7 +3,12 @@
 #include "../Object/common.h"
 #include<math.h>
 
-GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
+#include "../Object/Enemy_Roomba.h"
+#include "../Object/Obstacle_A.h"
+#include "../Object/Obstacle_B.h"
+#include "../Object/Obstacle_C.h"
+#include "../Object/Family.h"
+GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),bonus_flg(false),
 barrier_image(NULL),bonus_image(NULL),bonus_size(0.0),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),
 obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr)//,enemy(nullptr)
 {
@@ -43,12 +48,12 @@ void GameMainScene::Initialize()
 
 	//画像の読み込み
 	back_ground = LoadGraph("Resource/Images/back_img.png");
-	barrier_image = LoadGraph("Resource/Images/barrier.png");
-	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
-		enemy_image);
+	//barrier_image = LoadGraph("Resource/Images/barrier.png");
+	//int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
+	//	enemy_image);
 
 	obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki.png");
-	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
+	int result = LoadDivGraph("Resource/Images/omocha_tumiki.png", 3, 3, 1, 180, 180, obstacle_b_image);
 	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
 
 	family_image[0] = LoadGraph("Resource/Images/IMG_0111.png");
@@ -168,37 +173,34 @@ eSceneType GameMainScene::Update()
 			mileage += 1;
 		}
 
-		if (enemy_roomba->GetBonusFlg() != true)
+		//敵生成処理
+		if (mileage / 20 % 100 == 0)
 		{
-			//敵生成処理
-			if (mileage / 20 % 100 == 0)
+			for (int i = 0; i < 10; i++)
 			{
-				for (int i = 0; i < 10; i++)
+				if (obstacle_a[i] == nullptr)
 				{
-					if (obstacle_a[i] == nullptr)
-					{
-						int type = GetRand(1);
-						obstacle_a[i] = new Obstacle_A(type, obstacle_a_image);
-						obstacle_a[i]->Initialize();
-						break;
-					}
-					if (obstacle_b[i] == nullptr)
-					{
-						//int type = GetRand(3) % 3;
-						obstacle_b[i] = new Obstacle_B(obstacle_b_image);
-						obstacle_b[i]->Initialize();
-						break;
-					}
-					if (obstacle_c[i] == nullptr)
-					{
-						obstacle_c[i] = new Obstacle_C(obstacle_c_image);
-						obstacle_c[i]->Initialize();
-						break;
-					}
+					int type = GetRand(1);
+					obstacle_a[i] = new Obstacle_A(type, obstacle_a_image);
+					obstacle_a[i]->Initialize();
+					break;
+				}
+				if (obstacle_b[i] == nullptr)
+				{
+					int type = GetRand(3) % 3;
+					obstacle_b[i] = new Obstacle_B(type, obstacle_b_image[type]);
+					obstacle_b[i]->Initialize();
+					break;
+				}
+				if (obstacle_c[i] == nullptr)
+				{
+					obstacle_c[i] = new Obstacle_C(obstacle_c_image);
+					obstacle_c[i]->Initialize();
+					break;
 				}
 			}
 		}
-
+		
 		//仲間生成処理
 		if (mileage / 20 % 100 == 0)
 		{
@@ -215,10 +217,11 @@ eSceneType GameMainScene::Update()
 		}
 
 
-		//敵の更新と当たり判定チェック
+
+		//障害物の更新と当たり判定チェック
 		for (int i = 0; i < 10; i++)
 		{
-			//扇風機
+			//扇風機の当たり判定と更新
 			if (obstacle_a[i] != nullptr)
 			{
 				obstacle_a[i]->Update(player->GetSpeed());
@@ -231,10 +234,11 @@ eSceneType GameMainScene::Update()
 					obstacle_a[i] = nullptr;
 				}
 
+				//プレイヤーが移動可能な時
 				if (player->GetActiveFlg() == true)
 				{
-					//当たり判定の確認
-					if (IsObjectHitCheck_P(player, obstacle_a[i]))
+					//プレイヤーと障害物(扇風機)当たり判定の確認
+					if (IsObjecHitCheck_O<Player, Obstacle_A>(player, obstacle_a[i]))
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
@@ -249,16 +253,18 @@ eSceneType GameMainScene::Update()
 					}
 				}
 
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
-			{
-				enemy_roomba->SetActive(false);
-				enemy_roomba->DecreaseHp(-10.0f);
-				obstacle_a[i]->Finalize();
-				delete obstacle_a[i];
-				obstacle_a[i] = nullptr;
-			}
 
+				//敵と障害物(扇風機)の当たり判定
+				if (IsObjecHitCheck_O<Enemy_Roomba, Obstacle_A>(enemy_roomba, obstacle_a[i]))
+				{
+					enemy_roomba->SetActive(false);
+					enemy_roomba->DecreaseHp(-10.0f);
+					obstacle_a[i]->Finalize();
+					delete obstacle_a[i];
+					obstacle_a[i] = nullptr;
+				}
+
+				//障害物（扇風機)同士の当たり判定
 				for (int j = 0; j < 10; j++)
 				{
 					if (obstacle_a[j] != nullptr && i != j)
@@ -274,8 +280,11 @@ eSceneType GameMainScene::Update()
 				}
 
 			}
+
+			//積み木の更新と当たり判定
 			if (obstacle_b[i] != nullptr)
 			{
+				//更新
 				obstacle_b[i]->Update(player->GetSpeed());
 
 				//画面外に行ったら削除
@@ -289,7 +298,7 @@ eSceneType GameMainScene::Update()
 				if (player->GetActiveFlg() == true)
 				{
 					//当たり判定の確認
-					if (IsObjectHitCheck_P(player, obstacle_b[i]))
+					if (IsObjecHitCheck_O<Player, Obstacle_B>(player, obstacle_b[i]))
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
@@ -304,8 +313,8 @@ eSceneType GameMainScene::Update()
 					}
 				}
 
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
+			//敵と障害物(積み木)の当たり判定
+			if (IsObjecHitCheck_O<Enemy_Roomba, Obstacle_B>(enemy_roomba, obstacle_b[i]))
 			{
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
@@ -318,7 +327,7 @@ eSceneType GameMainScene::Update()
 				{
 					if (obstacle_b[j] != nullptr && i != j)
 					{
-						//敵同士の当たり判定
+						//障害物(積み木)同士の当たり判定
 						if (IsObjecHitCheck_O(obstacle_b[i], obstacle_b[j]))
 						{
 							obstacle_b[j]->Finalize();
@@ -329,8 +338,10 @@ eSceneType GameMainScene::Update()
 				}
 			}
 
+			//障害物(掃除機)の更新と当たり判定
 			if (obstacle_c[i] != nullptr)
 			{
+				//更新
 				obstacle_c[i]->Update(player->GetSpeed());
 
 				//画面外に行ったら削除
@@ -344,7 +355,7 @@ eSceneType GameMainScene::Update()
 				if (player->GetActiveFlg() == true)
 				{
 					//プレイヤーと障害物の当たり判定の確認
-					if (IsObjectHitCheck_P(player, obstacle_c[i]))
+					if (IsObjecHitCheck_O<Player, Obstacle_C>(player, obstacle_c[i]))
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
@@ -359,8 +370,8 @@ eSceneType GameMainScene::Update()
 					}
 				}
 
-				//敵と障害物の当たり判定
-				if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
+				//敵と障害物(掃除機)の当たり判定
+				if (IsObjecHitCheck_O<Enemy_Roomba, Obstacle_C>(enemy_roomba, obstacle_c[i]))
 				{
 					enemy_roomba->SetActive(false);
 					enemy_roomba->DecreaseHp(-50.0f);
@@ -373,8 +384,8 @@ eSceneType GameMainScene::Update()
 				{
 					if (obstacle_c[j] != nullptr && i != j)
 					{
-						//仲間同士の当たり判定
-						if (IsObjecHitCheck_O(obstacle_c[i], obstacle_c[j]))
+						//障害物(掃除機)同士の当たり判定
+						if (IsObjecHitCheck_O<Obstacle_C, Obstacle_C>(obstacle_c[i], obstacle_c[j]))
 						{
 							obstacle_c[j]->Finalize();
 							delete obstacle_c[j];
@@ -392,7 +403,8 @@ eSceneType GameMainScene::Update()
 			{
 				diff_x = player->GetLocation().x - enemy_roomba->GetLocation().x;
 			}
-			enemy_roomba->Update((float)counter, diff_x);
+
+			enemy_roomba->Update(main, (float)counter, diff_x);
 
 			if (player->GetActiveFlg() == true)
 			{
@@ -413,6 +425,12 @@ eSceneType GameMainScene::Update()
 					player->SetY(100.0f);
 				}
 			}
+			if (bonus_flg == true)
+			{
+				enemy_roomba->Finalize();
+				delete enemy_roomba;
+				enemy_roomba = nullptr;
+			}
 		}
 
 		//仲間の更新と当たり判定チェック
@@ -430,10 +448,10 @@ eSceneType GameMainScene::Update()
 					family[i] = nullptr;
 				}
 
-			//当たり判定の確認
+			//プレイヤーと仲間の当たり判定の確認
 				if (player->GetActiveFlg() == true)
 				{
-					if (IsObjectHitCheck_P(player, family[i]))
+					if (IsObjecHitCheck_O<Player, Family>(player, family[i]))
 					{
 						if (player->GetHp() < 100)
 						{
@@ -451,9 +469,8 @@ eSceneType GameMainScene::Update()
 					}
 				}
 			
-
-				//敵と障害物の当たり判定
-				if (IsObjecHitCheck_E(enemy_roomba, family[i]))
+				//敵(ルンバ)仲間の当たり判定
+				if (IsObjecHitCheck_O<Enemy_Roomba, Family>(enemy_roomba, family[i]))
 				{
 					family[i]->Finalize();
 					delete family[i];
@@ -485,7 +502,7 @@ eSceneType GameMainScene::Update()
 
 	}
 
-	if (enemy_roomba->GetBonusFlg() == true)
+	if (bonus_flg == true)
 	{
 		if (bonus_size < 1.3)
 		{
@@ -503,8 +520,6 @@ eSceneType GameMainScene::Update()
 //描画処理
 void GameMainScene::Draw() const
 {
-	
-
 	//背景画像の描画
 	DrawGraph(0, mileage % 720 - 720, back_ground, TRUE);
 	DrawGraph(0, mileage % 720, back_ground, TRUE);
@@ -531,7 +546,7 @@ void GameMainScene::Draw() const
 		DrawFormatString(640, 365, GetColor(255, 255, 255), "GO!");
 	}
 
-	if (enemy_roomba->GetBonusFlg() == true)
+	if (bonus_flg == true)
 	{
 		DrawRotaGraph(640, 150, bonus_size, 0.0, bonus_image, TRUE);
 	}
@@ -726,66 +741,6 @@ bool GameMainScene::IsHitCheck(Player* p, Enemy_Roomba* e)
 
 	//当たり判定サイズの大きさ取得
 	Vector2D box_ex = p->GetBoxSize() + e->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-}
-
-//当たり判定(プレイヤーとオブジェクト)
-template<class T>
-bool GameMainScene::IsObjectHitCheck_P(Player* p, T* object)
-{
-	//情報がなければ、当たり判定を無視する
-	if (object == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = p->GetLocation() - object->GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = p->GetBoxSize() + object->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-}
-
-//当たり判定(敵(ルンバ)とオブジェクト)
-template<class T>
-bool GameMainScene::IsObjecHitCheck_E(Enemy_Roomba* e, T* object)
-{
-	//情報がなければ、当たり判定を無視する
-	if (object == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = e->GetLocation() - object->GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = e->GetBoxSize() + object->GetBoxSize();
-
-	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
-	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));
-}
-
-//障害物同士の当たり判定
-template<class T>
-bool GameMainScene::IsObjecHitCheck_O(T* object1, T* object2)
-{
-	//情報がなければ、当たり判定を無視する
-	if (object1 == nullptr)
-	{
-		return false;
-	}
-
-	//敵情報の差分を取得
-	Vector2D diff_location = object1->GetLocation() - object2->GetLocation();
-
-	//当たり判定サイズの大きさ取得
-	Vector2D box_ex = object1->GetBoxSize() + object2->GetBoxSize();
 
 	//コリジョンデータより位置情報の差分が小さいなら、ヒット判定とする
 	return((fabsf(diff_location.x) < box_ex.x) && (fabsf(diff_location.y) < box_ex.y));

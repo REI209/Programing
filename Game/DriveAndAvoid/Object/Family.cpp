@@ -44,7 +44,7 @@ void Family::Draw() const
 
 void Family::Finalize()
 {
-	
+
 }
 
 int Family::GetType() const

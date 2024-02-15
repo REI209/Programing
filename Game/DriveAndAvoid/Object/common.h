@@ -26,6 +26,8 @@
 //‰æ‘œ—p
 #define PLAYER_IMAGE
 #define ENEMY_ROOMBA_IMAGE "Resource/Images/roomba.png"
+#define ENEMY_BOOM_IMAGE "Resource/Images/bakuhatsu.png"
+
 #define OBSTACLE_A_IMAGE
 #define OBSTACLE_B_IMAGE
 #define OBSTACLE_C_IMAGE

@@ -1,5 +1,8 @@
 #pragma once
 #include "../Utility/Vector2D.h"
+#include "../Scene/GameMainScene.h"
+
+class GameMainScene;
 
 class Enemy_Roomba
 {
@@ -18,15 +21,19 @@ private:
 
 	int count_t = 0;	//カウント用変数
 	int hit_count;		//ヒットカウント
-	bool bonus_flg;
+
+	int boom_image;
 	bool draw_flg;
+
+public:
+	bool bonus_flg;
 
 public:
 	Enemy_Roomba();
 	~Enemy_Roomba();
 
 	void Initialize();
-	void Update(float time,float _diff_x);
+	void Update(GameMainScene* main,float time,float _diff_x);
 	void Draw() const;
 	void Finalize();
 
@@ -36,7 +43,6 @@ public:
 	Vector2D GetBoxSize() const;
 
 	float TrackingPlayer(float _diff_x);
-	bool GetBonusFlg();
 
 };
 

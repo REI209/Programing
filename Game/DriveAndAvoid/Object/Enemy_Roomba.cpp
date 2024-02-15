@@ -2,7 +2,7 @@
 #include "common.h"
 #include "DxLib.h"
 
-Enemy_Roomba::Enemy_Roomba() :is_active(false), image(NULL), location(0.0f), box_size(0.0f),
+Enemy_Roomba::Enemy_Roomba() :is_active(false), bonus_flg(false), draw_flg(false),image(NULL), boom_image(NULL), location(0.0f), box_size(0.0f),
 angle(0.0f),speed(0.0f), diff_x(0.0f), hp(0.0f)
 {
 
@@ -25,28 +25,33 @@ void Enemy_Roomba::Initialize()
 
 	//画像の読み込み
 	image = LoadGraph(ENEMY_ROOMBA_IMAGE);
+	boom_image = LoadGraph(ENEMY_BOOM_IMAGE);
 
 	//エラーチェック
 	if (image == -1)
 	{
 		throw("Resource/Images/roomba.pngがありません\n");
 	}
+	if (boom_image == -1)
+	{
+		throw("Resource/Images/bakuhatsu.pngがありません\n");
+	}
 }
 
-void Enemy_Roomba::Update(float time,float _diff_x)
+void Enemy_Roomba::Update(GameMainScene* main,float time,float _diff_x)
 {
 	//障害物にあたったら動きを2秒停止させる
 	if (!is_active)
 	{
 		count_t++;
-		hit_count++;
-		//hit_count += 1;
+		hit_count += 1;
 
 		speed = -0.02f;
 		angle += 0.3f;
 
-		if (count_t > 60)
+		if (count_t % 60 == 0)
 		{
+
 			is_active = true;
 			count_t = 0;
 			angle = 0.0f;
@@ -79,39 +84,43 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 		}
 	}
 
-	if (hit_count > 5)
+	if (hit_count > 1)
 	{
-		bonus_flg = true;
 		draw_flg = true;
-		count_t = 0;
-		count_t++;
-		if (count_t > 120)
-		{
-			count_t = 0;
-			draw_flg = false;
 
+		if (count_t % 120 == 0)
+		{
+			draw_flg = false;
+			bonus_flg = true;
 		}
 
 	}
+
+	main->GetBonusFlg(bonus_flg);
 }
 
 void Enemy_Roomba::Draw() const
 {
 	//画像の描画
-	DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
+	if (hit_count < 1)
+	{
+		DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
+	}
+
 	DrawBoxAA(location.x - box_size.x, location.y - box_size.y, location.x + box_size.x, location.y + box_size.y, 0xff0000, FALSE);
 	DrawFormatString(510, 300, GetColor(255, 255, 255), "roomba_hp:%f", hp);
-	DrawFormatString(510, 350, GetColor(255, 255, 255), "location.x:%f location.y:%f", location.x, location.y);
+	//DrawFormatString(510, 350, GetColor(255, 255, 255), "location.x:%f location.y:%f", location.x, location.y);
 
-	if (draw_flg == true)
+	if (draw_flg)
 	{
-		//Draw_bakuhatu
+		DrawRotaGraphF(location.x, location.y, 0.5, 0.0, boom_image, TRUE);
 	}
 
 }
 
 void Enemy_Roomba::Finalize()
 {
+
 }
 
 //プレイヤーの追尾
@@ -137,11 +146,6 @@ float Enemy_Roomba::TrackingPlayer(float _diff_x)
 			return move_x;
 		}
 	}
-}
-
-bool Enemy_Roomba::GetBonusFlg()
-{
-	return this->bonus_flg;
 }
 
 
