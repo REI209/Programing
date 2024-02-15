@@ -144,8 +144,10 @@ eSceneType GameMainScene::Update()
 		if (count_down < 0)
 		{
 			counter -= 1;
+
 			if (counter < 0)
 			{
+				counter = 0;
 				return eSceneType::E_RESULT;
 			}
 		}
@@ -236,7 +238,7 @@ eSceneType GameMainScene::Update()
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.5f)
+						if (player->GetPlayerSize() > 0.1f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -291,7 +293,7 @@ eSceneType GameMainScene::Update()
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.5f)
+						if (player->GetPlayerSize() > 0.1f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -346,7 +348,7 @@ eSceneType GameMainScene::Update()
 					{
 						player->SetActive(false);
 						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.5f)
+						if (player->GetPlayerSize() > 0.1f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -570,14 +572,22 @@ void GameMainScene::Draw() const
 
 
 	//UI‚Ì•`‰æ
-	SetFontSize(20);
-
 	//§ŒÀŽžŠÔ‚Ì•`‰æ
-	//DrawFormatString(510, 180, GetColor(255, 255, 255), "time:%d", counter);
+	SetFontSize(20);
+	DrawFormatString(40, 10, GetColor(0, 0, 0), "TIME");
+	SetFontSize(60);
+	if (counter > 10)
+	{
+		DrawFormatString(30, 40, GetColor(0, 0, 0), "%02d", counter);
+	}
+	else
+	{
+		DrawFormatString(30, 40, GetColor(255, 0, 0), "%02d", counter);
+	}
 
 	//ƒXƒ^ƒ~ƒiƒQ[ƒW‚Ì•`‰æ
-	float fx = player->GetLocation().x + 50.0f * player->GetPlayerSize();
-	float fy = player->GetLocation().y - 40.0f * player->GetPlayerSize();
+	float fx = player->GetLocation().x + player->GetBoxSize().x + 13.0f;
+	float fy = player->GetLocation().y - player->GetBoxSize().y;
 	DrawBoxAA(fx, fy, fx + 15.0f, fy + 50.0f, GetColor(0, 0, 0),FALSE);
 	if (player->GetStamina() > 0.0f)
 	{
@@ -587,6 +597,7 @@ void GameMainScene::Draw() const
 	//‘Ì—ÍƒQ[ƒW‚Ì•`‰æ
 	fx = 1000.0f;
 	fy = 10.0f;
+	SetFontSize(16);
 	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "HP");
 	DrawBoxAA(fx, fy + 20.0f, fx + player->GetHp() + 130, fy + 40.0f, GetColor(255, 0, 0), TRUE);
 	DrawBoxAA(fx, fy + 20.0f, fx + 230.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
