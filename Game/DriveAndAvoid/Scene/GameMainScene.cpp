@@ -447,33 +447,35 @@ eSceneType GameMainScene::Update()
 			}
 			enemy_roomba->Update((float)counter, diff_x);
 			
+			if (enemy_roomba->GetHp() > 0) {
 
-			if (player->GetActiveFlg() == true)
-			{
-				//プレイヤーと敵の当たり判定の確認
-				if (IsHitCheck(player, enemy_roomba))
+				if (player->GetActiveFlg() == true)
 				{
-					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
-					player->SetRoomAnim(1);
-					//敵(ルンバ)に当たるとダメージ
-					player->SetActive(false);
-
-					if (player->GetPlayerSize() <= 0.5f)
+					//プレイヤーと敵の当たり判定の確認
+					if (IsHitCheck(player, enemy_roomba))
 					{
-						player->SetHp();
-					}
-					else
-					{
-						player->SetSizeDef();
-					}
+						PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
+						player->SetRoomAnim(1);
+						//敵(ルンバ)に当たるとダメージ
+						player->SetActive(false);
 
-					if (player->GetPlayerSize() > 0.3f)
-					{
-						player->SetSize(-0.1f);
-						player->SetBoxSize(-0.1f);
-					}
-					player->SetY(100.0f);
+						if (player->GetPlayerSize() <= 0.5f)
+						{
+							player->SetHp();
+						}
+						else
+						{
+							player->SetSizeDef();
+						}
 
+						if (player->GetPlayerSize() > 0.3f)
+						{
+							player->SetSize(-0.1f);
+							player->SetBoxSize(-0.1f);
+						}
+						player->SetY(100.0f);
+
+					}
 				}
 			}
 		}
@@ -552,21 +554,14 @@ eSceneType GameMainScene::Update()
 
 	if (enemy_roomba->GetHp() < 0.0f)
 	{
-		if (time % 120 == 0)
-		{
-			enemy_roomba->Finalize();
-			delete enemy_roomba;
-			enemy_roomba = nullptr;
-
-		}
 		if (bonus_size > 1.3)
 		{
 			bonus_size -= 0.05f;
 		}
-		else if (bonus_size < 0.9);
+	/*	else if (bonus_size < 0.9);
 		{
 			bonus_size += 0.05f;
-		}
+		}*/
 	}
 
 	return GetNowScene();

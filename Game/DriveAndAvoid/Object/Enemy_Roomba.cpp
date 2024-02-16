@@ -81,6 +81,7 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 		}
 	}
 
+
 	if (hp < 0)
 	{
 		speed = 0.0f;
