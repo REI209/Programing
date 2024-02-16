@@ -22,7 +22,7 @@ void Player::Initialize()
 	box_size = Vector2D(50.0f, 50.0f);
 	angle = 0.0f;
 	speed = 5.0f;
-	hp = 230.0f;
+	hp = 230000.0f;
 	stamina = 50.0f;
 	damage = 0;
 	image_size = 0.5f;

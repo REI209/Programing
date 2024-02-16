@@ -3,7 +3,7 @@
 #include "DxLib.h"
 
 Enemy_Roomba::Enemy_Roomba() :is_active(false), image(NULL), boom_image(NULL), hit_count(0), draw_flg(false),
-location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), diff_x(0.0f), hp(0.0f)
+location(0.0f), box_size(0.0f), angle(0.0f), speed(0.0f), diff_x(0.0f), hp(0.0f),is_boom(false)
 {
 
 }
@@ -21,6 +21,7 @@ void Enemy_Roomba::Initialize()
 	speed = -0.08f;		//ë¨ìx
 	angle = 0.0f;
 	hp = 250;			//ëÃóÕ
+	is_boom = false;
 
 	//âÊëúÇÃì«Ç›çûÇ›
 	image = LoadGraph(ENEMY_ROOMBA_IMAGE);
@@ -82,7 +83,7 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 	}
 
 
-	if (hp < 0)
+	if (hp < 0.0f && is_boom == false)
 	{
 		speed = 0.0f;
 		count_t++;
@@ -91,7 +92,7 @@ void Enemy_Roomba::Update(float time,float _diff_x)
 		if (count_t > 120)
 		{
 			draw_flg = false;
-			count_t = 0;
+			is_boom = true;
 		}
 	}
 }
@@ -101,16 +102,18 @@ void Enemy_Roomba::Draw() const
 	if (!nullptr)
 	{
 		//âÊëúÇÃï`âÊ
-		if (!draw_flg)
+		if (!draw_flg && is_boom == false)
 		{
 			DrawRotaGraphF(location.x, location.y, 1.0, angle, image, TRUE);
 		}
 
-		if (draw_flg)
+		if (draw_flg == true && is_boom == false)
 		{
 			DrawRotaGraphF(location.x, location.y, 0.5, 0.0, boom_image, TRUE);
 		}
 	}
+
+	DrawFormatString(0, 0, 0x000000, "%d", count_t);
 }
 
 void Enemy_Roomba::Finalize()

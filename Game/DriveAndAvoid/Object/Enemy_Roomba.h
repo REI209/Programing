@@ -23,6 +23,8 @@ private:
 	int count_t = 0;	//カウント用変数
 	int hit_count;
 
+	bool is_boom; //爆発しているかどうか
+
 
 public:
 	Enemy_Roomba();
@@ -42,5 +44,7 @@ public:
 	Vector2D GetBoxSize() const;
 
 	float TrackingPlayer(float _diff_x);
+
+	bool GetBoomFlg() { return is_boom; }
 };
 

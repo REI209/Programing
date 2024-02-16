@@ -130,7 +130,7 @@ void GameMainScene::Initialize()
 		obstacle_c[i] = nullptr;
 	}
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
 		family[i] = nullptr;
 	}
@@ -200,8 +200,9 @@ eSceneType GameMainScene::Update()
 		//	}
 		//}
 
+
 		//つみきの生成
-		if (mileage / 10 % 50 == 0)
+		if (enemy_roomba->GetBoomFlg() == false && mileage / 10 % 50 == 0)
 		{
 			for (int i = 0; i < 10; i++)
 			{
@@ -216,7 +217,7 @@ eSceneType GameMainScene::Update()
 		}
 
 		//掃除機の生成
-		if (counter < 55)
+		if (enemy_roomba->GetBoomFlg() == false && counter < 55)
 		{
 			if (mileage / 20 % 300 == 0)
 			{
@@ -236,9 +237,22 @@ eSceneType GameMainScene::Update()
 		
 
 		//仲間生成処理
-		if (mileage / 20 % 100 == 0)
+		if (enemy_roomba->GetBoomFlg() == false && mileage / 20 % 100 == 0)
 		{
 			for (int i = 0; i < 5; i++)
+			{
+				if (family[i] == nullptr)
+				{
+					int type = GetRand(1);
+					family[i] = new Family(type, family_image[type]);
+					family[i]->Initialize();
+					break;
+				}
+			}
+		}
+		else if (enemy_roomba->GetBoomFlg() == true && mileage / 20 % 10 == 0)
+		{
+			for (int i = 0; i < 10; i++)
 			{
 				if (family[i] == nullptr)
 				{
@@ -340,16 +354,19 @@ eSceneType GameMainScene::Update()
 					}
 				}
 
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
-			{
-				PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
-				enemy_roomba->SetActive(false);
-				enemy_roomba->DecreaseHp(-50.0f);
-				obstacle_b[i]->Finalize();
-				delete obstacle_b[i];
-				obstacle_b[i] = nullptr;
-			}
+				if (enemy_roomba->GetBoomFlg() == false)
+				{
+					//敵と障害物の当たり判定
+					if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
+					{
+						PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
+						enemy_roomba->SetActive(false);
+						enemy_roomba->DecreaseHp(-50.0f);
+						obstacle_b[i]->Finalize();
+						delete obstacle_b[i];
+						obstacle_b[i] = nullptr;
+					}
+				}
 
 				for (int j = 0; j < 10; j++)
 				{
@@ -364,6 +381,7 @@ eSceneType GameMainScene::Update()
 						}
 					}
 				}
+				
 			}
 
 			if (obstacle_c[i] != nullptr)
@@ -411,15 +429,18 @@ eSceneType GameMainScene::Update()
 					}
 				}
 
-				//敵と障害物の当たり判定
-				if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
+				if (enemy_roomba->GetBoomFlg() == false)
 				{
-					PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
-					enemy_roomba->SetActive(false);
-					enemy_roomba->DecreaseHp(-50.0f);
-					obstacle_c[i]->Finalize();
-					delete obstacle_c[i];
-					obstacle_c[i] = nullptr;
+					//敵と障害物の当たり判定
+					if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
+					{
+						PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
+						enemy_roomba->SetActive(false);
+						enemy_roomba->DecreaseHp(-50.0f);
+						obstacle_c[i]->Finalize();
+						delete obstacle_c[i];
+						obstacle_c[i] = nullptr;
+					}
 				}
 
 				for (int j = 0; j < 10; j++)
@@ -439,7 +460,7 @@ eSceneType GameMainScene::Update()
 		}
 
 		//敵(ルンバ)の更新と当たり判定チェック
-		if (enemy_roomba != nullptr)
+		if (enemy_roomba != nullptr && enemy_roomba->GetBoomFlg() == false)
 		{
 			if (time % 60 == 0)
 			{
@@ -480,70 +501,128 @@ eSceneType GameMainScene::Update()
 			}
 		}
 
-		//仲間の更新と当たり判定チェック
-		for (int i = 0; i < 5; i++)
+		if (enemy_roomba->GetBoomFlg() == true)
 		{
-			if (family[i] != nullptr)
+			//仲間の更新と当たり判定チェック
+			for (int i = 0; i < 10; i++)
 			{
-				family[i]->Update(player->GetSpeed());
-
-				//仲間が画面外に行ったら削除
-				if (family[i]->GetLocation().y >= 800.0f)
+				if (family[i] != nullptr)
 				{
-					family[i]->Finalize();
-					delete family[i];
-					family[i] = nullptr;
-				}
+					family[i]->Update(player->GetSpeed());
 
-			//当たり判定の確認
-				if (player->GetActiveFlg() == true)
-				{
-					if (IsObjectHitCheck_P(player, family[i]))
+					//仲間が画面外に行ったら削除
+					if (family[i]->GetLocation().y >= 800.0f)
 					{
-						PlaySoundMem(se[1], DX_PLAYTYPE_BACK, TRUE);
-						if (player->GetHp() < 230)
-						{
-							player->DecreaseHp(10.0f);
-						}
-						if (player->GetPlayerSize() < 2.0f)
-						{
-							player->SetSize(0.1f);
-							player->SetBoxSize(0.1f);
-						}
-						family_cnt[family[i]->GetType()]++;
 						family[i]->Finalize();
 						delete family[i];
 						family[i] = nullptr;
 					}
-				}
-			
 
-				//敵と障害物の当たり判定
-				if (IsObjecHitCheck_E(enemy_roomba, family[i]))
-				{
-					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
-					family[i]->Finalize();
-					delete family[i];
-					family[i] = nullptr;
-				}
-
-				for (int j = 0; j < 5; j++)
-				{
-					if (family[j] != nullptr && i != j)
+					//当たり判定の確認
+					if (player->GetActiveFlg() == true)
 					{
-						//仲間同士の当たり判定
-						if (IsObjecHitCheck_O(family[i], family[j]))
+						if (IsObjectHitCheck_P(player, family[i]))
 						{
-							family[j]->Finalize();
-							delete family[j];
-							family[j] = nullptr;
+							PlaySoundMem(se[1], DX_PLAYTYPE_BACK, TRUE);
+							if (player->GetHp() < 230)
+							{
+								player->DecreaseHp(10.0f);
+							}
+							if (player->GetPlayerSize() < 2.0f)
+							{
+								player->SetSize(0.1f);
+								player->SetBoxSize(0.1f);
+							}
+							family_cnt[family[i]->GetType()]++;
+							family[i]->Finalize();
+							delete family[i];
+							family[i] = nullptr;
 						}
 					}
-				}
 
+					for (int j = 0; j < 10; j++)
+					{
+						if (family[j] != nullptr && i != j)
+						{
+							//仲間同士の当たり判定
+							if (IsObjecHitCheck_O(family[i], family[j]))
+							{
+								family[j]->Finalize();
+								delete family[j];
+								family[j] = nullptr;
+							}
+						}
+					}
+
+				}
 			}
 		}
+		else
+		{
+			//仲間の更新と当たり判定チェック
+			for (int i = 0; i < 5; i++)
+			{
+				if (family[i] != nullptr)
+				{
+					family[i]->Update(player->GetSpeed());
 
+					//仲間が画面外に行ったら削除
+					if (family[i]->GetLocation().y >= 800.0f)
+					{
+						family[i]->Finalize();
+						delete family[i];
+						family[i] = nullptr;
+					}
+
+					//当たり判定の確認
+					if (player->GetActiveFlg() == true)
+					{
+						if (IsObjectHitCheck_P(player, family[i]))
+						{
+							PlaySoundMem(se[1], DX_PLAYTYPE_BACK, TRUE);
+							if (player->GetHp() < 230)
+							{
+								player->DecreaseHp(10.0f);
+							}
+							if (player->GetPlayerSize() < 2.0f)
+							{
+								player->SetSize(0.1f);
+								player->SetBoxSize(0.1f);
+							}
+							family_cnt[family[i]->GetType()]++;
+							family[i]->Finalize();
+							delete family[i];
+							family[i] = nullptr;
+						}
+					}
+
+					//敵と障害物の当たり判定
+					if (IsObjecHitCheck_E(enemy_roomba, family[i]))
+					{
+						PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
+						family[i]->Finalize();
+						delete family[i];
+						family[i] = nullptr;
+					}
+					
+
+					for (int j = 0; j < 5; j++)
+					{
+						if (family[j] != nullptr && i != j)
+						{
+							//仲間同士の当たり判定
+							if (IsObjecHitCheck_O(family[i], family[j]))
+							{
+								family[j]->Finalize();
+								delete family[j];
+								family[j] = nullptr;
+							}
+						}
+					}
+
+				}
+			}
+		}
 	}
 
 	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
@@ -552,7 +631,7 @@ eSceneType GameMainScene::Update()
 		return eSceneType::E_OVER;
 	}
 
-	if (enemy_roomba->GetHp() < 0.0f)
+	if (enemy_roomba != nullptr && enemy_roomba->GetHp() < 0.0f)
 	{
 		if (bonus_size > 1.3)
 		{
