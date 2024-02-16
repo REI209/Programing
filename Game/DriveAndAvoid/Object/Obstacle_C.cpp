@@ -16,13 +16,13 @@ Obstacle_C::~Obstacle_C()
 void Obstacle_C::Initialize()
 {
 	//出現させるx座標パターンを取得
-	float random_y = (float)(GetRand(4) * 105 + 40);
+	float random_y = (float)(GetRand(3) * 144 + 85);
 	//生成位置の設定
 	location = Vector2D( -50.0f, random_y);
 	//当たり判定の設定
 	box_size = Vector2D(40.0f, 60.0f);//後で調整
 	//速さの設定
-	speed =2.0f;
+	speed =8.0f;
 	//画像の読み込み
 	image = LoadGraph("Resource/images/pet_robot_soujiki_cat.png");
 }

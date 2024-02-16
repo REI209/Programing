@@ -31,12 +31,12 @@ private:
 	int roomba_image;	//ルンバの画像
 	float diff_x;		//プレイヤーとの差
 
-	Obstacle_A** obstacle_a;//扇風機
-	int obstacle_a_image;//扇風機画像
+	//Obstacle_A** obstacle_a;//扇風機
+	//int obstacle_a_image;//扇風機画像
 
 
 	Obstacle_B** obstacle_b;//積み木
-	int obstacle_b_image;//積み木画像
+	int obstacle_b_image[3];//積み木画像
 
 
 	Obstacle_C** obstacle_c;//掃除機
@@ -45,6 +45,8 @@ private:
 	Family** family; //仲間
 	int family_image[2]; //仲間画像
 	int family_cnt[2]; //集めた仲間の数
+
+	int se[4];
 
 public:
 	GameMainScene();

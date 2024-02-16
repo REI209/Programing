@@ -2,16 +2,18 @@
 
 #include"SceneBase.h"
 
-class HelpScene :public SceneBase
+class GameClear :public SceneBase
 {
 private:
+	
+private:
 	int background_image;  //”wŒi‰æ‘œ
-	int bgm;
+	int clearbgm;          //BGM
 	int ok_se;
 
 public:
-	HelpScene();
-	virtual ~HelpScene();
+	GameClear();
+	virtual ~GameClear();
 
 	virtual void Initialize() override;
 	virtual eSceneType Update() override;

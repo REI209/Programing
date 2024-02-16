@@ -2,8 +2,7 @@
 #include"../Utility/InputControl.h"
 #include"DxLib.h"
 #include "../Object/common.h"
-TitleScene::TitleScene() :background_image(NULL), menu_image(NULL),
-cursor_image(NULL), menu_cursor(0)
+TitleScene::TitleScene() :background_image(NULL),cursor_image(NULL), menu_cursor(0),titlebgm(0), cursor_se(0), ok_se(0)
 {
 
 }
@@ -17,20 +16,17 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	//画像の読み込み
-	background_image = LoadGraph("Resource/images/Title.png");
-	menu_image = LoadGraph("Resource/images/menu.bmp");
-	cursor_image = LoadGraph("Resource/images/cursor.png");
+	background_image = LoadGraph(TITLE_BACK_IMAGE);
+	cursor_image = LoadGraph(CURSOL_IMAGE);
 	//音源の読み込み
 	titlebgm = LoadSoundMem(TITLE_BGM);
+	cursor_se = LoadSoundMem(CURSOL_SE);
+	ok_se = LoadSoundMem(SELECT_SE);
 
 	//エラーチェック
 	if (background_image == -1)
 	{
 		throw("Resource/images/Title.bmpがありません\n");
-	}
-	if (menu_image == -1)
-	{
-		throw("Resource/images/menu.bmpがありません\n");
 	}
 	if (cursor_image == -1)
 	{
@@ -50,9 +46,10 @@ eSceneType TitleScene::Update()
 	//カーソル下移動
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_DOWN))
 	{
+		PlaySoundMem(cursor_se, DX_PLAYTYPE_BACK, TRUE);
 		menu_cursor++;
 		//一番下に到達したら、一番上にする
-		if (menu_cursor > 3)
+		if (menu_cursor > 2)
 		{
 			menu_cursor = 0;
 		}
@@ -61,27 +58,30 @@ eSceneType TitleScene::Update()
 	//カーソル上移動
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_DPAD_UP))
 	{
+		PlaySoundMem(cursor_se, DX_PLAYTYPE_BACK, TRUE);
 		menu_cursor--;
 		//一番上に到達したら、一番下にする
 		if (menu_cursor < 0)
 		{
-			menu_cursor = 3;
+			menu_cursor = 2;
 		}
 	}
 
 	//カーソル決定(決定した画面に遷移する)
 	if (InputControl::GetButtonDown(XINPUT_BUTTON_B))
 	{
+		PlaySoundMem(ok_se, DX_PLAYTYPE_BACK, TRUE);
+
 		switch (menu_cursor)
 		{
 		case 0:
 			return eSceneType::E_MAIN;
 		case 1:
-			return eSceneType::E_RANKING_DISP;
-		case 2:
 			return eSceneType::E_HELP;
-		default:
+		case 2:
 			return eSceneType::E_END;
+		default:
+			break;
 		}
 	}
 	//現在のシーンタイプを返す
@@ -94,9 +94,6 @@ void TitleScene::Draw() const
 	//タイトル画面の描画
 	DrawGraph(0, 0, background_image, FALSE);
 
-	//メニュー画面の描画
-	//DrawGraph(120, 200, menu_image, TRUE);
-
 	//カーソル画面の描画
 	DrawGraph(320, 305 + menu_cursor * 100, cursor_image,TRUE);
 }
@@ -106,9 +103,10 @@ void TitleScene::Finalize()
 {
 	//読み込んだ画像の削除
 	DeleteGraph(background_image);
-	DeleteGraph(menu_image);
 	DeleteGraph(cursor_image);
 	DeleteSoundMem(titlebgm);
+	//DeleteSoundMem(ok_se);
+	DeleteSoundMem(cursor_se);
 }
 
 //現在のシーン情報を取得

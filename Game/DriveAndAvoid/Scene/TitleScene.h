@@ -8,10 +8,11 @@ private:
 
 private:
 	int background_image;  //背景画像
-	int menu_image;        //メニュー画面
 	int cursor_image;      //カーソル画像
 	int menu_cursor;       //メニューカーソル番号
-	int titlebgm;
+	int titlebgm;          //BGM
+	int cursor_se;
+	int ok_se;
 public:
 	TitleScene();
 	virtual ~TitleScene();

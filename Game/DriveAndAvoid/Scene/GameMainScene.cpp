@@ -4,14 +4,13 @@
 #include<math.h>
 
 GameMainScene::GameMainScene() :high_score(0), back_ground(NULL),
-barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),obstacle_a(nullptr), obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
-family_cnt{}, counter(0), count_down(0), obstacle_a_image(NULL), obstacle_b_image(NULL), obstacle_c_image(NULL), time(0),mainbgm(0)//,enemy(nullptr)
+barrier_image(NULL),mileage(0), player(nullptr), enemy_roomba(nullptr),diff_x(0.0),/*obstacle_a(nullptr),*/ obstacle_b(nullptr), obstacle_c(nullptr), family(nullptr),
+family_cnt{}, counter(0), count_down(0),/* obstacle_a_image(NULL),*/obstacle_c_image(NULL), time(0), mainbgm(0), se{}//,enemy(nullptr)
 {
 
 	for (int i = 0; i < 3; i++)
 	{
-		enemy_image[i] = NULL;
-		enemy_count[i] = NULL;
+		obstacle_b_image[i] = NULL;
 	}
 
 	for (int i = 0; i < 2; i++)
@@ -40,28 +39,29 @@ void GameMainScene::Initialize()
 
 
 	//画像の読み込み
-	back_ground = LoadGraph("Resource/Images/back_img.png");
-	barrier_image = LoadGraph("Resource/Images/barrier.png");
-	int result = LoadDivGraph("Resource/Images/car.bmp", 3, 3, 1, 63, 120,
-		enemy_image);
+	back_ground = LoadGraph(GAMEMAIN_BACK_IMAGE);
 
-	obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki.png");
-	obstacle_b_image= LoadGraph("Resource/Images/omocha_tsumiki.png");
-	obstacle_c_image = LoadGraph("Resource/Images/pet_robot_soujiki_cat.png");
+	//obstacle_a_image = LoadGraph("Resource/Images/kaden_senpuki1.png");
+	int obs_b_image= LoadDivGraph(OBSTACLE_B_IMAGE,3,3,1,180,180,obstacle_b_image,TRUE);
+	obstacle_c_image = LoadGraph(OBSTACLE_C_IMAGE);
 
-	family_image[0] = LoadGraph("Resource/Images/IMG_0111.png");
-	family_image[1] = LoadGraph("Resource/Images/IMG_0113.png");
+	family_image[0] = LoadGraph(FAMILLY_IMAGE_01);
+	family_image[1] = LoadGraph(FAMILLY_IMAGE_02);
 
 	//音源の読み込み
 	mainbgm = LoadSoundMem(GAMEMAIN_BGM);
+
 	//roombabgm = LoadSoundMem(ROOMBA_DEATH_SE);//ルンバ爆発BGM
+
+	ChangeVolumeSoundMem(100, mainbgm);
+
 
 	//エラーチェック
 	if (back_ground == -1)
 	{
 		throw("Resource/Images/back_img.pngがありません\n");
 	}
-	if (result == -1)
+	if (obs_b_image == -1)
 	{
 		throw("Resource/Images/car.bmpがありません\n");
 	}
@@ -69,10 +69,10 @@ void GameMainScene::Initialize()
 	{
 		throw("Resource/Images/barrier.pngがありません\n");
 	}
-	if (obstacle_a)
+	/*if (obstacle_a)
 	{
 		throw("Resource/Images/kaden_senpuki.pngがありません\n");
-	}
+	}*/
 	if (obstacle_b)
 	{
 		throw("Resource/Images/omocha_tumiki.pngがありません\n");
@@ -83,18 +83,18 @@ void GameMainScene::Initialize()
 	}
 	if (family_image[0] == -1)
 	{
-		throw("Resource/Images/IMG_0111.pngがありません\n");
+		throw("Resource/Images/family01.pngがありません\n");
 	}
 	if (family_image[1] == -1)
 	{
-		throw("Resource/Images/IMG_0113.pngがありません\n");
+		throw("Resource/Images/family02.pngがありません\n");
 	}
 	//オブジェクトの生成
 	player = new Player;
 	//enemy = new Enemy * [10];
 
 	enemy_roomba = new Enemy_Roomba;
-	obstacle_a = new Obstacle_A * [10];
+	//obstacle_a = new Obstacle_A * [10];
 	obstacle_b = new Obstacle_B*[10];
 	obstacle_c = new Obstacle_C * [10];
 
@@ -110,7 +110,7 @@ void GameMainScene::Initialize()
 
 	for (int i = 0; i < 10; i++)
 	{
-		obstacle_a[i] = nullptr;
+		//obstacle_a[i] = nullptr;
 		obstacle_b[i] = nullptr;
 		obstacle_c[i] = nullptr;
 	}
@@ -119,6 +119,11 @@ void GameMainScene::Initialize()
 	{
 		family[i] = nullptr;
 	}
+
+	
+	se[1] = LoadSoundMem(FAMILLY_GET_SE);
+	se[2] = LoadSoundMem(DAMAGE_SE);
+	se[3] = LoadSoundMem(DEATH_SE);
 }
 
 //更新処理
@@ -145,7 +150,7 @@ eSceneType GameMainScene::Update()
 			if (counter < 0)
 			{
 				counter = 0;
-				return eSceneType::E_RESULT;
+				return eSceneType::E_CLEAR;
 			}
 		}
 	}
@@ -165,33 +170,55 @@ eSceneType GameMainScene::Update()
 			mileage += 1;
 		}
 
-		//敵生成処理
-		if (mileage / 20 % 100 == 0)
+		////敵生成処理
+		//if (mileage / 20 % 100 == 0)
+		//{
+		//	for (int i = 0; i < 10; i++)
+		//	{
+		//		if (obstacle_a[i] == nullptr)
+		//		{
+		//			int type = GetRand(1);
+		//			obstacle_a[i] = new Obstacle_A(type,obstacle_a_image);
+		//			obstacle_a[i]->Initialize();
+		//			break;
+		//		}
+		//	}
+		//}
+
+		//つみきの生成
+		if (mileage / 10 % 50 == 0)
 		{
 			for (int i = 0; i < 10; i++)
 			{
-				if (obstacle_a[i] == nullptr)
-				{
-					int type = GetRand(1);
-					obstacle_a[i] = new Obstacle_A(type,obstacle_a_image);
-					obstacle_a[i]->Initialize();
-					break;
-				}
 				if (obstacle_b[i] == nullptr)
 				{
-					//int type = GetRand(3) % 3;
-					obstacle_b[i] = new Obstacle_B(obstacle_b_image);
+					int type = GetRand(3) % 3;
+					obstacle_b[i] = new Obstacle_B(type,obstacle_b_image[type]);
 					obstacle_b[i]->Initialize();
-					break;
-				}
-				if (obstacle_c[i] == nullptr)
-				{
-					obstacle_c[i] = new Obstacle_C(obstacle_c_image);
-					obstacle_c[i]->Initialize();
 					break;
 				}
 			}
 		}
+
+		//掃除機の生成
+		if (counter < 55)
+		{
+			if (mileage / 20 % 300 == 0)
+			{
+				se[0] = LoadSoundMem(CLEANER_SE);
+				ChangeVolumeSoundMem(255, se[0]);
+				for (int i = 0; i < 2; i++)
+				{
+					if (obstacle_c[i] == nullptr)
+					{
+						obstacle_c[i] = new Obstacle_C(obstacle_c_image);
+						obstacle_c[i]->Initialize();
+						break;
+					}
+				}
+			}
+		}
+		
 
 		//仲間生成処理
 		if (mileage / 20 % 100 == 0)
@@ -212,61 +239,61 @@ eSceneType GameMainScene::Update()
 		//敵の更新と当たり判定チェック
 		for (int i = 0; i < 10; i++)
 		{
-			if (obstacle_a[i] != nullptr)
-			{
-				obstacle_a[i]->Update(player->GetSpeed());
+			//if (obstacle_a[i] != nullptr)
+			//{
+			//	obstacle_a[i]->Update(player->GetSpeed());
 
-				//画面外に行ったら削除
-				if (obstacle_a[i]->GetLocation().y >= 800.0f)
-				{
-					obstacle_a[i]->Finalize();
-					delete obstacle_a[i];
-					obstacle_a[i] = nullptr;
-				}
+			//	//画面外に行ったら削除
+			//	if (obstacle_a[i]->GetLocation().y >= 800.0f)
+			//	{
+			//		obstacle_a[i]->Finalize();
+			//		delete obstacle_a[i];
+			//		obstacle_a[i] = nullptr;
+			//	}
 
-				if (player->GetActiveFlg() == true)
-				{
-					//当たり判定の確認
-					if (IsObjectHitCheck_P(player, obstacle_a[i]))
-					{
-						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
-						{
-							player->SetSize(-0.1f);
-							player->SetBoxSize(-0.1f);
-						}
-						obstacle_b[i]->Finalize();
-						delete obstacle_b[i];
-						obstacle_b[i] = nullptr;
-					}
-				}
+			//	if (player->GetActiveFlg() == true)
+			//	{
+			//		//当たり判定の確認
+			//		if (IsObjectHitCheck_P(player, obstacle_a[i]))
+			//		{
+			//			player->SetActive(false);
+			//			player->DecreaseHp(-20.0f);
+			//			if (player->GetPlayerSize() > 0.3f)
+			//			{
+			//				player->SetSize(-0.1f);
+			//				player->SetBoxSize(-0.1f);
+			//			}
+			//			obstacle_a[i]->Finalize();
+			//			delete obstacle_a[i];
+			//			obstacle_a[i] = nullptr;
+			//		}
+			//	}
 
-			//敵と障害物の当たり判定
-			if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
-			{
-				enemy_roomba->SetActive(false);
-				enemy_roomba->DecreaseHp(-10.0f);
-				obstacle_a[i]->Finalize();
-				delete obstacle_a[i];
-				obstacle_a[i] = nullptr;
-			}
+			////敵と障害物の当たり判定
+			//if (IsObjecHitCheck_E(enemy_roomba, obstacle_a[i]))
+			//{
+			//	enemy_roomba->SetActive(false);
+			//	enemy_roomba->DecreaseHp(-10.0f);
+			//	obstacle_a[i]->Finalize();
+			//	delete obstacle_a[i];
+			//	obstacle_a[i] = nullptr;
+			//}
 
-				for (int j = 0; j < 10; j++)
-				{
-					if (obstacle_a[j] != nullptr && i != j)
-					{
-						//仲間同士の当たり判定
-						if (IsObjecHitCheck_O(obstacle_a[i], obstacle_a[j]))
-						{
-							obstacle_a[j]->Finalize();
-							delete obstacle_a[j];
-							obstacle_a[j] = nullptr;
-						}
-					}
-				}
+			//	for (int j = 0; j < 10; j++)
+			//	{
+			//		if (obstacle_a[j] != nullptr && i != j)
+			//		{
+			//			//仲間同士の当たり判定
+			//			if (IsObjecHitCheck_O(obstacle_a[i], obstacle_a[j]))
+			//			{
+			//				obstacle_a[j]->Finalize();
+			//				delete obstacle_a[j];
+			//				obstacle_a[j] = nullptr;
+			//			}
+			//		}
+			//	}
 
-			}
+			//}
 			if (obstacle_b[i] != nullptr)
 			{
 				obstacle_b[i]->Update(player->GetSpeed());
@@ -284,9 +311,10 @@ eSceneType GameMainScene::Update()
 					//当たり判定の確認
 					if (IsObjectHitCheck_P(player, obstacle_b[i]))
 					{
+						PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						player->DecreaseHp(-50.0f);
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
@@ -300,6 +328,7 @@ eSceneType GameMainScene::Update()
 			//敵と障害物の当たり判定
 			if (IsObjecHitCheck_E(enemy_roomba, obstacle_b[i]))
 			{
+				PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 				enemy_roomba->SetActive(false);
 				enemy_roomba->DecreaseHp(-50.0f);
 				obstacle_b[i]->Finalize();
@@ -325,9 +354,10 @@ eSceneType GameMainScene::Update()
 			if (obstacle_c[i] != nullptr)
 			{
 				obstacle_c[i]->Update(player->GetSpeed());
+				PlaySoundMem(se[0], DX_PLAYTYPE_BACK, TRUE);
 
 				//画面外に行ったら削除
-				if (obstacle_c[i]->GetLocation().y >= 800.0f)
+				if (obstacle_c[i]->GetLocation().x >= 1290.0f)
 				{
 					obstacle_c[i]->Finalize();
 					delete obstacle_c[i];
@@ -339,22 +369,37 @@ eSceneType GameMainScene::Update()
 					//プレイヤーと障害物の当たり判定の確認
 					if (IsObjectHitCheck_P(player, obstacle_c[i]))
 					{
+						PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
+						player->SetRoomAnim(1);
+						//敵(ルンバ)に当たるとダメージ
 						player->SetActive(false);
-						player->DecreaseHp(-10.0f);
-						if (player->GetPlayerSize() > 0.1f)
+						if (player->GetPlayerSize() <= 0.5f)
+						{
+							
+							player->SetHp();
+						}
+						else
+						{
+							player->SetSizeDef();
+						}
+
+						if (player->GetPlayerSize() > 0.3f)
 						{
 							player->SetSize(-0.1f);
 							player->SetBoxSize(-0.1f);
 						}
+						//player->SetY(100.0f);
 						obstacle_c[i]->Finalize();
 						delete obstacle_c[i];
 						obstacle_c[i] = nullptr;
+						DeleteSoundMem(se[0]);
 					}
 				}
 
 				//敵と障害物の当たり判定
 				if (IsObjecHitCheck_E(enemy_roomba, obstacle_c[i]))
 				{
+					PlaySoundMem(se[2], DX_PLAYTYPE_BACK, TRUE);
 					enemy_roomba->SetActive(false);
 					enemy_roomba->DecreaseHp(-50.0f);
 					obstacle_c[i]->Finalize();
@@ -392,18 +437,26 @@ eSceneType GameMainScene::Update()
 				//プレイヤーと敵の当たり判定の確認
 				if (IsHitCheck(player, enemy_roomba))
 				{
+					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
+					player->SetRoomAnim(1);
 					//敵(ルンバ)に当たるとダメージ
 					player->SetActive(false);
-					if (player->GetPlayerSize() <= 1.0f)
+					if (player->GetPlayerSize() <= 0.5f)
 					{
-						player->DecreaseHp(-100.0f);
+						player->SetHp();
 					}
-					if (player->GetPlayerSize() > 0.5f)
+					else
+					{
+						player->SetSizeDef();
+					}
+
+					if (player->GetPlayerSize() > 0.3f)
 					{
 						player->SetSize(-0.1f);
 						player->SetBoxSize(-0.1f);
 					}
 					player->SetY(100.0f);
+
 				}
 			}
 		}
@@ -428,7 +481,8 @@ eSceneType GameMainScene::Update()
 				{
 					if (IsObjectHitCheck_P(player, family[i]))
 					{
-						if (player->GetHp() < 100)
+						PlaySoundMem(se[1], DX_PLAYTYPE_BACK, TRUE);
+						if (player->GetHp() < 230)
 						{
 							player->DecreaseHp(10.0f);
 						}
@@ -448,6 +502,7 @@ eSceneType GameMainScene::Update()
 				//敵と障害物の当たり判定
 				if (IsObjecHitCheck_E(enemy_roomba, family[i]))
 				{
+					PlaySoundMem(se[3], DX_PLAYTYPE_BACK, TRUE);
 					family[i]->Finalize();
 					delete family[i];
 					family[i] = nullptr;
@@ -470,12 +525,12 @@ eSceneType GameMainScene::Update()
 			}
 		}
 
-		//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
-		if (player->GetHp() < 0.0f)
-		{
-			return eSceneType::E_OVER;
-		}
+	}
 
+	//プレイヤーの燃料化体力が０未満なら、リザルトに遷移する
+	if (player->GetHp() < 0.1f)
+	{
+		return eSceneType::E_OVER;
 	}
 
 	return GetNowScene();
@@ -484,26 +539,85 @@ eSceneType GameMainScene::Update()
 //描画処理
 void GameMainScene::Draw() const
 {
-
-
 	//背景画像の描画
 	DrawGraph(0, mileage % 720 - 720, back_ground, TRUE);
 	DrawGraph(0, mileage % 720, back_ground, TRUE);
 
+	//プレイヤーの描画
+	player->Draw();
+
+	//ルンバの描画
+	enemy_roomba->Draw();
+
+	//スタミナゲージの描画
+	float fx = player->GetLocation().x + player->GetBoxSize().x + 13.0f;
+	float fy = player->GetLocation().y - player->GetBoxSize().y;
+	DrawBoxAA(fx, fy, fx + 15.0f, fy + 50.0f, GetColor(0, 0, 0), FALSE);
+	if (player->GetStamina() > 0.0f)
+	{
+		DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
+	}
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+	DrawBox(995, 5, 1265, 115, GetColor(255, 255, 255), TRUE);
+
+	SetFontSize(16);
+	//DrawFormatStringF(1000.0f, 60.0f, GetColor(0, 0, 0), "集めた仲間の数");
+
+	//集めた仲間の数
+	fx = 1010.0f;
+	fy = 60.0f;
+	SetFontSize(20);
+	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[0], TRUE);
+	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d", family_cnt[0]);
+
+	fx = 1145.0f;
+	fy = 60.0f;
+	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[1], TRUE);
+	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d", family_cnt[1]);
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	//体力ゲージの描画
+	fx = 1015.0f;
+	fy = 10.0f;
+	SetFontSize(16);
+	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "HP");
+	DrawBoxAA(fx, fy + 20.0f, fx + player->GetHp(), fy + 40.0f, GetColor(255, 0, 0), TRUE);
+	DrawBoxAA(fx, fy + 20.0f, fx + 230.0f, fy + 40.0f, GetColor(0, 0, 0), FALSE);
+
+	//制限時間の描画
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+	DrawBox(20, 30, 100, 110, GetColor(255, 255, 255), TRUE);
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
+
+	SetFontSize(20);
+	DrawFormatString(40, 10, GetColor(0, 0, 0), "TIME");
+
+	SetFontSize(60);
+	if (counter > 10)
+	{
+		DrawFormatString(30, 40, GetColor(0, 0, 0), "%02d", counter);
+	}
+	else
+	{
+		DrawFormatString(30, 40, GetColor(255, 0, 0), "%02d", counter);
+	}
+
 	//一時停止中なら画面を薄暗くする
-	if (count_down > 0)
+
+	SetFontSize(120);
+
+	if (count_down > 1)
 	{
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
 		DrawBox(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
-
-		SetFontSize(64);
-		DrawFormatString(640, 365, GetColor(255, 255, 255), "%d", count_down - 1);
+		DrawFormatString(600, 315, GetColor(255, 255, 255), "%d", count_down - 1);
 	}
-	
-	if (count_down == 1)
+	else if (count_down == 1)
 	{
-		DrawFormatString(640, 365, GetColor(255, 255, 255), "GO!");
+		DrawFormatString(570, 315, GetColor(0, 0, 0), "GO!");
 	}
 
 	SetFontSize(16);
@@ -511,10 +625,10 @@ void GameMainScene::Draw() const
 	//敵の描画
 	for (int i = 0; i < 10; i++)
 	{
-		if (obstacle_a[i] != nullptr)
+		/*if (obstacle_a[i] != nullptr)
 		{
 			obstacle_a[i]->Draw();
-		}
+		}*/
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Draw();
@@ -535,59 +649,8 @@ void GameMainScene::Draw() const
 
 		//DrawFormatString(1000, 180+ i * 30, GetColor(255, 255, 255), "%d", family[i]);
 	}
-
-
-	//プレイヤーの描画
-	player->Draw();
-
-	//ルンバの描画
-	enemy_roomba->Draw();
-
 	//UIの描画
-	//制限時間の描画
-	SetFontSize(20);
-	DrawFormatString(40, 10, GetColor(0, 0, 0), "TIME");
-	SetFontSize(60);
-	if (counter > 10)
-	{
-		DrawFormatString(30, 40, GetColor(0, 0, 0), "%02d", counter);
-	}
-	else
-	{
-		DrawFormatString(30, 40, GetColor(255, 0, 0), "%02d", counter);
-	}
 
-	//スタミナゲージの描画
-	float fx = player->GetLocation().x + player->GetBoxSize().x + 13.0f;
-	float fy = player->GetLocation().y - player->GetBoxSize().y;
-	DrawBoxAA(fx, fy, fx + 15.0f, fy + 50.0f, GetColor(0, 0, 0),FALSE);
-	if (player->GetStamina() > 0.0f)
-	{
-		DrawBoxAA(fx, fy + 50.0f - player->GetStamina(), fx + 15.0f, fy + 50.0f, GetColor(0, 0, 255), TRUE);
-	}
-
-	//体力ゲージの描画
-	fx = 1000.0f;
-	fy = 10.0f;
-	SetFontSize(16);
-	DrawFormatStringF(fx, fy, GetColor(0, 0, 0), "HP");
-	DrawBoxAA(fx, fy + 20.0f, fx + player->GetHp() + 130, fy + 40.0f, GetColor(255, 0, 0), TRUE);
-	DrawBoxAA(fx, fy + 20.0f, fx + 230.0f, fy + 40.0f, GetColor(0, 0, 0),FALSE);
-
-	SetFontSize(16);
-	//DrawFormatStringF(1000.0f, 60.0f, GetColor(0, 0, 0), "集めた仲間の数");
-
-	//集めた仲間の数
-	fx = 995.0f;
-	fy = 60.0f;
-	SetFontSize(20);
-	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[0], TRUE);
-	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d",family_cnt[0]);
-
-	fx = 1130.0f;
-	fy = 60.0f;
-	DrawExtendGraphF(fx, fy, fx + 50, fy + 50, family_image[1], TRUE);
-	DrawFormatStringF(fx + 60, fy + 20, GetColor(0, 0, 0), "× %d", family_cnt[1]);
 } 
 
 //終了時宣言
@@ -629,12 +692,12 @@ void GameMainScene::Finalize()
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (obstacle_a[i] != nullptr)
+		/*if (obstacle_a[i] != nullptr)
 		{
 			obstacle_a[i]->Finalize();
 			delete obstacle_a[i];
 			obstacle_a[i] = nullptr;
-		}
+		}*/
 		if (obstacle_b[i] != nullptr)
 		{
 			obstacle_b[i]->Finalize();
@@ -649,7 +712,7 @@ void GameMainScene::Finalize()
 		}
 	}
 
-	delete[] obstacle_a;
+	//delete[] obstacle_a;
 	delete[] obstacle_b;
 	delete[] obstacle_c;
 
